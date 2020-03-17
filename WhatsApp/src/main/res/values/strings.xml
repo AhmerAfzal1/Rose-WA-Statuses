@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Rose WA Status Downloader</string>
+
+    <!-- Ads key strings -->
+    <string name="banner_ad_app_id">ca-app-pub-0672688958454166~1575550090</string>
+    <string name="banner_ad_unit_id">ca-app-pub-0672688958454166/9041948903</string>
+    <string name="native_ad_unit_id">ca-app-pub-0672688958454166/6534919656</string>
 </resources>

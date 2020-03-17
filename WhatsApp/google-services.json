@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "522960861053-knhapl8mb9f638oir94icevbsc8g9gg0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ahmer.whatsapp",
+            "certificate_hash": "966628907cc4811721dcc704b46b0d4bf96610fa"
+          }
+        },
+        {
           "client_id": "522960861053-o6e05mgvitv5hd0ou5lj6n44pjaurgdq.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -33,7 +41,8 @@
             }
           ]
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-0672688958454166~1575550090"
     }
   ],
   "configuration_version": "1"
