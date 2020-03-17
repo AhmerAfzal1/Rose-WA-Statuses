@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "522960861053",
+    "firebase_url": "https://rose-wa-status-downloader.firebaseio.com",
+    "project_id": "rose-wa-status-downloader",
+    "storage_bucket": "rose-wa-status-downloader.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522960861053:android:230efce40e9f895b357e14",
+        "android_client_info": {
+          "package_name": "com.ahmer.whatsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "522960861053-o6e05mgvitv5hd0ou5lj6n44pjaurgdq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGuimVCJGelKMlf4NpzCjATVnBfKo79b8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "522960861053-o6e05mgvitv5hd0ou5lj6n44pjaurgdq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
