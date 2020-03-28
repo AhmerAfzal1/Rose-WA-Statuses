@@ -5,4 +5,7 @@
     <string name="banner_ad_app_id">ca-app-pub-0672688958454166~1575550090</string>
     <string name="banner_ad_unit_id">ca-app-pub-0672688958454166/9041948903</string>
     <string name="native_ad_unit_id">ca-app-pub-0672688958454166/6534919656</string>
+
+    <string name="logo">Empty content description</string>
+    <string name="no_having_status">WhatsApp status will be downloaded in next update</string>
 </resources>
