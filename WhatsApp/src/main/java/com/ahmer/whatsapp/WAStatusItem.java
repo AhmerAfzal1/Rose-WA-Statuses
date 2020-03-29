@@ -2,7 +2,7 @@ package com.ahmer.whatsapp;
 
 import android.graphics.Bitmap;
 
-public class WhatsAppStatusItem {
+public class WAStatusItem {
 
     private String path;
     private Bitmap thumbnails;

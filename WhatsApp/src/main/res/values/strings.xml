@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Rose WA Status Downloader</string>
+    <string name="app_name">Rose WA Statuses</string>
 
     <!-- Ads key strings -->
     <string name="banner_ad_app_id">ca-app-pub-0672688958454166~1575550090</string>
