@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activity.MainActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -44,9 +46,16 @@
     </androidx.appcompat.widget.Toolbar>
 
     <RelativeLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
         android:gravity="center">
 
         <TextView
@@ -54,7 +63,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_margin="10dp"
             android:gravity="center"
             android:text="@string/no_having_status"
             android:textColor="@color/colorPrimaryDark"
@@ -67,7 +75,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tvNoStatus"
             android:layout_centerInParent="true"
-            android:layout_margin="10dp"
             android:scrollbars="vertical" />
         <!--
                 <androidx.core.widget.ContentLoadingProgressBar
@@ -78,5 +85,14 @@
                     android:layout_gravity="center_horizontal|center|center_vertical"
                     android:visibility="visible" />-->
     </RelativeLayout>
-
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/white"
+        ads:adSize="LARGE_BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id" />
 </RelativeLayout>

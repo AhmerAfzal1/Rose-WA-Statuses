@@ -24,14 +24,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ahmer.afzal.utils.IOUtils;
 import com.ahmer.afzal.utils.info.PathUtils;
 import com.ahmer.afzal.utils.toastandsnackbar.ToastUtils;
+import com.ahmer.whatsapp.ConstantsValues;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.Thumbnails;
+import com.ahmer.whatsapp.WAImageStatusView;
 import com.ahmer.whatsapp.WAStatusItem;
 import com.ahmer.whatsapp.WAVideoStatusView;
 import com.ahmer.whatsapp.permission.DownloadPermissionHandler;
 import com.ahmer.whatsapp.permission.PermissionRequestCodes;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,12 +55,18 @@ import static com.ahmer.whatsapp.ConstantsValues.MP4;
 import static com.ahmer.whatsapp.ConstantsValues.TAG;
 import static com.ahmer.whatsapp.ConstantsValues.WHATSAPP_STATUSES_LOCATION;
 import static com.ahmer.whatsapp.ConstantsValues.YO_WHATSAPP_STATUSES_LOCATION;
+import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INTERNAL_ERROR;
+import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INVALID_REQUEST;
+import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NETWORK_ERROR;
+import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityCompat.OnRequestPermissionsResultCallback onRequestPermissionsResultCallback;
     private RecyclerView rvVideo;
     private ArrayList<WAStatusItem> videoList = new ArrayList<>();
+    private AdView adView;
+    private FirebaseAnalytics firebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +81,66 @@ public class MainActivity extends AppCompatActivity {
         title.setText(R.string.app_name);
         rvVideo = findViewById(R.id.rvWhatsappStatusList);
         rvVideo.setLayoutManager(new GridLayoutManager(this, 1));
+        adView = findViewById(R.id.adView);
+        FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
+        firebaseCrashlytics.log("Start " + MainActivity.class.getSimpleName() + " Crashlytics logging...");
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        MobileAds.initialize(this, getResources().getString(R.string.banner_ad_app_id));
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                Log.v(ConstantsValues.TAG, getResources().getString(R.string.adLoaded));
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                switch (errorCode) {
+                    case ERROR_CODE_INTERNAL_ERROR: {
+                        Log.v(ConstantsValues.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INTERNAL_ERROR));
+                        firebaseCrashlytics.log(getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INTERNAL_ERROR));
+                    }
+                    break;
+                    case ERROR_CODE_INVALID_REQUEST: {
+                        Log.v(ConstantsValues.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INVALID_REQUEST));
+                        firebaseCrashlytics.log(getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INVALID_REQUEST));
+                    }
+                    break;
+                    case ERROR_CODE_NETWORK_ERROR: {
+                        Log.v(ConstantsValues.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_NETWORK_ERROR));
+                        firebaseCrashlytics.log(getResources().getString(R.string.adFailedToLoad_ERROR_CODE_NETWORK_ERROR));
+                    }
+                    break;
+                    case ERROR_CODE_NO_FILL: {
+                        Log.v(ConstantsValues.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_NO_FILL));
+                        firebaseCrashlytics.log(getResources().getString(R.string.adFailedToLoad_ERROR_CODE_NO_FILL));
+                    }
+                    break;
+                    default: {
+                        Log.v(ConstantsValues.TAG, getResources().getString(R.string.adFailedToLoad) + errorCode);
+                        firebaseCrashlytics.log(getResources().getString(R.string.adFailedToLoad) + errorCode);
+                    }
+                    break;
+                }
+            }
+
+            @Override
+            public void onAdOpened() {
+                Log.v(ConstantsValues.TAG, getResources().getString(R.string.adOpened));
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                Log.v(ConstantsValues.TAG, getResources().getString(R.string.adLeftApplication));
+            }
+
+            @Override
+            public void onAdClosed() {
+                Log.v(ConstantsValues.TAG, getResources().getString(R.string.adClosed));
+            }
+        });
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
         checkPermission();
     }
 
@@ -104,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getVideo() throws IOException {
+/*
 
         File moviesFolder = new File(PathUtils.getExternalMoviesPath());
         Log.v(TAG, moviesFolder.getAbsolutePath());
@@ -126,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+*/
 
         File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
         File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
@@ -206,6 +282,31 @@ public class MainActivity extends AppCompatActivity {
         videoList.add(obj);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (adView != null) {
+            adView.pause();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        firebaseAnalytics.setCurrentScreen(this, "CurrentScreen: " + getClass().getSimpleName(), null);
+        if (adView != null) {
+            adView.resume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (adView != null) {
+            adView.destroy();
+        }
+    }
+
     public class StatusVideoAdapter extends RecyclerView.Adapter<StatusVideoAdapter.ViewHolder> {
 
         @Override
@@ -214,13 +315,43 @@ public class MainActivity extends AppCompatActivity {
             holder.rl_select.setBackgroundColor(Color.parseColor("#FFFFFF"));
             holder.rl_select.setAlpha(0);
             holder.rl_select.setOnClickListener(view -> {
-                Intent intent_gallery = new Intent(MainActivity.this, WAVideoStatusView.class);
-                intent_gallery.putExtra("format", videoList.get(position).getFormat());
-                intent_gallery.putExtra("path", videoList.get(position).getPath());
-                MainActivity.this.startActivity(intent_gallery);
+                if (videoList.get(position).getFormat().endsWith(MP4)) {
+                    Bundle bundleMP4 = new Bundle();
+                    bundleMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "MP4");
+                    bundleMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "MP4 Video Viewed");
+                    firebaseAnalytics.logEvent("MP4_Open", bundleMP4);
+                    Intent intent_gallery = new Intent(MainActivity.this, WAVideoStatusView.class);
+                    intent_gallery.putExtra("format", videoList.get(position).getFormat());
+                    intent_gallery.putExtra("path", videoList.get(position).getPath());
+                    MainActivity.this.startActivity(intent_gallery);
+                }
+                if (videoList.get(position).getFormat().endsWith(JPG)) {
+                    Bundle bundleJPG = new Bundle();
+                    bundleJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "JPG");
+                    bundleJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "JPG Image Viewed");
+                    firebaseAnalytics.logEvent("JPG_Open", bundleJPG);
+                    Intent intent_gallery = new Intent(MainActivity.this, WAImageStatusView.class);
+                    intent_gallery.putExtra("format", videoList.get(position).getFormat());
+                    intent_gallery.putExtra("path", videoList.get(position).getPath());
+                    MainActivity.this.startActivity(intent_gallery);
+                }
+                if (videoList.get(position).getFormat().endsWith(GIF)) {
+                    Bundle bundleGIF = new Bundle();
+                    bundleGIF.putString(FirebaseAnalytics.Param.ITEM_ID, "GIF");
+                    bundleGIF.putString(FirebaseAnalytics.Param.ITEM_NAME, "GIF Image Viewed");
+                    firebaseAnalytics.logEvent("GIF_Open", bundleGIF);
+                    Intent intent_gallery = new Intent(MainActivity.this, WAVideoStatusView.class);
+                    intent_gallery.putExtra("format", videoList.get(position).getFormat());
+                    intent_gallery.putExtra("path", videoList.get(position).getPath());
+                    MainActivity.this.startActivity(intent_gallery);
+                }
             });
 
             holder.share.setOnClickListener(v -> {
+                Bundle bundleShare = new Bundle();
+                bundleShare.putString(FirebaseAnalytics.Param.ITEM_ID, "Share");
+                bundleShare.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Shared Something");
+                firebaseAnalytics.logEvent("Share_Open", bundleShare);
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(videoList.get(position).getPath()));
@@ -228,7 +359,11 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(Intent.createChooser(sendIntent, "Send Status via:"));
             });
 
-            holder.wsp.setOnClickListener(v -> {
+            holder.whatsAppShare.setOnClickListener(v -> {
+                Bundle bundleWhatsApp = new Bundle();
+                bundleWhatsApp.putString(FirebaseAnalytics.Param.ITEM_ID, "ShareWhatsApp");
+                bundleWhatsApp.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Shared Something on WhatsApp");
+                firebaseAnalytics.logEvent("WhatsApp_Share_Open", bundleWhatsApp);
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.setPackage("com.whatsapp");
@@ -238,6 +373,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
             holder.download.setOnClickListener(v -> {
+
                 String sourcePath = videoList.get(position).getPath();
                 File source = new File(sourcePath);
                 File directory = Environment.getExternalStoragePublicDirectory(Objects.requireNonNull(MainActivity.this).getString(R.string.app_name));
@@ -250,6 +386,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 String fileName = "_" + getRandomNumberString();
                 String folder = "Rose WA Statuses";
+                String toastText = "Status Saved Successfully at location: ";
                 String destPathMP4 = Environment.getExternalStoragePublicDirectory(folder) + "/WhatsAppStatus" + fileName + MP4;
                 String destPathJPG = Environment.getExternalStoragePublicDirectory(folder) + "/WhatsAppStatus" + fileName + JPG;
                 String destPathGIF = Environment.getExternalStoragePublicDirectory(folder) + "/WhatsAppStatus" + fileName + GIF;
@@ -257,20 +394,32 @@ public class MainActivity extends AppCompatActivity {
                 File destJPG = new File(destPathJPG);
                 File destGIF = new File(destPathGIF);
                 if (sourcePath.endsWith(MP4)) {
+                    Bundle bundleDownloadMP4 = new Bundle();
+                    bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadMP4");
+                    bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download MP4 Status");
+                    firebaseAnalytics.logEvent("Download_MP4_Open", bundleDownloadMP4);
                     IOUtils.move(source, destMP4);
-                    ToastUtils.showLong("Status Saved Successfully at location:" + destPathMP4);
+                    ToastUtils.showLong(toastText + destPathMP4);
                 } else {
                     Log.d(TAG, "onClick: no data saved");
                 }
                 if (sourcePath.endsWith(JPG)) {
+                    Bundle bundleDownloadJPG = new Bundle();
+                    bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadJPG");
+                    bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download JPG Status");
+                    firebaseAnalytics.logEvent("Download_JPG_Open", bundleDownloadJPG);
                     IOUtils.move(source, destJPG);
-                    ToastUtils.showLong("Status Saved Successfully at location:" + destPathJPG);
+                    ToastUtils.showLong(toastText + destPathJPG);
                 } else {
                     Log.d(TAG, "onClick: no data saved");
                 }
                 if (sourcePath.endsWith(GIF)) {
+                    Bundle bundleDownloadGIF = new Bundle();
+                    bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadGIF");
+                    bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download GIF Status");
+                    firebaseAnalytics.logEvent("Download_GIF_Open", bundleDownloadGIF);
                     IOUtils.move(source, destGIF);
-                    ToastUtils.showLong("Status Saved Successfully at location:" + destPathGIF);
+                    ToastUtils.showLong(toastText + destPathGIF);
                 } else {
                     Log.d(TAG, "onClick: no data saved");
                 }
@@ -302,7 +451,7 @@ public class MainActivity extends AppCompatActivity {
 
             ImageView iv_image;
             RelativeLayout rl_select;
-            ImageView wsp;
+            ImageView whatsAppShare;
             ImageView share;
             ImageView download;
             FloatingActionButton play_btn;
@@ -311,7 +460,7 @@ public class MainActivity extends AppCompatActivity {
                 super(v);
                 iv_image = v.findViewById(R.id.iv_image);
                 rl_select = v.findViewById(R.id.rl_select);
-                wsp = v.findViewById(R.id.whatsapp);
+                whatsAppShare = v.findViewById(R.id.whatsapp);
                 share = v.findViewById(R.id.share);
                 download = v.findViewById(R.id.download);
                 play_btn = v.findViewById(R.id.play_btn);
