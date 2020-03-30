@@ -1,11 +1,9 @@
 package com.ahmer.whatsapp.activity;
 
-import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -24,7 +22,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmer.afzal.utils.IOUtils;
-import com.ahmer.afzal.utils.info.ApplicationUtils;
 import com.ahmer.afzal.utils.info.PathUtils;
 import com.ahmer.afzal.utils.toastandsnackbar.ToastUtils;
 import com.ahmer.whatsapp.ConstantsValues;
@@ -33,8 +30,6 @@ import com.ahmer.whatsapp.Thumbnails;
 import com.ahmer.whatsapp.WAImageStatusView;
 import com.ahmer.whatsapp.WAStatusItem;
 import com.ahmer.whatsapp.WAVideoStatusView;
-import com.ahmer.whatsapp.permission.DownloadPermissionHandler;
-import com.ahmer.whatsapp.permission.PermissionRequestCodes;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -149,40 +144,12 @@ public class MainActivity extends AppCompatActivity {
         });
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
-        checkPermission();
-    }
-
-    private void checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            new DownloadPermissionHandler(this) {
-                @Override
-                public void onPermissionGranted() {
-                    try {
-                        getVideo();
-                    } catch (IOException e) {
-                        Log.v(TAG, Objects.requireNonNull(e.getMessage()));
-                        e.printStackTrace();
-                    }
-                }
-            }.checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionRequestCodes.DOWNLOADS);
-        } else {
-            try {
-                getVideo();
-            } catch (IOException e) {
-                Log.v(TAG, Objects.requireNonNull(e.getMessage()));
-                e.printStackTrace();
-            }
+        try {
+            getVideo();
+        } catch (IOException e) {
+            Log.v(TAG, Objects.requireNonNull(e.getMessage()));
+            e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        onRequestPermissionsResultCallback.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    public void setOnRequestPermissionsResultListener(ActivityCompat.OnRequestPermissionsResultCallback onRequestPermissionsResultCallback) {
-        this.onRequestPermissionsResultCallback = onRequestPermissionsResultCallback;
     }
 
     public void getVideo() throws IOException {
