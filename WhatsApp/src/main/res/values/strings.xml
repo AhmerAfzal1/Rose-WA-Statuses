@@ -20,4 +20,5 @@
     <string name="adLeftApplication">onAdLeftApplication: Ad left the App</string>
     <string name="adLoaded">onAdLoaded: Ad loading…</string>
     <string name="adOpened">onAdOpened: Ad opening… user tap or click the ad</string>
+    <string name="splash_title">Rose WhatsApp \nStatuses Downloader</string>
 </resources>
