@@ -2,7 +2,6 @@ package com.ahmer.whatsapp;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.os.CancellationSignal;
@@ -30,8 +29,6 @@ public final class Thumbnails {
             } else {
                 photo = BitmapFactory.decodeFile(path);
                 Log.v(TAG, "BitmapFactory.decodeFile works");
-                photo = getResizedBitmap(photo, IMAGE_HEIGHT, IMAGE_WIDTH);
-                Log.v(TAG, "getResizedBitmap works");
             }
         } catch (OperationCanceledException c) {
             c.printStackTrace();
@@ -55,8 +52,6 @@ public final class Thumbnails {
             } else {
                 photo = BitmapFactory.decodeFile(path);
                 Log.v(TAG, "BitmapFactory.decodeFile works");
-                photo = getResizedBitmap(photo, IMAGE_HEIGHT, IMAGE_WIDTH);
-                Log.v(TAG, "getResizedBitmap works");
             }
         } catch (OperationCanceledException c) {
             c.printStackTrace();
@@ -66,22 +61,5 @@ public final class Thumbnails {
         //If we want to delete the userPhoto that is not the thumbnail. uncomment below code
         /*File file =  new File(path);
         file.delete();*/
-    }
-
-    public static Bitmap getResizedBitmap(Bitmap bitmap, int newHeight, int newWidth) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-
-        Matrix matrix = new Matrix();
-        // RESIZE THE BIT MAP
-        matrix.postScale(scaleWidth, scaleHeight);
-
-        //Rotate is needed here because somehow the bitmap factory is getting my image rotated
-        matrix.postRotate(-90);
-
-        // RECREATE THE NEW BITMAP
-        return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
     }
 }

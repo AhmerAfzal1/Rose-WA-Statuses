@@ -1,5 +1,7 @@
 package com.ahmer.whatsapp;
 
+import com.ahmer.afzal.utils.info.ApplicationUtils;
+
 public class Application extends android.app.Application {
 
     private static Application instance;
@@ -12,5 +14,6 @@ public class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        ApplicationUtils.uninstallApp(ApplicationUtils.getAppPackageName());
     }
 }

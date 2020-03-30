@@ -7,8 +7,8 @@
     <string name="native_ad_unit_id">ca-app-pub-0672688958454166/6534919656</string>
 
     <string name="logo">Empty content description</string>
-    <string name="no_having_status">WhatsApp status will be downloaded in next update</string>
-
+    <string name="no_status">Something went wrong and will be fine in the next update</string>
+    <string name="no_having_status">There is currently no WhatsApp status for download</string>
 
     <!-- Ads log strings -->
     <string name="adClosed">onAdClosed: Ad closed</string>

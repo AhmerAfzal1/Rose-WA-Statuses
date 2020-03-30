@@ -14,14 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmer.afzal.utils.IOUtils;
+import com.ahmer.afzal.utils.info.ApplicationUtils;
 import com.ahmer.afzal.utils.info.PathUtils;
 import com.ahmer.afzal.utils.toastandsnackbar.ToastUtils;
 import com.ahmer.whatsapp.ConstantsValues;
@@ -67,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<WAStatusItem> videoList = new ArrayList<>();
     private AdView adView;
     private FirebaseAnalytics firebaseAnalytics;
+    private ContentLoadingProgressBar progressBar;
+    private TextView noStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
         });
         MaterialTextView title = findViewById(R.id.tvTitle);
         title.setText(R.string.app_name);
+        noStatus = findViewById(R.id.tvNoStatus);
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         rvVideo = findViewById(R.id.rvWhatsappStatusList);
         rvVideo.setLayoutManager(new GridLayoutManager(this, 1));
         adView = findViewById(R.id.adView);
@@ -178,16 +186,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getVideo() throws IOException {
-/*
-
+        /*
         File moviesFolder = new File(PathUtils.getExternalMoviesPath());
         Log.v(TAG, moviesFolder.getAbsolutePath());
         File[] movies;
         movies = moviesFolder.listFiles();
         if (moviesFolder.exists()) {
-            findViewById(R.id.tvNoStatus).setVisibility(View.GONE);
+            noStatus.setText(R.string.no_having_status);
+            noStatus.setVisibility(View.VISIBLE);
         } else {
-            findViewById(R.id.tvNoStatus).setVisibility(View.VISIBLE);
+            noStatus.setText(R.string.no_status);
+            noStatus.setVisibility(View.VISIBLE);
         }
         if (movies != null) {
             for (File wa : movies) {
@@ -201,8 +210,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-*/
-
+        */
         File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
         File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
         File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
@@ -211,9 +219,12 @@ public class MainActivity extends AppCompatActivity {
         filesFMWA = dirFMWhatsApp.listFiles();
         fileYoWA = dirYoWhatsApp.listFiles();
         if (dirWhatsApp.exists() || dirFMWhatsApp.exists() || dirYoWhatsApp.exists()) {
-            findViewById(R.id.tvNoStatus).setVisibility(View.GONE);
+            noStatus.setText(R.string.no_having_status);
+            noStatus.setVisibility(View.VISIBLE);
         } else {
-            findViewById(R.id.tvNoStatus).setVisibility(View.VISIBLE);
+            noStatus.setText(R.string.no_status);
+            noStatus.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
         }
         if (filesWA != null) {
             for (File wa : filesWA) {
@@ -224,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (wa.getName().endsWith(GIF)) {
                     getGIF(wa);
                 }
+                progressBar.setVisibility(View.INVISIBLE);
             }
             if (filesFMWA != null) {
                 for (File fmwa : filesFMWA) {
@@ -235,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
                         getGIF(fmwa);
                     }
                 }
+                progressBar.setVisibility(View.INVISIBLE);
             }
             if (fileYoWA != null) {
                 for (File yowa : fileYoWA) {
@@ -247,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
+            progressBar.setVisibility(View.INVISIBLE);
         }
         StatusVideoAdapter statusVideoAdapter = new StatusVideoAdapter();
         rvVideo.setAdapter(statusVideoAdapter);
@@ -400,6 +414,7 @@ public class MainActivity extends AppCompatActivity {
                     firebaseAnalytics.logEvent("Download_MP4_Open", bundleDownloadMP4);
                     IOUtils.move(source, destMP4);
                     ToastUtils.showLong(toastText + destPathMP4);
+                    MainActivity.this.recreate();
                 } else {
                     Log.d(TAG, "onClick: no data saved");
                 }
@@ -410,6 +425,7 @@ public class MainActivity extends AppCompatActivity {
                     firebaseAnalytics.logEvent("Download_JPG_Open", bundleDownloadJPG);
                     IOUtils.move(source, destJPG);
                     ToastUtils.showLong(toastText + destPathJPG);
+                    MainActivity.this.recreate();
                 } else {
                     Log.d(TAG, "onClick: no data saved");
                 }
@@ -420,6 +436,7 @@ public class MainActivity extends AppCompatActivity {
                     firebaseAnalytics.logEvent("Download_GIF_Open", bundleDownloadGIF);
                     IOUtils.move(source, destGIF);
                     ToastUtils.showLong(toastText + destPathGIF);
+                    MainActivity.this.recreate();
                 } else {
                     Log.d(TAG, "onClick: no data saved");
                 }

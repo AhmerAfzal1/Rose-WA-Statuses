@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="@string/no_having_status"
+            android:text="@string/no_status"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="12sp"
             android:visibility="gone" />
@@ -76,23 +76,28 @@
             android:layout_below="@id/tvNoStatus"
             android:layout_centerInParent="true"
             android:scrollbars="vertical" />
-        <!--
-                <androidx.core.widget.ContentLoadingProgressBar
-                    android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|center|center_vertical"
-                    android:visibility="visible" />-->
+
+
     </RelativeLayout>
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:visibility="visible" />
+
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
-        android:background="@android:color/white"
         ads:adSize="LARGE_BANNER"
         ads:adUnitId="@string/banner_ad_unit_id" />
 </RelativeLayout>
