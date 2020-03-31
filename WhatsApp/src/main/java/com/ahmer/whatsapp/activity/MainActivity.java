@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +23,7 @@ import com.ahmer.afzal.utils.IOUtils;
 import com.ahmer.afzal.utils.info.PathUtils;
 import com.ahmer.afzal.utils.toastandsnackbar.ToastUtils;
 import com.ahmer.whatsapp.ConstantsValues;
+import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.Thumbnails;
 import com.ahmer.whatsapp.WAImageStatusView;
@@ -60,9 +59,8 @@ import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityCompat.OnRequestPermissionsResultCallback onRequestPermissionsResultCallback;
     private RecyclerView rvVideo;
-    private ArrayList<WAStatusItem> videoList = new ArrayList<>();
+    private ArrayList<WAStatusItem> contentList = new ArrayList<>();
     private AdView adView;
     private FirebaseAnalytics firebaseAnalytics;
     private ContentLoadingProgressBar progressBar;
@@ -240,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
         Bitmap thumb = Thumbnails.videoThumbnails(file.getAbsolutePath());
         obj.setThumbnails(thumb);
         obj.setFormat(MP4);
-        videoList.add(obj);
+        contentList.add(obj);
     }
 
     private void getJPG(File file) throws IOException {
@@ -250,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
         Bitmap pic = Thumbnails.imageThumbnails(file.getAbsolutePath());
         obj_model.setThumbnails(pic);
         obj_model.setFormat(JPG);
-        videoList.add(obj_model);
+        contentList.add(obj_model);
     }
 
     private void getGIF(File file) throws IOException {
@@ -260,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
         Bitmap thumb = Thumbnails.videoThumbnails(file.getAbsolutePath());
         obj.setThumbnails(thumb);
         obj.setFormat(GIF);
-        videoList.add(obj);
+        contentList.add(obj);
     }
 
     @Override
@@ -292,38 +290,38 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final StatusVideoAdapter.ViewHolder holder, final int position) {
-            holder.iv_image.setImageBitmap(videoList.get(position).getThumbnails());
-            holder.rl_select.setBackgroundColor(Color.parseColor("#FFFFFF"));
-            holder.rl_select.setAlpha(0);
-            holder.rl_select.setOnClickListener(view -> {
-                if (videoList.get(position).getFormat().endsWith(MP4)) {
+            holder.iv_image.setImageBitmap(contentList.get(position).getThumbnails());
+            holder.layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            holder.layout.setAlpha(0);
+            holder.layout.setOnClickListener(view -> {
+                if (contentList.get(position).getFormat().endsWith(MP4)) {
                     Bundle bundleMP4 = new Bundle();
                     bundleMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "MP4");
                     bundleMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "MP4 Video Viewed");
                     firebaseAnalytics.logEvent("MP4_Open", bundleMP4);
                     Intent intent_gallery = new Intent(MainActivity.this, WAVideoStatusView.class);
-                    intent_gallery.putExtra("format", videoList.get(position).getFormat());
-                    intent_gallery.putExtra("path", videoList.get(position).getPath());
+                    intent_gallery.putExtra("format", contentList.get(position).getFormat());
+                    intent_gallery.putExtra("path", contentList.get(position).getPath());
                     MainActivity.this.startActivity(intent_gallery);
                 }
-                if (videoList.get(position).getFormat().endsWith(JPG)) {
+                if (contentList.get(position).getFormat().endsWith(JPG)) {
                     Bundle bundleJPG = new Bundle();
                     bundleJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "JPG");
                     bundleJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "JPG Image Viewed");
                     firebaseAnalytics.logEvent("JPG_Open", bundleJPG);
                     Intent intent_gallery = new Intent(MainActivity.this, WAImageStatusView.class);
-                    intent_gallery.putExtra("format", videoList.get(position).getFormat());
-                    intent_gallery.putExtra("path", videoList.get(position).getPath());
+                    intent_gallery.putExtra("format", contentList.get(position).getFormat());
+                    intent_gallery.putExtra("path", contentList.get(position).getPath());
                     MainActivity.this.startActivity(intent_gallery);
                 }
-                if (videoList.get(position).getFormat().endsWith(GIF)) {
+                if (contentList.get(position).getFormat().endsWith(GIF)) {
                     Bundle bundleGIF = new Bundle();
                     bundleGIF.putString(FirebaseAnalytics.Param.ITEM_ID, "GIF");
                     bundleGIF.putString(FirebaseAnalytics.Param.ITEM_NAME, "GIF Image Viewed");
                     firebaseAnalytics.logEvent("GIF_Open", bundleGIF);
                     Intent intent_gallery = new Intent(MainActivity.this, WAVideoStatusView.class);
-                    intent_gallery.putExtra("format", videoList.get(position).getFormat());
-                    intent_gallery.putExtra("path", videoList.get(position).getPath());
+                    intent_gallery.putExtra("format", contentList.get(position).getFormat());
+                    intent_gallery.putExtra("path", contentList.get(position).getPath());
                     MainActivity.this.startActivity(intent_gallery);
                 }
             });
@@ -335,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
                 firebaseAnalytics.logEvent("Share_Open", bundleShare);
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(videoList.get(position).getPath()));
+                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(contentList.get(position).getPath()));
                 sendIntent.setType("file/*");
                 MainActivity.this.startActivity(Intent.createChooser(sendIntent, "Send Status via:"));
             });
@@ -348,40 +346,39 @@ public class MainActivity extends AppCompatActivity {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.setPackage("com.whatsapp");
-                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(videoList.get(position).getPath()));
+                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(contentList.get(position).getPath()));
                 sendIntent.setType("file/*");
                 MainActivity.this.startActivity(Intent.createChooser(sendIntent, "Send Status via:"));
             });
 
             holder.download.setOnClickListener(v -> {
 
-                String sourcePath = videoList.get(position).getPath();
+                String sourcePath = contentList.get(position).getPath();
                 File source = new File(sourcePath);
-                File directory = Environment.getExternalStoragePublicDirectory(Objects.requireNonNull(MainActivity.this).getString(R.string.app_name));
-                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri contentUri = Uri.fromFile(directory);
-                mediaScanIntent.setData(contentUri);
-                MainActivity.this.sendBroadcast(mediaScanIntent);
-                if (!directory.exists()) {
-                    directory.mkdirs();
+                File statusDirectory = new File(PathUtils.getExternalStoragePath(), MainActivity.this.getString(R.string.app_name));
+                if (!statusDirectory.exists()) {
+                    if (statusDirectory.mkdirs()) {
+                        Log.d(TAG, "The directory has been created: " + statusDirectory);
+                    } else {
+                        Log.d(TAG, "Could not create the directory for some unknown reason");
+                    }
+                } else {
+                    Log.d(TAG, "This directory has already been created");
                 }
-                String fileName = "_" + getRandomNumberString();
-                String folder = "Rose WA Statuses";
-                String toastText = "Status Saved Successfully at location: ";
-                String destPathMP4 = Environment.getExternalStoragePublicDirectory(folder) + "/WhatsAppStatus" + fileName + MP4;
-                String destPathJPG = Environment.getExternalStoragePublicDirectory(folder) + "/WhatsAppStatus" + fileName + JPG;
-                String destPathGIF = Environment.getExternalStoragePublicDirectory(folder) + "/WhatsAppStatus" + fileName + GIF;
-                File destMP4 = new File(destPathMP4);
-                File destJPG = new File(destPathJPG);
-                File destGIF = new File(destPathGIF);
+                String directoryAndFileName = "/Rose WA Statuses/WhatsAppStatus_" + getRandomNumberString();
+                String toastText = "Status have been successfully saved to: ";
+                File destPathMP4 = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + MP4);
+                File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + JPG);
+                File destPathGIF = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + GIF);
                 if (sourcePath.endsWith(MP4)) {
                     Bundle bundleDownloadMP4 = new Bundle();
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadMP4");
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download MP4 Status");
                     firebaseAnalytics.logEvent("Download_MP4_Open", bundleDownloadMP4);
-                    IOUtils.move(source, destMP4);
-                    ToastUtils.showLong(toastText + destPathMP4);
+                    IOUtils.move(source, destPathMP4.getAbsoluteFile());
+                    ToastUtils.showLong(toastText + destPathMP4.getAbsolutePath());
                     MainActivity.this.recreate();
+                    new MediaScanner(MainActivity.this, destPathMP4);
                 } else {
                     Log.d(TAG, "onClick: no data saved");
                 }
@@ -390,9 +387,10 @@ public class MainActivity extends AppCompatActivity {
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadJPG");
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download JPG Status");
                     firebaseAnalytics.logEvent("Download_JPG_Open", bundleDownloadJPG);
-                    IOUtils.move(source, destJPG);
-                    ToastUtils.showLong(toastText + destPathJPG);
+                    IOUtils.move(source, destPathJPG.getAbsoluteFile());
+                    ToastUtils.showLong(toastText + destPathJPG.getAbsolutePath());
                     MainActivity.this.recreate();
+                    new MediaScanner(MainActivity.this, destPathJPG);
                 } else {
                     Log.d(TAG, "onClick: no data saved");
                 }
@@ -401,9 +399,10 @@ public class MainActivity extends AppCompatActivity {
                     bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadGIF");
                     bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download GIF Status");
                     firebaseAnalytics.logEvent("Download_GIF_Open", bundleDownloadGIF);
-                    IOUtils.move(source, destGIF);
-                    ToastUtils.showLong(toastText + destPathGIF);
+                    IOUtils.move(source, destPathGIF.getAbsoluteFile());
+                    ToastUtils.showLong(toastText + destPathGIF.getAbsolutePath());
                     MainActivity.this.recreate();
+                    new MediaScanner(MainActivity.this, destPathGIF);
                 } else {
                     Log.d(TAG, "onClick: no data saved");
                 }
@@ -419,7 +418,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return videoList.size();
+            return contentList.size();
         }
 
         private String getRandomNumberString() {
@@ -434,7 +433,7 @@ public class MainActivity extends AppCompatActivity {
         private class ViewHolder extends RecyclerView.ViewHolder {
 
             ImageView iv_image;
-            RelativeLayout rl_select;
+            RelativeLayout layout;
             ImageView whatsAppShare;
             ImageView share;
             ImageView download;
@@ -443,7 +442,7 @@ public class MainActivity extends AppCompatActivity {
             private ViewHolder(View v) {
                 super(v);
                 iv_image = v.findViewById(R.id.iv_image);
-                rl_select = v.findViewById(R.id.rl_select);
+                layout = v.findViewById(R.id.rl_select);
                 whatsAppShare = v.findViewById(R.id.whatsapp);
                 share = v.findViewById(R.id.share);
                 download = v.findViewById(R.id.download);
