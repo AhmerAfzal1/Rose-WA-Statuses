@@ -51,15 +51,15 @@ public class SplashActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) +
                     ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG, getClass().getSimpleName() + "-> Permission has been granted");
+                Log.v(TAG, getClass().getSimpleName() + " -> Permission has been granted");
                 new RunProgram(this).execute();
             } else {
-                Log.v(TAG, getClass().getSimpleName() + "-> Permission has not been granted");
+                Log.v(TAG, getClass().getSimpleName() + " -> Permission has not been granted");
                 if (checkPermissions()) {
-                    Log.v(TAG, getClass().getSimpleName() + "-> Again checked and now permission has been granted");
+                    Log.v(TAG, getClass().getSimpleName() + " -> Again checked and now permission has been granted");
                     new RunProgram(this).execute();
                 } else {
-                    Log.v(TAG, getClass().getSimpleName() + "-> Again checked and but permission has not been granted");
+                    Log.v(TAG, getClass().getSimpleName() + " -> Again checked and but permission has not been granted");
                 }
             }
         }
@@ -120,7 +120,7 @@ public class SplashActivity extends AppCompatActivity {
                 activity.getVideo();
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.v(TAG, getClass().getSimpleName() + "-> Error during loading data: " + e.getMessage());
+                Log.v(TAG, getClass().getSimpleName() + " -> Error during loading data: " + e.getMessage());
                 FirebaseCrashlytics.getInstance().recordException(e);
             }
             return null;

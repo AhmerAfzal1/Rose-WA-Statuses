@@ -1,9 +1,11 @@
 package com.ahmer.whatsapp.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,12 +41,16 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import static com.ahmer.whatsapp.ConstantsValues.EXT_GIF_LOWER_CASE;
+import static com.ahmer.whatsapp.ConstantsValues.EXT_GIF_UPPER_CASE;
+import static com.ahmer.whatsapp.ConstantsValues.EXT_JPG_LOWER_CASE;
+import static com.ahmer.whatsapp.ConstantsValues.EXT_JPG_UPPER_CASE;
+import static com.ahmer.whatsapp.ConstantsValues.EXT_MP4_LOWER_CASE;
+import static com.ahmer.whatsapp.ConstantsValues.EXT_MP4_UPPER_CASE;
 import static com.ahmer.whatsapp.ConstantsValues.FM_WHATSAPP_STATUSES_LOCATION;
-import static com.ahmer.whatsapp.ConstantsValues.GIF;
-import static com.ahmer.whatsapp.ConstantsValues.JPG;
-import static com.ahmer.whatsapp.ConstantsValues.MP4;
 import static com.ahmer.whatsapp.ConstantsValues.TAG;
 import static com.ahmer.whatsapp.ConstantsValues.WHATSAPP_STATUSES_LOCATION;
 import static com.ahmer.whatsapp.ConstantsValues.YO_WHATSAPP_STATUSES_LOCATION;
@@ -61,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAnalytics firebaseAnalytics;
     private RecyclerView recyclerView;
     private TextView noStatus;
+    private StatusVideoAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +80,9 @@ public class MainActivity extends AppCompatActivity {
         });
         MaterialTextView title = findViewById(R.id.tvTitle);
         title.setText(R.string.app_name);
+        adapter = new StatusVideoAdapter();
         noStatus = findViewById(R.id.tvNoStatus);
         progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
         recyclerView = findViewById(R.id.rvWhatsappStatusList);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         adView = findViewById(R.id.adView);
@@ -142,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
             getVideo();
         } catch (Exception e) {
             e.printStackTrace();
-            Log.v(TAG, getClass().getSimpleName() + "-> Error during loading data: " + e.getMessage());
+            Log.v(TAG, getClass().getSimpleName() + " -> Error during loading data: " + e.getMessage());
             FirebaseCrashlytics.getInstance().recordException(e);
         }
     }
@@ -150,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     public void getVideo() {
         /*
         File moviesFolder = new File(PathUtils.getExternalMoviesPath());
-        Log.v(TAG, getClass().getSimpleName()+ moviesFolder.getAbsolutePath());
+        Log.v(TAG, getClass().getSimpleName() + moviesFolder.getAbsolutePath());
         File[] movies;
         movies = moviesFolder.listFiles();
         if (moviesFolder.exists()) {
@@ -162,12 +169,12 @@ public class MainActivity extends AppCompatActivity {
         }
         if (movies != null) {
             for (File wa : movies) {
-                Log.v(TAG, getClass().getSimpleName()+ "File Name: " + wa.getName());
-                if (wa.getName().endsWith(MP4)) {
+                Log.v(TAG, getClass().getSimpleName() + "File Name: " + wa.getName());
+                if (wa.getName().endsWith(EXT_MP4_LOWER_CASE) || wa.getName().endsWith(EXT_MP4_UPPER_CASE)) {
                     getMP4(wa);
-                } else if (wa.getName().endsWith(JPG)) {
+                } else if (wa.getName().endsWith(EXT_JPG_LOWER_CASE) || wa.getName().endsWith(EXT_JPG_UPPER_CASE)) {
                     getJPG(wa);
-                } else if (wa.getName().endsWith(GIF)) {
+                } else if (wa.getName().endsWith(EXT_GIF_LOWER_CASE) || wa.getName().endsWith(EXT_GIF_UPPER_CASE)) {
                     getGIF(wa);
                 }
             }
@@ -176,56 +183,68 @@ public class MainActivity extends AppCompatActivity {
         File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
         File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
         File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
+
+         /*
+        File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + "/WhatsApp");
+        File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + "/FMWhatsApp");
+        File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + "/YoWhatsApp");
+        */
         File[] filesWA, filesFMWA, fileYoWA;
         filesWA = dirWhatsApp.listFiles();
         filesFMWA = dirFMWhatsApp.listFiles();
         fileYoWA = dirYoWhatsApp.listFiles();
-        if (dirWhatsApp.exists() || dirFMWhatsApp.exists() || dirYoWhatsApp.exists()) {
-            noStatus.setText(R.string.no_having_status);
-            noStatus.setVisibility(View.VISIBLE);
-        } else {
+        if (!dirWhatsApp.exists() && !dirFMWhatsApp.exists() && !dirYoWhatsApp.exists()) {
+            Log.v(TAG, getClass().getSimpleName() + " -> No kind of WhatsApp installed");
             noStatus.setText(R.string.no_status);
             noStatus.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
         }
         if (filesWA != null) {
             for (File wa : filesWA) {
-                if (wa.getName().endsWith(MP4)) {
+                if (wa.getName().endsWith(EXT_MP4_LOWER_CASE) || wa.getName().endsWith(EXT_MP4_UPPER_CASE)) {
                     getMP4(wa);
-                } else if (wa.getName().endsWith(JPG)) {
+                } else if (wa.getName().endsWith(EXT_JPG_LOWER_CASE) || wa.getName().endsWith(EXT_JPG_UPPER_CASE)) {
                     getJPG(wa);
-                } else if (wa.getName().endsWith(GIF)) {
+                } else if (wa.getName().endsWith(EXT_GIF_LOWER_CASE) || wa.getName().endsWith(EXT_GIF_UPPER_CASE)) {
                     getGIF(wa);
-                }
-                progressBar.setVisibility(View.INVISIBLE);
-            }
-            if (filesFMWA != null) {
-                for (File fmwa : filesFMWA) {
-                    if (fmwa.getName().endsWith(MP4)) {
-                        getMP4(fmwa);
-                    } else if (fmwa.getName().endsWith(JPG)) {
-                        getJPG(fmwa);
-                    } else if (fmwa.getName().endsWith(GIF)) {
-                        getGIF(fmwa);
-                    }
-                }
-                progressBar.setVisibility(View.INVISIBLE);
-            }
-            if (fileYoWA != null) {
-                for (File yowa : fileYoWA) {
-                    if (yowa.getName().endsWith(MP4)) {
-                        getMP4(yowa);
-                    } else if (yowa.getName().endsWith(JPG)) {
-                        getJPG(yowa);
-                    } else if (yowa.getName().endsWith(GIF)) {
-                        getGIF(yowa);
-                    }
+                } else {
+                    noStatus.setText(R.string.no_having_status);
+                    noStatus.setVisibility(View.VISIBLE);
+                    Log.v(TAG, "WA : " + noStatus);
                 }
             }
-            progressBar.setVisibility(View.INVISIBLE);
         }
-        StatusVideoAdapter statusVideoAdapter = new StatusVideoAdapter();
-        recyclerView.setAdapter(statusVideoAdapter);
+        if (filesFMWA != null) {
+            for (File fmWA : filesFMWA) {
+                if (fmWA.getName().endsWith(EXT_MP4_LOWER_CASE) || fmWA.getName().endsWith(EXT_MP4_UPPER_CASE)) {
+                    getMP4(fmWA);
+                } else if (fmWA.getName().endsWith(EXT_JPG_LOWER_CASE) || fmWA.getName().endsWith(EXT_JPG_UPPER_CASE)) {
+                    getJPG(fmWA);
+                } else if (fmWA.getName().endsWith(EXT_GIF_LOWER_CASE) || fmWA.getName().endsWith(EXT_GIF_UPPER_CASE)) {
+                    getGIF(fmWA);
+                } else {
+                    noStatus.setText(R.string.no_having_status);
+                    noStatus.setVisibility(View.VISIBLE);
+                    Log.v(TAG, "FM : " + noStatus);
+                }
+            }
+
+        }
+        if (fileYoWA != null) {
+            for (File yoWA : fileYoWA) {
+                if (yoWA.getName().endsWith(EXT_MP4_LOWER_CASE) || yoWA.getName().endsWith(EXT_MP4_UPPER_CASE)) {
+                    getMP4(yoWA);
+                } else if (yoWA.getName().endsWith(EXT_JPG_LOWER_CASE) || yoWA.getName().endsWith(EXT_JPG_UPPER_CASE)) {
+                    getJPG(yoWA);
+                } else if (yoWA.getName().endsWith(EXT_GIF_LOWER_CASE) || yoWA.getName().endsWith(EXT_GIF_UPPER_CASE)) {
+                    getGIF(yoWA);
+                } else {
+                    noStatus.setText(R.string.no_having_status);
+                    noStatus.setVisibility(View.VISIBLE);
+                    Log.v(TAG, "Yo : " + noStatus);
+                }
+            }
+        }
+        recyclerView.setAdapter(adapter);
     }
 
     private void getMP4(File file) {
@@ -234,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
         obj.setPath(file.getAbsolutePath());
         Bitmap thumb = Thumbnails.videoThumbnails(file.getAbsolutePath());
         obj.setThumbnails(thumb);
-        obj.setFormat(MP4);
+        obj.setFormat(EXT_MP4_LOWER_CASE);
         contentList.add(obj);
     }
 
@@ -244,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
         obj_model.setPath(file.getAbsolutePath());
         Bitmap pic = Thumbnails.imageThumbnails(file.getAbsolutePath());
         obj_model.setThumbnails(pic);
-        obj_model.setFormat(JPG);
+        obj_model.setFormat(EXT_JPG_LOWER_CASE);
         contentList.add(obj_model);
     }
 
@@ -254,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
         obj.setPath(file.getAbsolutePath());
         Bitmap thumb = Thumbnails.videoThumbnails(file.getAbsolutePath());
         obj.setThumbnails(thumb);
-        obj.setFormat(GIF);
+        obj.setFormat(EXT_GIF_LOWER_CASE);
         contentList.add(obj);
     }
 
@@ -283,15 +302,64 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public static class MoveFiles extends AsyncTask<File, Integer, Boolean> {
+
+        String toastText = "Status have been successfully saved to: ";
+        private WeakReference<Context> context;
+        private WeakReference<ContentLoadingProgressBar> progressBar;
+        private File destination;
+
+        private MoveFiles(Context context, File destination, ContentLoadingProgressBar progressBar) {
+            this.context = new WeakReference<>(context);
+            this.progressBar = new WeakReference<>(progressBar);
+            this.destination = destination;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.get().setVisibility(View.VISIBLE);
+            Log.v(TAG, "onPreExecute");
+        }
+
+        @Override
+        protected Boolean doInBackground(File... files) {
+            File source = files[0];
+            IOUtils.move(source, destination.getAbsoluteFile());
+            Log.v(TAG, "doInBackground");
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            progressBar.get().setProgress(values[0]);
+            Log.v(TAG, "onProgressUpdate");
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            progressBar.get().setVisibility(View.GONE);
+            Log.v(TAG, "progressBar: " + progressBar + " View: " + View.GONE);
+            ToastUtils.showLong(toastText + destination.getAbsolutePath());
+            new MediaScanner(context.get(), destination);
+            Log.v(TAG, "onPostExecute");
+        }
+    }
+
     public class StatusVideoAdapter extends RecyclerView.Adapter<StatusVideoAdapter.ViewHolder> {
+
+        private int itemPosition = 0;
 
         @Override
         public void onBindViewHolder(final StatusVideoAdapter.ViewHolder holder, final int position) {
+            itemPosition = position;
             holder.iv_image.setImageBitmap(contentList.get(position).getThumbnails());
             holder.layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
             holder.layout.setAlpha(0);
             holder.layout.setOnClickListener(view -> {
-                if (contentList.get(position).getFormat().endsWith(MP4)) {
+                if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) || contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
                     Bundle bundleMP4 = new Bundle();
                     bundleMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "MP4");
                     bundleMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "MP4 Video Viewed");
@@ -301,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
                     intent_gallery.putExtra("path", contentList.get(position).getPath());
                     MainActivity.this.startActivity(intent_gallery);
                 }
-                if (contentList.get(position).getFormat().endsWith(JPG)) {
+                if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) || contentList.get(position).getFormat().endsWith(EXT_JPG_UPPER_CASE)) {
                     Bundle bundleJPG = new Bundle();
                     bundleJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "JPG");
                     bundleJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "JPG Image Viewed");
@@ -311,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
                     intent_gallery.putExtra("path", contentList.get(position).getPath());
                     MainActivity.this.startActivity(intent_gallery);
                 }
-                if (contentList.get(position).getFormat().endsWith(GIF)) {
+                if (contentList.get(position).getFormat().endsWith(EXT_GIF_LOWER_CASE) || contentList.get(position).getFormat().endsWith(EXT_GIF_UPPER_CASE)) {
                     Bundle bundleGIF = new Bundle();
                     bundleGIF.putString(FirebaseAnalytics.Param.ITEM_ID, "GIF");
                     bundleGIF.putString(FirebaseAnalytics.Param.ITEM_NAME, "GIF Image Viewed");
@@ -350,56 +418,52 @@ public class MainActivity extends AppCompatActivity {
 
             holder.download.setOnClickListener(v -> {
                 File source = new File(contentList.get(position).getPath());
-                String toastText = "Status have been successfully saved to: ";
-                String directoryAndFileName = "/Rose WA Statuses/WAStatus_" + getFileName(source);
+                String directoryAndFileName = "/Rose WA Statuses/WAStatus_" + IOUtils.getFileNameNoExtension(source.getAbsolutePath());
                 File statusDirectory = new File(PathUtils.getExternalStoragePath(), MainActivity.this.getString(R.string.app_name));
                 if (!statusDirectory.exists()) {
                     if (statusDirectory.mkdirs()) {
-                        Log.v(TAG, getClass().getSimpleName() + "-> The directory has been created: " + statusDirectory);
+                        Log.v(TAG, getClass().getSimpleName() + " -> The directory has been created: " + statusDirectory);
                     } else {
-                        Log.v(TAG, getClass().getSimpleName() + "-> Could not create the directory for some unknown reason");
+                        Log.v(TAG, getClass().getSimpleName() + " -> Could not create the directory for some unknown reason");
                     }
                 } else {
-                    Log.v(TAG, getClass().getSimpleName() + "-> This directory has already been created");
+                    Log.v(TAG, getClass().getSimpleName() + " -> This directory has already been created");
                 }
-                if (source.getAbsolutePath().endsWith(MP4)) {
-                    File destPathMP4 = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + MP4);
+                if (source.getAbsolutePath().endsWith(EXT_MP4_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_MP4_UPPER_CASE)) {
+                    File destPathMP4 = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + ".mp4");
                     Bundle bundleDownloadMP4 = new Bundle();
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadMP4");
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download MP4 Status");
                     firebaseAnalytics.logEvent("Download_MP4_Open", bundleDownloadMP4);
-                    IOUtils.move(source, destPathMP4.getAbsoluteFile());
-                    ToastUtils.showLong(toastText + destPathMP4.getAbsolutePath());
-                    MainActivity.this.recreate();
-                    new MediaScanner(MainActivity.this, destPathMP4);
+                    new MoveFiles(MainActivity.this, destPathMP4, progressBar).execute(source);
+                    adapter.notifyDataSetChanged();
+                    adapter.notifyItemChanged(position);
                 } else {
-                    Log.v(TAG, getClass().getSimpleName() + "-> onClick: no data saved");
+                    Log.v(TAG, getClass().getSimpleName() + " -> onClick: no data saved");
                 }
-                if (source.getAbsolutePath().endsWith(JPG)) {
-                    File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + JPG);
+                if (source.getAbsolutePath().endsWith(EXT_JPG_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_JPG_UPPER_CASE)) {
+                    File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + ".jpg");
                     Bundle bundleDownloadJPG = new Bundle();
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadJPG");
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download JPG Status");
                     firebaseAnalytics.logEvent("Download_JPG_Open", bundleDownloadJPG);
-                    IOUtils.move(source, destPathJPG.getAbsoluteFile());
-                    ToastUtils.showLong(toastText + destPathJPG.getAbsolutePath());
-                    MainActivity.this.recreate();
-                    new MediaScanner(MainActivity.this, destPathJPG);
+                    new MoveFiles(MainActivity.this, destPathJPG, progressBar).execute(source);
+                    adapter.notifyDataSetChanged();
+                    adapter.notifyItemChanged(position);
                 } else {
-                    Log.v(TAG, getClass().getSimpleName() + "-> onClick: no data saved");
+                    Log.v(TAG, getClass().getSimpleName() + " -> onClick: no data saved");
                 }
-                if (source.getAbsolutePath().endsWith(GIF)) {
-                    File destPathGIF = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + GIF);
+                if (source.getAbsolutePath().endsWith(EXT_GIF_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_GIF_UPPER_CASE)) {
+                    File destPathGIF = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + ".gif");
                     Bundle bundleDownloadGIF = new Bundle();
                     bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadGIF");
                     bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download GIF Status");
                     firebaseAnalytics.logEvent("Download_GIF_Open", bundleDownloadGIF);
-                    IOUtils.move(source, destPathGIF.getAbsoluteFile());
-                    ToastUtils.showLong(toastText + destPathGIF.getAbsolutePath());
-                    MainActivity.this.recreate();
-                    new MediaScanner(MainActivity.this, destPathGIF);
+                    new MoveFiles(MainActivity.this, destPathGIF, progressBar).execute(source);
+                    adapter.notifyDataSetChanged();
+                    adapter.notifyItemChanged(position);
                 } else {
-                    Log.v(TAG, getClass().getSimpleName() + "-> onClick: no data saved");
+                    Log.v(TAG, getClass().getSimpleName() + " -> onClick: no data saved");
                 }
             });
         }
@@ -416,10 +480,10 @@ public class MainActivity extends AppCompatActivity {
             return contentList.size();
         }
 
-        private String getFileName(File file) {
-            String fileName = IOUtils.getFileNameNoExtension(file);
-            return fileName.substring(fileName.length() - 6);
+        public int getItemPosition() {
+            return itemPosition;
         }
+
 
         private class ViewHolder extends RecyclerView.ViewHolder {
 

@@ -13,7 +13,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.Objects;
 
-import static com.ahmer.whatsapp.ConstantsValues.MP4;
+import static com.ahmer.whatsapp.ConstantsValues.EXT_MP4_LOWER_CASE;
 
 public class WAVideoStatusView extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
@@ -30,7 +30,7 @@ public class WAVideoStatusView extends AppCompatActivity implements MediaPlayer.
         String format = getIntent().getStringExtra("format");
         String path = getIntent().getStringExtra("path");
         Log.v(ConstantsValues.TAG, "Path is: " + path);
-        if (Objects.requireNonNull(format).equals(MP4)) {
+        if (Objects.requireNonNull(format).equals(EXT_MP4_LOWER_CASE)) {
             videoView.setVideoPath(path);
             MediaController mediaController = new MediaController(this);
             mediaController.setAnchorView(videoView);
