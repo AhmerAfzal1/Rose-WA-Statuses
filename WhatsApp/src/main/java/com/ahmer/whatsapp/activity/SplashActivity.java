@@ -1,8 +1,10 @@
 package com.ahmer.whatsapp.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,7 +31,6 @@ public class SplashActivity extends AppCompatActivity {
     private final String[] permissions = new String[]{
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE
     };
-    private boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,20 +42,16 @@ public class SplashActivity extends AppCompatActivity {
         goHome();
     }
 
-    private synchronized void goHome() {
-        if (!flag) {
-            flag = true;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) +
-                        ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    Log.v(TAG, "Permission has granted");
-                    startActivity(new Intent(this, MainActivity.class));
-                    finish();
-                } else {
-                    Log.v(TAG, "Permission has not been granted");
-                    if (checkPermissions()) {
-                        handleAfterPermissions();
-                    }
+    private void goHome() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) +
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG, "Permission has been granted");
+                new RunProgress().execute();
+            } else {
+                Log.v(TAG, "Permission has not been granted");
+                if (checkPermissions()) {
+                    new RunProgress().execute();
                 }
             }
         }
@@ -80,7 +77,7 @@ public class SplashActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissionsList, @NonNull int[] grantResults) {
         if (requestCode == MULTIPLE_PERMISSIONS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                handleAfterPermissions();
+                new RunProgress().execute();
             } else {
                 StringBuilder permissionsDenied = new StringBuilder();
                 for (String per : permissionsList) {
@@ -88,21 +85,47 @@ public class SplashActivity extends AppCompatActivity {
                         permissionsDenied.append("\n").append(per);
                     }
                 }
-                ToastUtils.showLong("Please grant the permission to run app");
+                ToastUtils.showLong("Please allow the permission for app works properly");
             }
             return;
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    private void handleAfterPermissions() {
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        flag = true;
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public class RunProgress extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                MainActivity activity = new MainActivity();
+                activity.getVideo();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            finish();
+        }
     }
 }

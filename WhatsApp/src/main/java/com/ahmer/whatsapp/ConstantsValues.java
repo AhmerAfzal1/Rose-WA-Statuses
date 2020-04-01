@@ -10,4 +10,9 @@ public class ConstantsValues {
     public static final String YO_WHATSAPP_STATUSES_LOCATION = "/YoWhatsApp/Media/.Statuses";
     public static final int IMAGE_WIDTH = 256;
     public static final int IMAGE_HEIGHT = 256;
+    /*
+    public static final String PKG_FM_WhatsApp = "com.fmwhatsapp";
+    public static final String PKG_GB_WhatsApp = "com.gbwhatsapp";
+    public static final String PKG_Yo_WhatsApp = "com.yowhatsapp";
+    */
 }

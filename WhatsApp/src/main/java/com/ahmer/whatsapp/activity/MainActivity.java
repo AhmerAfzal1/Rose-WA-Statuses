@@ -1,9 +1,11 @@
 package com.ahmer.whatsapp.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,7 +44,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Random;
 
 import static com.ahmer.whatsapp.ConstantsValues.FM_WHATSAPP_STATUSES_LOCATION;
@@ -144,14 +145,14 @@ public class MainActivity extends AppCompatActivity {
         adView.loadAd(adRequest);
         try {
             getVideo();
-        } catch (IOException e) {
-            Log.v(TAG, Objects.requireNonNull(e.getMessage()));
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        //new RunProgress().execute();
     }
 
     public void getVideo() throws IOException {
-        /*
+
         File moviesFolder = new File(PathUtils.getExternalMoviesPath());
         Log.v(TAG, moviesFolder.getAbsolutePath());
         File[] movies;
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        */
+
         File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
         File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
         File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
