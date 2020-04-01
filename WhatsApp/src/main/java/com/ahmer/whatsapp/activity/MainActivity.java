@@ -1,11 +1,9 @@
 package com.ahmer.whatsapp.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,10 +39,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Random;
 
 import static com.ahmer.whatsapp.ConstantsValues.FM_WHATSAPP_STATUSES_LOCATION;
 import static com.ahmer.whatsapp.ConstantsValues.GIF;
@@ -60,11 +55,11 @@ import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView rvVideo;
-    private ArrayList<WAStatusItem> contentList = new ArrayList<>();
     private AdView adView;
-    private FirebaseAnalytics firebaseAnalytics;
+    private ArrayList<WAStatusItem> contentList = new ArrayList<>();
     private ContentLoadingProgressBar progressBar;
+    private FirebaseAnalytics firebaseAnalytics;
+    private RecyclerView recyclerView;
     private TextView noStatus;
 
     @Override
@@ -81,12 +76,12 @@ public class MainActivity extends AppCompatActivity {
         noStatus = findViewById(R.id.tvNoStatus);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
-        rvVideo = findViewById(R.id.rvWhatsappStatusList);
-        rvVideo.setLayoutManager(new GridLayoutManager(this, 1));
+        recyclerView = findViewById(R.id.rvWhatsappStatusList);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         adView = findViewById(R.id.adView);
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
-        firebaseCrashlytics.log("Start " + MainActivity.class.getSimpleName() + " Crashlytics logging...");
+        firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         MobileAds.initialize(this, getResources().getString(R.string.banner_ad_app_id));
         adView.setAdListener(new AdListener() {
@@ -147,14 +142,15 @@ public class MainActivity extends AppCompatActivity {
             getVideo();
         } catch (Exception e) {
             e.printStackTrace();
+            Log.v(TAG, getClass().getSimpleName() + "-> Error during loading data: " + e.getMessage());
+            FirebaseCrashlytics.getInstance().recordException(e);
         }
-        //new RunProgress().execute();
     }
 
-    public void getVideo() throws IOException {
-
+    public void getVideo() {
+        /*
         File moviesFolder = new File(PathUtils.getExternalMoviesPath());
-        Log.v(TAG, moviesFolder.getAbsolutePath());
+        Log.v(TAG, getClass().getSimpleName()+ moviesFolder.getAbsolutePath());
         File[] movies;
         movies = moviesFolder.listFiles();
         if (moviesFolder.exists()) {
@@ -166,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (movies != null) {
             for (File wa : movies) {
-                Log.v(TAG, "File Name: " + wa.getName());
+                Log.v(TAG, getClass().getSimpleName()+ "File Name: " + wa.getName());
                 if (wa.getName().endsWith(MP4)) {
                     getMP4(wa);
                 } else if (wa.getName().endsWith(JPG)) {
@@ -176,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
+        */
         File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
         File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
         File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
@@ -229,10 +225,10 @@ public class MainActivity extends AppCompatActivity {
             progressBar.setVisibility(View.INVISIBLE);
         }
         StatusVideoAdapter statusVideoAdapter = new StatusVideoAdapter();
-        rvVideo.setAdapter(statusVideoAdapter);
+        recyclerView.setAdapter(statusVideoAdapter);
     }
 
-    private void getMP4(File file) throws IOException {
+    private void getMP4(File file) {
         WAStatusItem obj = new WAStatusItem();
         obj.setSelect(false);
         obj.setPath(file.getAbsolutePath());
@@ -242,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
         contentList.add(obj);
     }
 
-    private void getJPG(File file) throws IOException {
+    private void getJPG(File file) {
         WAStatusItem obj_model = new WAStatusItem();
         obj_model.setSelect(false);
         obj_model.setPath(file.getAbsolutePath());
@@ -252,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
         contentList.add(obj_model);
     }
 
-    private void getGIF(File file) throws IOException {
+    private void getGIF(File file) {
         WAStatusItem obj = new WAStatusItem();
         obj.setSelect(false);
         obj.setPath(file.getAbsolutePath());
@@ -353,25 +349,21 @@ public class MainActivity extends AppCompatActivity {
             });
 
             holder.download.setOnClickListener(v -> {
-
-                String sourcePath = contentList.get(position).getPath();
-                File source = new File(sourcePath);
+                File source = new File(contentList.get(position).getPath());
+                String toastText = "Status have been successfully saved to: ";
+                String directoryAndFileName = "/Rose WA Statuses/WAStatus_" + getFileName(source);
                 File statusDirectory = new File(PathUtils.getExternalStoragePath(), MainActivity.this.getString(R.string.app_name));
                 if (!statusDirectory.exists()) {
                     if (statusDirectory.mkdirs()) {
-                        Log.d(TAG, "The directory has been created: " + statusDirectory);
+                        Log.v(TAG, getClass().getSimpleName() + "-> The directory has been created: " + statusDirectory);
                     } else {
-                        Log.d(TAG, "Could not create the directory for some unknown reason");
+                        Log.v(TAG, getClass().getSimpleName() + "-> Could not create the directory for some unknown reason");
                     }
                 } else {
-                    Log.d(TAG, "This directory has already been created");
+                    Log.v(TAG, getClass().getSimpleName() + "-> This directory has already been created");
                 }
-                String directoryAndFileName = "/Rose WA Statuses/WhatsAppStatus_" + getRandomNumberString();
-                String toastText = "Status have been successfully saved to: ";
-                File destPathMP4 = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + MP4);
-                File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + JPG);
-                File destPathGIF = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + GIF);
-                if (sourcePath.endsWith(MP4)) {
+                if (source.getAbsolutePath().endsWith(MP4)) {
+                    File destPathMP4 = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + MP4);
                     Bundle bundleDownloadMP4 = new Bundle();
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadMP4");
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download MP4 Status");
@@ -381,9 +373,10 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.this.recreate();
                     new MediaScanner(MainActivity.this, destPathMP4);
                 } else {
-                    Log.d(TAG, "onClick: no data saved");
+                    Log.v(TAG, getClass().getSimpleName() + "-> onClick: no data saved");
                 }
-                if (sourcePath.endsWith(JPG)) {
+                if (source.getAbsolutePath().endsWith(JPG)) {
+                    File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + JPG);
                     Bundle bundleDownloadJPG = new Bundle();
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadJPG");
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download JPG Status");
@@ -393,9 +386,10 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.this.recreate();
                     new MediaScanner(MainActivity.this, destPathJPG);
                 } else {
-                    Log.d(TAG, "onClick: no data saved");
+                    Log.v(TAG, getClass().getSimpleName() + "-> onClick: no data saved");
                 }
-                if (sourcePath.endsWith(GIF)) {
+                if (source.getAbsolutePath().endsWith(GIF)) {
+                    File destPathGIF = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + GIF);
                     Bundle bundleDownloadGIF = new Bundle();
                     bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadGIF");
                     bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download GIF Status");
@@ -405,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.this.recreate();
                     new MediaScanner(MainActivity.this, destPathGIF);
                 } else {
-                    Log.d(TAG, "onClick: no data saved");
+                    Log.v(TAG, getClass().getSimpleName() + "-> onClick: no data saved");
                 }
             });
         }
@@ -422,13 +416,9 @@ public class MainActivity extends AppCompatActivity {
             return contentList.size();
         }
 
-        private String getRandomNumberString() {
-            // It will generate 6 digit random Number.
-            // from 0 to 999999
-            Random rnd = new Random();
-            int number = rnd.nextInt(999999);
-            // this will convert any number sequence into 6 character.
-            return String.format(Locale.getDefault(), "%06d", number);
+        private String getFileName(File file) {
+            String fileName = IOUtils.getFileNameNoExtension(file);
+            return fileName.substring(fileName.length() - 6);
         }
 
         private class ViewHolder extends RecyclerView.ViewHolder {

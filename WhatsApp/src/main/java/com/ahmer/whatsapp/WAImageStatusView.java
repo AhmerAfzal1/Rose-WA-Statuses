@@ -8,6 +8,8 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import java.util.Objects;
 
 import static com.ahmer.whatsapp.ConstantsValues.JPG;
@@ -18,6 +20,9 @@ public class WAImageStatusView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.whatsapp_image_view);
+        FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
+        firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
         ImageView imageView = findViewById(R.id.image);
         String format = getIntent().getStringExtra("format");
         String path = getIntent().getStringExtra("path");

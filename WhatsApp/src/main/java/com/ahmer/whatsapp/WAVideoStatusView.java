@@ -9,6 +9,7 @@ import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ahmer.afzal.utils.toastandsnackbar.ToastUtils;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.Objects;
 
@@ -22,6 +23,9 @@ public class WAVideoStatusView extends AppCompatActivity implements MediaPlayer.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.whatsapp_video_view);
+        FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
+        firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
         videoView = findViewById(R.id.vv_video);
         String format = getIntent().getStringExtra("format");
         String path = getIntent().getStringExtra("path");
