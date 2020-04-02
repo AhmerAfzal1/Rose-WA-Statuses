@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.ahmer.afzal.utils.Utilities;
 import com.ahmer.afzal.utils.info.ApplicationUtils;
 import com.ahmer.afzal.utils.toastandsnackbar.ToastUtils;
 import com.ahmer.whatsapp.R;
@@ -115,14 +116,17 @@ public class SplashActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            try {
-                MainActivity activity = new MainActivity();
-                activity.getVideo();
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.v(TAG, getClass().getSimpleName() + " -> Error during loading data: " + e.getMessage());
-                FirebaseCrashlytics.getInstance().recordException(e);
-            }
+            Utilities.runOnUI(()->{
+                try {
+                    MainActivity activity = new MainActivity();
+                    activity.getVideo();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.v(TAG, getClass().getSimpleName() + " -> Error during loading data: " + e.getMessage());
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                }
+            });
+
             return null;
         }
 
@@ -134,8 +138,9 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            weakContext.get().startActivity(new Intent(weakContext.get(), MainActivity.class));
-            ((SplashActivity) weakContext.get()).finish();
+                weakContext.get().startActivity(new Intent(weakContext.get(), MainActivity.class));
+                ((SplashActivity) weakContext.get()).finish();
+
         }
     }
 }

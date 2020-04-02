@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmer.afzal.utils.IOUtils;
+import com.ahmer.afzal.utils.Utilities;
 import com.ahmer.afzal.utils.info.PathUtils;
 import com.ahmer.afzal.utils.toastandsnackbar.ToastUtils;
 import com.ahmer.whatsapp.ConstantsValues;
@@ -61,13 +62,13 @@ import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
 public class MainActivity extends AppCompatActivity {
 
+    private RecyclerView recyclerView;
+    private StatusVideoAdapter adapter;
     private AdView adView;
     private ArrayList<WAStatusItem> contentList = new ArrayList<>();
     private ContentLoadingProgressBar progressBar;
     private FirebaseAnalytics firebaseAnalytics;
-    private RecyclerView recyclerView;
     private TextView noStatus;
-    private StatusVideoAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
         });
         MaterialTextView title = findViewById(R.id.tvTitle);
         title.setText(R.string.app_name);
-        adapter = new StatusVideoAdapter();
         noStatus = findViewById(R.id.tvNoStatus);
+        adapter = new StatusVideoAdapter();
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.rvWhatsappStatusList);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
@@ -179,70 +180,80 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        */
+        File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + "/WhatsApp");
+        File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + "/FMWhatsApp");
+        File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + "/YoWhatsApp");
+       */
         File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
         File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
         File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
 
-         /*
-        File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + "/WhatsApp");
-        File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + "/FMWhatsApp");
-        File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + "/YoWhatsApp");
-        */
-        File[] filesWA, filesFMWA, fileYoWA;
-        filesWA = dirWhatsApp.listFiles();
-        filesFMWA = dirFMWhatsApp.listFiles();
-        fileYoWA = dirYoWhatsApp.listFiles();
+        File[] filesWA = dirWhatsApp.listFiles();
+        File[] filesFMWA = dirFMWhatsApp.listFiles();
+        File[] fileYoWA = dirYoWhatsApp.listFiles();
+
+        if (dirWhatsApp.exists()) {
+            Log.v(TAG, getClass().getSimpleName() + " -> WhatsApp installed");
+            if (filesWA != null) {
+                noStatus.setVisibility(View.INVISIBLE);
+                for (File wa : filesWA) {
+                    if (wa.getName().endsWith(EXT_MP4_LOWER_CASE) || wa.getName().endsWith(EXT_MP4_UPPER_CASE)) {
+                        getMP4(wa);
+                    } else if (wa.getName().endsWith(EXT_JPG_LOWER_CASE) || wa.getName().endsWith(EXT_JPG_UPPER_CASE)) {
+                        getJPG(wa);
+                    } else if (wa.getName().endsWith(EXT_GIF_LOWER_CASE) || wa.getName().endsWith(EXT_GIF_UPPER_CASE)) {
+                        getGIF(wa);
+                    }
+                }
+            } else {
+                noStatus.setText(R.string.no_having_status);
+                noStatus.setVisibility(View.VISIBLE);
+                Log.v(TAG, "WA : " + noStatus);
+            }
+        }
+
+        if (dirFMWhatsApp.exists()) {
+            Log.v(TAG, getClass().getSimpleName() + " -> FMWhatsApp installed");
+            if (filesFMWA != null) {
+                noStatus.setVisibility(View.INVISIBLE);
+                for (File fmWA : filesFMWA) {
+                    if (fmWA.getName().endsWith(EXT_MP4_LOWER_CASE) || fmWA.getName().endsWith(EXT_MP4_UPPER_CASE)) {
+                        getMP4(fmWA);
+                    } else if (fmWA.getName().endsWith(EXT_JPG_LOWER_CASE) || fmWA.getName().endsWith(EXT_JPG_UPPER_CASE)) {
+                        getJPG(fmWA);
+                    } else if (fmWA.getName().endsWith(EXT_GIF_LOWER_CASE) || fmWA.getName().endsWith(EXT_GIF_UPPER_CASE)) {
+                        getGIF(fmWA);
+                    }
+                }
+            } else {
+                noStatus.setText(R.string.no_having_status);
+                noStatus.setVisibility(View.VISIBLE);
+                Log.v(TAG, "FM : " + noStatus);
+            }
+        }
+        if (dirYoWhatsApp.exists()) {
+            Log.v(TAG, getClass().getSimpleName() + " -> YoWhatsApp installed");
+            if (fileYoWA != null) {
+                noStatus.setVisibility(View.INVISIBLE);
+                for (File yoWA : fileYoWA) {
+                    if (yoWA.getName().endsWith(EXT_MP4_LOWER_CASE) || yoWA.getName().endsWith(EXT_MP4_UPPER_CASE)) {
+                        getMP4(yoWA);
+                    } else if (yoWA.getName().endsWith(EXT_JPG_LOWER_CASE) || yoWA.getName().endsWith(EXT_JPG_UPPER_CASE)) {
+                        getJPG(yoWA);
+                    } else if (yoWA.getName().endsWith(EXT_GIF_LOWER_CASE) || yoWA.getName().endsWith(EXT_GIF_UPPER_CASE)) {
+                        getGIF(yoWA);
+                    }
+                }
+            } else {
+                noStatus.setText(R.string.no_having_status);
+                noStatus.setVisibility(View.VISIBLE);
+                Log.v(TAG, "Yo : " + noStatus);
+            }
+        }
         if (!dirWhatsApp.exists() && !dirFMWhatsApp.exists() && !dirYoWhatsApp.exists()) {
             Log.v(TAG, getClass().getSimpleName() + " -> No kind of WhatsApp installed");
             noStatus.setText(R.string.no_status);
             noStatus.setVisibility(View.VISIBLE);
-        }
-        if (filesWA != null) {
-            for (File wa : filesWA) {
-                if (wa.getName().endsWith(EXT_MP4_LOWER_CASE) || wa.getName().endsWith(EXT_MP4_UPPER_CASE)) {
-                    getMP4(wa);
-                } else if (wa.getName().endsWith(EXT_JPG_LOWER_CASE) || wa.getName().endsWith(EXT_JPG_UPPER_CASE)) {
-                    getJPG(wa);
-                } else if (wa.getName().endsWith(EXT_GIF_LOWER_CASE) || wa.getName().endsWith(EXT_GIF_UPPER_CASE)) {
-                    getGIF(wa);
-                } else {
-                    noStatus.setText(R.string.no_having_status);
-                    noStatus.setVisibility(View.VISIBLE);
-                    Log.v(TAG, "WA : " + noStatus);
-                }
-            }
-        }
-        if (filesFMWA != null) {
-            for (File fmWA : filesFMWA) {
-                if (fmWA.getName().endsWith(EXT_MP4_LOWER_CASE) || fmWA.getName().endsWith(EXT_MP4_UPPER_CASE)) {
-                    getMP4(fmWA);
-                } else if (fmWA.getName().endsWith(EXT_JPG_LOWER_CASE) || fmWA.getName().endsWith(EXT_JPG_UPPER_CASE)) {
-                    getJPG(fmWA);
-                } else if (fmWA.getName().endsWith(EXT_GIF_LOWER_CASE) || fmWA.getName().endsWith(EXT_GIF_UPPER_CASE)) {
-                    getGIF(fmWA);
-                } else {
-                    noStatus.setText(R.string.no_having_status);
-                    noStatus.setVisibility(View.VISIBLE);
-                    Log.v(TAG, "FM : " + noStatus);
-                }
-            }
-
-        }
-        if (fileYoWA != null) {
-            for (File yoWA : fileYoWA) {
-                if (yoWA.getName().endsWith(EXT_MP4_LOWER_CASE) || yoWA.getName().endsWith(EXT_MP4_UPPER_CASE)) {
-                    getMP4(yoWA);
-                } else if (yoWA.getName().endsWith(EXT_JPG_LOWER_CASE) || yoWA.getName().endsWith(EXT_JPG_UPPER_CASE)) {
-                    getJPG(yoWA);
-                } else if (yoWA.getName().endsWith(EXT_GIF_LOWER_CASE) || yoWA.getName().endsWith(EXT_GIF_UPPER_CASE)) {
-                    getGIF(yoWA);
-                } else {
-                    noStatus.setText(R.string.no_having_status);
-                    noStatus.setVisibility(View.VISIBLE);
-                    Log.v(TAG, "Yo : " + noStatus);
-                }
-            }
         }
         recyclerView.setAdapter(adapter);
     }
@@ -304,7 +315,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static class MoveFiles extends AsyncTask<File, Integer, Boolean> {
 
-        String toastText = "Status have been successfully saved to: ";
         private WeakReference<Context> context;
         private WeakReference<ContentLoadingProgressBar> progressBar;
         private File destination;
@@ -324,9 +334,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(File... files) {
-            File source = files[0];
-            IOUtils.move(source, destination.getAbsoluteFile());
-            Log.v(TAG, "doInBackground");
+            Utilities.runOnUI(() -> {
+                File source = files[0];
+                IOUtils.move(source, destination.getAbsoluteFile());
+                Log.v(TAG, "doInBackground");
+            });
             return null;
         }
 
@@ -342,9 +354,11 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(aBoolean);
             progressBar.get().setVisibility(View.GONE);
             Log.v(TAG, "progressBar: " + progressBar + " View: " + View.GONE);
-            ToastUtils.showLong(toastText + destination.getAbsolutePath());
-            new MediaScanner(context.get(), destination);
-            Log.v(TAG, "onPostExecute");
+            ToastUtils.showLong("Status have been successfully saved to: " + destination.getAbsolutePath());
+            Utilities.runOnUI(() -> {
+                new MediaScanner(context.get(), destination);
+                Log.v(TAG, "onPostExecute");
+            });
         }
     }
 
@@ -354,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final StatusVideoAdapter.ViewHolder holder, final int position) {
-            itemPosition = position;
+            itemPosition = holder.getLayoutPosition();
             holder.iv_image.setImageBitmap(contentList.get(position).getThumbnails());
             holder.layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
             holder.layout.setAlpha(0);
@@ -436,8 +450,9 @@ public class MainActivity extends AppCompatActivity {
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download MP4 Status");
                     firebaseAnalytics.logEvent("Download_MP4_Open", bundleDownloadMP4);
                     new MoveFiles(MainActivity.this, destPathMP4, progressBar).execute(source);
-                    adapter.notifyDataSetChanged();
-                    adapter.notifyItemChanged(position);
+                    contentList.remove(itemPosition);
+                    adapter.notifyItemRemoved(itemPosition);
+                    adapter.notifyItemRangeRemoved(itemPosition, getItemCount());
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + " -> onClick: no data saved");
                 }
@@ -448,8 +463,9 @@ public class MainActivity extends AppCompatActivity {
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download JPG Status");
                     firebaseAnalytics.logEvent("Download_JPG_Open", bundleDownloadJPG);
                     new MoveFiles(MainActivity.this, destPathJPG, progressBar).execute(source);
-                    adapter.notifyDataSetChanged();
-                    adapter.notifyItemChanged(position);
+                    contentList.remove(itemPosition);
+                    adapter.notifyItemRemoved(itemPosition);
+                    adapter.notifyItemRangeRemoved(itemPosition, getItemCount());
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + " -> onClick: no data saved");
                 }
@@ -460,8 +476,9 @@ public class MainActivity extends AppCompatActivity {
                     bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download GIF Status");
                     firebaseAnalytics.logEvent("Download_GIF_Open", bundleDownloadGIF);
                     new MoveFiles(MainActivity.this, destPathGIF, progressBar).execute(source);
-                    adapter.notifyDataSetChanged();
-                    adapter.notifyItemChanged(position);
+                    contentList.remove(itemPosition);
+                    adapter.notifyItemRemoved(itemPosition);
+                    adapter.notifyItemRangeRemoved(itemPosition, getItemCount());
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + " -> onClick: no data saved");
                 }
@@ -479,11 +496,6 @@ public class MainActivity extends AppCompatActivity {
         public int getItemCount() {
             return contentList.size();
         }
-
-        public int getItemPosition() {
-            return itemPosition;
-        }
-
 
         private class ViewHolder extends RecyclerView.ViewHolder {
 
