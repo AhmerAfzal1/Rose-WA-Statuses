@@ -157,7 +157,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void getVideo() {
         /*
-        File moviesFolder = new File(PathUtils.getExternalMoviesPath());
+        File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
+        //File moviesFolder = new File(PathUtils.getExternalMoviesPath());
         Log.v(TAG, getClass().getSimpleName() + moviesFolder.getAbsolutePath());
         File[] movies;
         movies = moviesFolder.listFiles();
@@ -197,11 +198,11 @@ public class MainActivity extends AppCompatActivity {
             if (filesWA != null) {
                 noStatus.setVisibility(View.INVISIBLE);
                 for (File wa : filesWA) {
-                    if (wa.getName().endsWith(EXT_MP4_LOWER_CASE) || wa.getName().endsWith(EXT_MP4_UPPER_CASE)) {
+                    if (wa.getName().endsWith(EXT_MP4_LOWER_CASE) || wa.getName().toLowerCase().endsWith(EXT_MP4_UPPER_CASE)) {
                         getMP4(wa);
-                    } else if (wa.getName().endsWith(EXT_JPG_LOWER_CASE) || wa.getName().endsWith(EXT_JPG_UPPER_CASE)) {
+                    } else if (wa.getName().endsWith(EXT_JPG_LOWER_CASE) || wa.getName().toLowerCase().endsWith(EXT_JPG_UPPER_CASE)) {
                         getJPG(wa);
-                    } else if (wa.getName().endsWith(EXT_GIF_LOWER_CASE) || wa.getName().endsWith(EXT_GIF_UPPER_CASE)) {
+                    } else if (wa.getName().endsWith(EXT_GIF_LOWER_CASE) || wa.getName().toLowerCase().endsWith(EXT_GIF_UPPER_CASE)) {
                         getGIF(wa);
                     }
                 }
@@ -217,11 +218,11 @@ public class MainActivity extends AppCompatActivity {
             if (filesFMWA != null) {
                 noStatus.setVisibility(View.INVISIBLE);
                 for (File fmWA : filesFMWA) {
-                    if (fmWA.getName().endsWith(EXT_MP4_LOWER_CASE) || fmWA.getName().endsWith(EXT_MP4_UPPER_CASE)) {
+                    if (fmWA.getName().endsWith(EXT_MP4_LOWER_CASE) || fmWA.getName().toLowerCase().endsWith(EXT_MP4_UPPER_CASE)) {
                         getMP4(fmWA);
-                    } else if (fmWA.getName().endsWith(EXT_JPG_LOWER_CASE) || fmWA.getName().endsWith(EXT_JPG_UPPER_CASE)) {
+                    } else if (fmWA.getName().endsWith(EXT_JPG_LOWER_CASE) || fmWA.getName().toLowerCase().endsWith(EXT_JPG_UPPER_CASE)) {
                         getJPG(fmWA);
-                    } else if (fmWA.getName().endsWith(EXT_GIF_LOWER_CASE) || fmWA.getName().endsWith(EXT_GIF_UPPER_CASE)) {
+                    } else if (fmWA.getName().endsWith(EXT_GIF_LOWER_CASE) || fmWA.getName().toLowerCase().endsWith(EXT_GIF_UPPER_CASE)) {
                         getGIF(fmWA);
                     }
                 }
@@ -236,11 +237,11 @@ public class MainActivity extends AppCompatActivity {
             if (fileYoWA != null) {
                 noStatus.setVisibility(View.INVISIBLE);
                 for (File yoWA : fileYoWA) {
-                    if (yoWA.getName().endsWith(EXT_MP4_LOWER_CASE) || yoWA.getName().endsWith(EXT_MP4_UPPER_CASE)) {
+                    if (yoWA.getName().endsWith(EXT_MP4_LOWER_CASE) || yoWA.getName().toLowerCase().endsWith(EXT_MP4_UPPER_CASE)) {
                         getMP4(yoWA);
-                    } else if (yoWA.getName().endsWith(EXT_JPG_LOWER_CASE) || yoWA.getName().endsWith(EXT_JPG_UPPER_CASE)) {
+                    } else if (yoWA.getName().endsWith(EXT_JPG_LOWER_CASE) || yoWA.getName().toLowerCase().endsWith(EXT_JPG_UPPER_CASE)) {
                         getJPG(yoWA);
-                    } else if (yoWA.getName().endsWith(EXT_GIF_LOWER_CASE) || yoWA.getName().endsWith(EXT_GIF_UPPER_CASE)) {
+                    } else if (yoWA.getName().endsWith(EXT_GIF_LOWER_CASE) || yoWA.getName().toLowerCase().endsWith(EXT_GIF_UPPER_CASE)) {
                         getGIF(yoWA);
                     }
                 }
@@ -373,7 +374,7 @@ public class MainActivity extends AppCompatActivity {
             holder.layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
             holder.layout.setAlpha(0);
             holder.layout.setOnClickListener(view -> {
-                if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) || contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
+                if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) || contentList.get(position).getFormat().toLowerCase().endsWith(EXT_MP4_UPPER_CASE)) {
                     Bundle bundleMP4 = new Bundle();
                     bundleMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "MP4");
                     bundleMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "MP4 Video Viewed");
@@ -383,7 +384,7 @@ public class MainActivity extends AppCompatActivity {
                     intent_gallery.putExtra("path", contentList.get(position).getPath());
                     MainActivity.this.startActivity(intent_gallery);
                 }
-                if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) || contentList.get(position).getFormat().endsWith(EXT_JPG_UPPER_CASE)) {
+                if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) || contentList.get(position).getFormat().toLowerCase().endsWith(EXT_JPG_UPPER_CASE)) {
                     Bundle bundleJPG = new Bundle();
                     bundleJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "JPG");
                     bundleJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "JPG Image Viewed");
@@ -393,7 +394,7 @@ public class MainActivity extends AppCompatActivity {
                     intent_gallery.putExtra("path", contentList.get(position).getPath());
                     MainActivity.this.startActivity(intent_gallery);
                 }
-                if (contentList.get(position).getFormat().endsWith(EXT_GIF_LOWER_CASE) || contentList.get(position).getFormat().endsWith(EXT_GIF_UPPER_CASE)) {
+                if (contentList.get(position).getFormat().endsWith(EXT_GIF_LOWER_CASE) || contentList.get(position).getFormat().toLowerCase().endsWith(EXT_GIF_UPPER_CASE)) {
                     Bundle bundleGIF = new Bundle();
                     bundleGIF.putString(FirebaseAnalytics.Param.ITEM_ID, "GIF");
                     bundleGIF.putString(FirebaseAnalytics.Param.ITEM_NAME, "GIF Image Viewed");
@@ -495,6 +496,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return contentList.size();
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return super.getItemId(position);
         }
 
         private class ViewHolder extends RecyclerView.ViewHolder {
