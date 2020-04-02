@@ -444,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.v(TAG, getClass().getSimpleName() + " -> This directory has already been created");
                 }
                 if (source.getAbsolutePath().endsWith(EXT_MP4_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_MP4_UPPER_CASE)) {
-                    File destPathMP4 = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + ".mp4");
+                    File destPathMP4 = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_MP4_LOWER_CASE);
                     Bundle bundleDownloadMP4 = new Bundle();
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadMP4");
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download MP4 Status");
@@ -457,7 +457,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.v(TAG, getClass().getSimpleName() + " -> onClick: no data saved");
                 }
                 if (source.getAbsolutePath().endsWith(EXT_JPG_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_JPG_UPPER_CASE)) {
-                    File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + ".jpg");
+                    File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_JPG_LOWER_CASE);
                     Bundle bundleDownloadJPG = new Bundle();
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadJPG");
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download JPG Status");
@@ -470,7 +470,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.v(TAG, getClass().getSimpleName() + " -> onClick: no data saved");
                 }
                 if (source.getAbsolutePath().endsWith(EXT_GIF_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_GIF_UPPER_CASE)) {
-                    File destPathGIF = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + ".gif");
+                    File destPathGIF = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_GIF_LOWER_CASE);
                     Bundle bundleDownloadGIF = new Bundle();
                     bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadGIF");
                     bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download GIF Status");

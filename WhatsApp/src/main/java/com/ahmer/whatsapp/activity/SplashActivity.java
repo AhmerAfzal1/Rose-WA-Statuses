@@ -116,7 +116,7 @@ public class SplashActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Utilities.runOnUI(()->{
+            Utilities.runOnUI(() -> {
                 try {
                     MainActivity activity = new MainActivity();
                     activity.getVideo();
@@ -138,8 +138,8 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-                weakContext.get().startActivity(new Intent(weakContext.get(), MainActivity.class));
-                ((SplashActivity) weakContext.get()).finish();
+            weakContext.get().startActivity(new Intent(weakContext.get(), MainActivity.class));
+            ((SplashActivity) weakContext.get()).finish();
 
         }
     }
