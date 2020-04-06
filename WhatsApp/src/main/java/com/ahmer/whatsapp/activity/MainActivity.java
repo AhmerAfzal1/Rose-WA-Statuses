@@ -21,10 +21,11 @@ import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ahmer.afzal.utils.IOUtils;
-import com.ahmer.afzal.utils.Utilities;
-import com.ahmer.afzal.utils.info.PathUtils;
-import com.ahmer.afzal.utils.toastandsnackbar.ToastUtils;
+import com.ahmer.afzal.utils.utilcode.FileUtils;
+import com.ahmer.afzal.utils.utilcode.PathUtils;
+import com.ahmer.afzal.utils.utilcode.ThreadUtils;
+import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
+import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.ahmer.whatsapp.ConstantsValues;
 import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
@@ -51,10 +52,7 @@ import static com.ahmer.whatsapp.ConstantsValues.EXT_JPG_LOWER_CASE;
 import static com.ahmer.whatsapp.ConstantsValues.EXT_JPG_UPPER_CASE;
 import static com.ahmer.whatsapp.ConstantsValues.EXT_MP4_LOWER_CASE;
 import static com.ahmer.whatsapp.ConstantsValues.EXT_MP4_UPPER_CASE;
-import static com.ahmer.whatsapp.ConstantsValues.FM_WHATSAPP_STATUSES_LOCATION;
 import static com.ahmer.whatsapp.ConstantsValues.TAG;
-import static com.ahmer.whatsapp.ConstantsValues.WHATSAPP_STATUSES_LOCATION;
-import static com.ahmer.whatsapp.ConstantsValues.YO_WHATSAPP_STATUSES_LOCATION;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INTERNAL_ERROR;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INVALID_REQUEST;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NETWORK_ERROR;
@@ -62,12 +60,12 @@ import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    private StatusVideoAdapter adapter;
     private AdView adView;
     private ArrayList<WAStatusItem> contentList = new ArrayList<>();
     private ContentLoadingProgressBar progressBar;
     private FirebaseAnalytics firebaseAnalytics;
+    private RecyclerView recyclerView;
+    private StatusVideoAdapter adapter;
     private TextView noStatus;
 
     @Override
@@ -147,18 +145,19 @@ public class MainActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
         try {
-            getVideo();
+            getData();
         } catch (Exception e) {
             e.printStackTrace();
+            ThrowableUtils.getFullStackTrace(e);
             Log.v(TAG, getClass().getSimpleName() + " -> Error during loading data: " + e.getMessage());
             FirebaseCrashlytics.getInstance().recordException(e);
         }
     }
 
-    public void getVideo() {
-        /*
-        File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
-        //File moviesFolder = new File(PathUtils.getExternalMoviesPath());
+    public void getData() {
+
+        //File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
+        File moviesFolder = new File(PathUtils.getExternalMoviesPath());
         Log.v(TAG, getClass().getSimpleName() + moviesFolder.getAbsolutePath());
         File[] movies;
         movies = moviesFolder.listFiles();
@@ -184,11 +183,11 @@ public class MainActivity extends AppCompatActivity {
         File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + "/WhatsApp");
         File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + "/FMWhatsApp");
         File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + "/YoWhatsApp");
-       */
+       /*
         File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
         File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
         File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
-
+*/
         File[] filesWA = dirWhatsApp.listFiles();
         File[] filesFMWA = dirFMWhatsApp.listFiles();
         File[] fileYoWA = dirYoWhatsApp.listFiles();
@@ -260,33 +259,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getMP4(File file) {
-        WAStatusItem obj = new WAStatusItem();
-        obj.setSelect(false);
-        obj.setPath(file.getAbsolutePath());
+        WAStatusItem getMP4 = new WAStatusItem();
+        getMP4.setSelect(false);
+        getMP4.setPath(file.getAbsolutePath());
         Bitmap thumb = Thumbnails.videoThumbnails(file.getAbsolutePath());
-        obj.setThumbnails(thumb);
-        obj.setFormat(EXT_MP4_LOWER_CASE);
-        contentList.add(obj);
+        getMP4.setThumbnails(thumb);
+        getMP4.setFormat(EXT_MP4_LOWER_CASE);
+        contentList.add(getMP4);
     }
 
     private void getJPG(File file) {
-        WAStatusItem obj_model = new WAStatusItem();
-        obj_model.setSelect(false);
-        obj_model.setPath(file.getAbsolutePath());
+        WAStatusItem getJPG = new WAStatusItem();
+        getJPG.setSelect(false);
+        getJPG.setPath(file.getAbsolutePath());
         Bitmap pic = Thumbnails.imageThumbnails(file.getAbsolutePath());
-        obj_model.setThumbnails(pic);
-        obj_model.setFormat(EXT_JPG_LOWER_CASE);
-        contentList.add(obj_model);
+        getJPG.setThumbnails(pic);
+        getJPG.setFormat(EXT_JPG_LOWER_CASE);
+        contentList.add(getJPG);
     }
 
     private void getGIF(File file) {
-        WAStatusItem obj = new WAStatusItem();
-        obj.setSelect(false);
-        obj.setPath(file.getAbsolutePath());
-        Bitmap thumb = Thumbnails.videoThumbnails(file.getAbsolutePath());
-        obj.setThumbnails(thumb);
-        obj.setFormat(EXT_GIF_LOWER_CASE);
-        contentList.add(obj);
+        WAStatusItem getGIF = new WAStatusItem();
+        getGIF.setSelect(false);
+        getGIF.setPath(file.getAbsolutePath());
+        Bitmap thumb = Thumbnails.imageThumbnails(file.getAbsolutePath());
+        getGIF.setThumbnails(thumb);
+        getGIF.setFormat(EXT_GIF_LOWER_CASE);
+        contentList.add(getGIF);
     }
 
     @Override
@@ -335,9 +334,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(File... files) {
-            Utilities.runOnUI(() -> {
+            ThreadUtils.runOnUiThread(() -> {
                 File source = files[0];
-                IOUtils.move(source, destination.getAbsoluteFile());
+                FileUtils.move(source, destination.getAbsoluteFile());
                 Log.v(TAG, "doInBackground");
             });
             return null;
@@ -356,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
             progressBar.get().setVisibility(View.GONE);
             Log.v(TAG, "progressBar: " + progressBar + " View: " + View.GONE);
             ToastUtils.showLong("Status have been successfully saved to: " + destination.getAbsolutePath());
-            Utilities.runOnUI(() -> {
+            ThreadUtils.runOnUiThread(() -> {
                 new MediaScanner(context.get(), destination);
                 Log.v(TAG, "onPostExecute");
             });
@@ -365,11 +364,8 @@ public class MainActivity extends AppCompatActivity {
 
     public class StatusVideoAdapter extends RecyclerView.Adapter<StatusVideoAdapter.ViewHolder> {
 
-        private int itemPosition = 0;
-
         @Override
         public void onBindViewHolder(final StatusVideoAdapter.ViewHolder holder, final int position) {
-            itemPosition = holder.getLayoutPosition();
             holder.iv_image.setImageBitmap(contentList.get(position).getThumbnails());
             holder.layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
             holder.layout.setAlpha(0);
@@ -379,30 +375,30 @@ public class MainActivity extends AppCompatActivity {
                     bundleMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "MP4");
                     bundleMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "MP4 Video Viewed");
                     firebaseAnalytics.logEvent("MP4_Open", bundleMP4);
-                    Intent intent_gallery = new Intent(MainActivity.this, WAVideoStatusView.class);
-                    intent_gallery.putExtra("format", contentList.get(position).getFormat());
-                    intent_gallery.putExtra("path", contentList.get(position).getPath());
-                    MainActivity.this.startActivity(intent_gallery);
+                    Intent intentVideo = new Intent(MainActivity.this, WAVideoStatusView.class);
+                    intentVideo.putExtra("format", contentList.get(position).getFormat());
+                    intentVideo.putExtra("path", contentList.get(position).getPath());
+                    MainActivity.this.startActivity(intentVideo);
                 }
                 if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) || contentList.get(position).getFormat().toLowerCase().endsWith(EXT_JPG_UPPER_CASE)) {
                     Bundle bundleJPG = new Bundle();
                     bundleJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "JPG");
                     bundleJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "JPG Image Viewed");
                     firebaseAnalytics.logEvent("JPG_Open", bundleJPG);
-                    Intent intent_gallery = new Intent(MainActivity.this, WAImageStatusView.class);
-                    intent_gallery.putExtra("format", contentList.get(position).getFormat());
-                    intent_gallery.putExtra("path", contentList.get(position).getPath());
-                    MainActivity.this.startActivity(intent_gallery);
+                    Intent intentJPG = new Intent(MainActivity.this, WAImageStatusView.class);
+                    intentJPG.putExtra("format", contentList.get(position).getFormat());
+                    intentJPG.putExtra("path", contentList.get(position).getPath());
+                    MainActivity.this.startActivity(intentJPG);
                 }
                 if (contentList.get(position).getFormat().endsWith(EXT_GIF_LOWER_CASE) || contentList.get(position).getFormat().toLowerCase().endsWith(EXT_GIF_UPPER_CASE)) {
                     Bundle bundleGIF = new Bundle();
                     bundleGIF.putString(FirebaseAnalytics.Param.ITEM_ID, "GIF");
                     bundleGIF.putString(FirebaseAnalytics.Param.ITEM_NAME, "GIF Image Viewed");
                     firebaseAnalytics.logEvent("GIF_Open", bundleGIF);
-                    Intent intent_gallery = new Intent(MainActivity.this, WAVideoStatusView.class);
-                    intent_gallery.putExtra("format", contentList.get(position).getFormat());
-                    intent_gallery.putExtra("path", contentList.get(position).getPath());
-                    MainActivity.this.startActivity(intent_gallery);
+                    Intent intentGIF = new Intent(MainActivity.this, WAImageStatusView.class);
+                    intentGIF.putExtra("format", contentList.get(position).getFormat());
+                    intentGIF.putExtra("path", contentList.get(position).getPath());
+                    MainActivity.this.startActivity(intentGIF);
                 }
             });
 
@@ -433,7 +429,7 @@ public class MainActivity extends AppCompatActivity {
 
             holder.download.setOnClickListener(v -> {
                 File source = new File(contentList.get(position).getPath());
-                String directoryAndFileName = "/Rose WA Statuses/WAStatus_" + IOUtils.getFileNameNoExtension(source.getAbsolutePath());
+                String directoryAndFileName = "/Rose WA Statuses/Status_" + FileUtils.getFileNameNoExtension(source.getAbsolutePath());
                 File statusDirectory = new File(PathUtils.getExternalStoragePath(), MainActivity.this.getString(R.string.app_name));
                 if (!statusDirectory.exists()) {
                     if (statusDirectory.mkdirs()) {
@@ -451,9 +447,7 @@ public class MainActivity extends AppCompatActivity {
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download MP4 Status");
                     firebaseAnalytics.logEvent("Download_MP4_Open", bundleDownloadMP4);
                     new MoveFiles(MainActivity.this, destPathMP4, progressBar).execute(source);
-                    contentList.remove(itemPosition);
-                    adapter.notifyItemRemoved(itemPosition);
-                    adapter.notifyItemRangeRemoved(itemPosition, getItemCount());
+                    updateList(position);
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + " -> onClick: no data saved");
                 }
@@ -464,9 +458,7 @@ public class MainActivity extends AppCompatActivity {
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download JPG Status");
                     firebaseAnalytics.logEvent("Download_JPG_Open", bundleDownloadJPG);
                     new MoveFiles(MainActivity.this, destPathJPG, progressBar).execute(source);
-                    contentList.remove(itemPosition);
-                    adapter.notifyItemRemoved(itemPosition);
-                    adapter.notifyItemRangeRemoved(itemPosition, getItemCount());
+                    updateList(position);
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + " -> onClick: no data saved");
                 }
@@ -477,9 +469,7 @@ public class MainActivity extends AppCompatActivity {
                     bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download GIF Status");
                     firebaseAnalytics.logEvent("Download_GIF_Open", bundleDownloadGIF);
                     new MoveFiles(MainActivity.this, destPathGIF, progressBar).execute(source);
-                    contentList.remove(itemPosition);
-                    adapter.notifyItemRemoved(itemPosition);
-                    adapter.notifyItemRangeRemoved(itemPosition, getItemCount());
+                    updateList(position);
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + " -> onClick: no data saved");
                 }
@@ -501,6 +491,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public long getItemId(int position) {
             return super.getItemId(position);
+        }
+
+        private void updateList(final int position) {
+            contentList.remove(position);
+            adapter.notifyItemChanged(position);
+            adapter.notifyItemRangeChanged(position, getItemCount());
         }
 
         private class ViewHolder extends RecyclerView.ViewHolder {

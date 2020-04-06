@@ -8,12 +8,14 @@ import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.ahmer.afzal.utils.toastandsnackbar.ToastUtils;
+import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
+import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.Objects;
 
 import static com.ahmer.whatsapp.ConstantsValues.EXT_MP4_LOWER_CASE;
+import static com.ahmer.whatsapp.ConstantsValues.TAG;
 
 public class WAVideoStatusView extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
@@ -30,11 +32,17 @@ public class WAVideoStatusView extends AppCompatActivity implements MediaPlayer.
         String format = getIntent().getStringExtra("format");
         String path = getIntent().getStringExtra("path");
         Log.v(ConstantsValues.TAG, "Path is: " + path);
-        if (Objects.requireNonNull(format).equals(EXT_MP4_LOWER_CASE)) {
-            videoView.setVideoPath(path);
-            MediaController mediaController = new MediaController(this);
-            mediaController.setAnchorView(videoView);
-            videoView.setMediaController(mediaController);
+        try {
+            if (Objects.requireNonNull(format).equals(EXT_MP4_LOWER_CASE)) {
+                videoView.setVideoPath(path);
+                MediaController mediaController = new MediaController(this);
+                mediaController.setAnchorView(videoView);
+                videoView.setMediaController(mediaController);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ThrowableUtils.getFullStackTrace(e);
+            Log.v(TAG, getClass().getSimpleName() + " -> " + e.getMessage());
         }
     }
 

@@ -8,11 +8,14 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.Objects;
 
+import static com.ahmer.whatsapp.ConstantsValues.EXT_GIF_LOWER_CASE;
 import static com.ahmer.whatsapp.ConstantsValues.EXT_JPG_LOWER_CASE;
+import static com.ahmer.whatsapp.ConstantsValues.TAG;
 
 public class WAImageStatusView extends AppCompatActivity {
 
@@ -26,10 +29,16 @@ public class WAImageStatusView extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.image);
         String format = getIntent().getStringExtra("format");
         String path = getIntent().getStringExtra("path");
-        if (Objects.requireNonNull(format).equals(EXT_JPG_LOWER_CASE)) {
-            Bitmap bitmap = BitmapFactory.decodeFile(path);
-            Log.v(ConstantsValues.TAG, "Path is: " + bitmap);
-            imageView.setImageBitmap(bitmap);
+        try {
+            if (Objects.requireNonNull(format).equals(EXT_JPG_LOWER_CASE) || Objects.requireNonNull(format).equals(EXT_GIF_LOWER_CASE)) {
+                Bitmap bitmap = BitmapFactory.decodeFile(path);
+                Log.v(ConstantsValues.TAG, "Path is: " + bitmap);
+                imageView.setImageBitmap(bitmap);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ThrowableUtils.getFullStackTrace(e);
+            Log.v(TAG, getClass().getSimpleName() + " -> " + e.getMessage());
         }
     }
 }

@@ -4,10 +4,10 @@ import android.graphics.Bitmap;
 
 public class WAStatusItem {
 
-    private String path;
     private Bitmap thumbnails;
-    private String format;
     private boolean select;
+    private String format;
+    private String path;
 
     public String getFormat() {
         return format;
