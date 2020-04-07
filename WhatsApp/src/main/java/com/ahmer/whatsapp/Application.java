@@ -14,6 +14,6 @@ public class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        AppUtils.uninstallApp(AppUtils.getAppPackageName());
+        //AppUtils.uninstallApp(AppUtils.getAppPackageName());
     }
 }

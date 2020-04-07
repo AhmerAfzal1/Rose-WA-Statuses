@@ -1,6 +1,8 @@
 package com.ahmer.whatsapp;
 
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.MediaController;
@@ -14,30 +16,39 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.Objects;
 
-import static com.ahmer.whatsapp.ConstantsValues.EXT_MP4_LOWER_CASE;
-import static com.ahmer.whatsapp.ConstantsValues.TAG;
+import static com.ahmer.whatsapp.Constant.EXT_MP4_LOWER_CASE;
+import static com.ahmer.whatsapp.Constant.TAG;
 
-public class WAVideoStatusView extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
+public class StatusViewVideo extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
-    private VideoView videoView;
+    private VideoView view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.whatsapp_video_view);
+        setContentView(R.layout.view_video);
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
-        videoView = findViewById(R.id.vv_video);
+        view = findViewById(R.id.videoView);
         String format = getIntent().getStringExtra("format");
         String path = getIntent().getStringExtra("path");
-        Log.v(ConstantsValues.TAG, "Path is: " + path);
+        Log.v(Constant.TAG, "Path is: " + path);
         try {
             if (Objects.requireNonNull(format).equals(EXT_MP4_LOWER_CASE)) {
-                videoView.setVideoPath(path);
-                MediaController mediaController = new MediaController(this);
-                mediaController.setAnchorView(videoView);
-                videoView.setMediaController(mediaController);
+                Uri uri = Uri.parse(path);
+                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                retriever.setDataSource(getApplicationContext(), uri);
+                String hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO);
+                boolean isVideo = "yes".equals(hasVideo);
+                if (isVideo) {
+                    MediaController mediaController = new MediaController(StatusViewVideo.this);
+                    mediaController.setAnchorView(view);
+                    view.setMediaController(mediaController);
+                    view.setVideoURI(uri);
+                } else {
+                    ToastUtils.showLong("Video file is corrupt.");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,13 +59,13 @@ public class WAVideoStatusView extends AppCompatActivity implements MediaPlayer.
 
     @Override
     protected void onResume() {
-        videoView.start();
+        view.start();
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        videoView.stopPlayback();
+        view.stopPlayback();
         super.onPause();
     }
 

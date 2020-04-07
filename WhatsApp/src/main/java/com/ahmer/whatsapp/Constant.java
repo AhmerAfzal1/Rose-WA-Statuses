@@ -1,6 +1,6 @@
 package com.ahmer.whatsapp;
 
-public class ConstantsValues {
+public class Constant {
     public static final String TAG = "WhatsApp";
     public static final int IMAGE_HEIGHT = 256;
     public static final int IMAGE_WIDTH = 256;

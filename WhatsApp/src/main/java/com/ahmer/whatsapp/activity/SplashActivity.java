@@ -24,7 +24,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
 
-import static com.ahmer.whatsapp.ConstantsValues.TAG;
+import static com.ahmer.whatsapp.Constant.TAG;
 
 public class SplashActivity extends AppCompatActivity {
 

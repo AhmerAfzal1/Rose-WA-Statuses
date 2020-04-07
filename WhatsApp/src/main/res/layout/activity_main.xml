@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="@string/no_status"
+            android:text="@string/no_whatsapp_installed"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="12sp"
             android:visibility="gone" />

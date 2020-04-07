@@ -2,42 +2,42 @@ package com.ahmer.whatsapp;
 
 import android.graphics.Bitmap;
 
-public class WAStatusItem {
+public class StatusItem {
 
-    private Bitmap thumbnails;
-    private boolean select;
-    private String format;
-    private String path;
+    private Bitmap mThumbnails;
+    private boolean mSelect;
+    private String mFormat;
+    private String mPath;
 
     public String getFormat() {
-        return format;
+        return mFormat;
     }
 
     public void setFormat(String format) {
-        this.format = format;
+        mFormat = format;
     }
 
     public String getPath() {
-        return path;
+        return mPath;
     }
 
     public void setPath(String path) {
-        this.path = path;
+        mPath = path;
     }
 
     public Bitmap getThumbnails() {
-        return thumbnails;
+        return mThumbnails;
     }
 
     public void setThumbnails(Bitmap thumbnails) {
-        this.thumbnails = thumbnails;
+        mThumbnails = thumbnails;
     }
 
     public boolean isSelect() {
-        return select;
+        return mSelect;
     }
 
     public void setSelect(boolean select) {
-        this.select = select;
+        mSelect = select;
     }
 }

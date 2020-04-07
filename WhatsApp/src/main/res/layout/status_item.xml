@@ -15,7 +15,6 @@
         android:id="@+id/status_view"
         android:layout_width="match_parent"
         android:layout_height="170dp"
-        android:background="@drawable/background_whatsapp"
         android:orientation="vertical">
 
         <ImageView
