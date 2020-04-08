@@ -46,7 +46,6 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import static com.ahmer.whatsapp.Constant.EXT_GIF_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_GIF_UPPER_CASE;
@@ -89,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.rvWhatsappStatusList);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        recyclerView.getRecycledViewPool().clear();
         adView = findViewById(R.id.adView);
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
             Log.v(TAG, getClass().getSimpleName() + " -> Error during loading data: " + e.getMessage());
             FirebaseCrashlytics.getInstance().recordException(e);
         }
+        Log.v(TAG, getClass().getSimpleName() + " -> Size: " + adapter.getItemCount());
     }
 
     public void getData() {
@@ -174,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
         if (moviesFolder.exists()) {
             getStatuses(moviesFolder.listFiles());
         }*/
-
         File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
         File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
         File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (dirYoWhatsApp.exists()) {
             getStatuses(dirYoWhatsApp.listFiles());
-        }
+        }/*
         if (Objects.requireNonNull(dirWhatsApp.listFiles()).length > 0 ||
                 Objects.requireNonNull(dirFMWhatsApp.listFiles()).length > 0 ||
                 Objects.requireNonNull(dirYoWhatsApp.listFiles()).length > 0) {
@@ -195,12 +195,14 @@ public class MainActivity extends AppCompatActivity {
         } else {
             noStatus.setText(R.string.no_having_status);
             noStatus.setVisibility(View.VISIBLE);
-        }
+        }*/
         if (!dirWhatsApp.exists() && !dirFMWhatsApp.exists() && !dirYoWhatsApp.exists()) {
             Log.v(TAG, MainActivity.class.getSimpleName() + " -> No kind of WhatsApp installed");
             noStatus.setText(R.string.no_whatsapp_installed);
         }
         recyclerView.setAdapter(adapter);
+        adapter.registerAdapterDataObserver(observer);
+        observer.onChanged();
     }
 
     private void getStatuses(File[] filesList) {
@@ -212,24 +214,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getStatusesContent(File file) {
-        StatusItem item = new StatusItem();
-        item.setPath(file.getAbsolutePath());
-        Bitmap bitmap = Thumbnails.getThumbnails(file);
-        item.setThumbnails(bitmap);
-        if (Thumbnails.isVideoFile(file.getAbsolutePath())) {
+        String filePath = file.getAbsolutePath();
+        if (filePath.endsWith(EXT_MP4_LOWER_CASE) || filePath.endsWith(EXT_MP4_UPPER_CASE) ||
+                filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE) ||
+                filePath.endsWith(EXT_GIF_LOWER_CASE) || filePath.endsWith(EXT_GIF_UPPER_CASE)) {
+            StatusItem item = new StatusItem();
             if (file.getName().endsWith(EXT_MP4_LOWER_CASE) || file.getName().endsWith(EXT_MP4_UPPER_CASE)) {
+                item.setPath(file.getAbsolutePath());
                 item.setFormat(EXT_MP4_LOWER_CASE);
+                Bitmap video = Thumbnails.videoThumbnails(file);
+                item.setThumbnails(video);
             }
-        }
-        if (Thumbnails.isImageFile(file.getAbsolutePath())) {
             if (file.getName().endsWith(EXT_JPG_LOWER_CASE) || file.getName().endsWith(EXT_JPG_UPPER_CASE)) {
+                item.setPath(file.getAbsolutePath());
                 item.setFormat(EXT_JPG_LOWER_CASE);
+                Bitmap jpg = Thumbnails.imageThumbnails(file);
+                item.setThumbnails(jpg);
             }
             if (file.getName().endsWith(EXT_GIF_LOWER_CASE) || file.getName().endsWith(EXT_GIF_UPPER_CASE)) {
+                item.setPath(file.getAbsolutePath());
                 item.setFormat(EXT_GIF_LOWER_CASE);
+                Bitmap gif = Thumbnails.imageThumbnails(file);
+                item.setThumbnails(gif);
             }
+            contentList.add(item);
         }
-        contentList.add(item);
     }
 
     @Override
@@ -273,7 +282,6 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             progressBar.get().setVisibility(View.VISIBLE);
-            Log.v(TAG, "onPreExecute");
         }
 
         @Override
@@ -281,7 +289,6 @@ public class MainActivity extends AppCompatActivity {
             ThreadUtils.runOnUiThread(() -> {
                 File source = files[0];
                 FileUtils.move(source, destination.getAbsoluteFile());
-                Log.v(TAG, "doInBackground");
             });
             return null;
         }
@@ -290,21 +297,43 @@ public class MainActivity extends AppCompatActivity {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             progressBar.get().setProgress(values[0]);
-            Log.v(TAG, "onProgressUpdate");
         }
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             progressBar.get().setVisibility(View.GONE);
-            Log.v(TAG, "progressBar: " + progressBar + " View: " + View.GONE);
-            ToastUtils.showLong("Status have been successfully saved to: " + destination.getAbsolutePath());
             ThreadUtils.runOnUiThread(() -> {
+                ToastUtils.showLong("Status have been successfully saved to: " + destination.getAbsolutePath());
                 new MediaScanner(context.get(), destination);
-                Log.v(TAG, "onPostExecute");
             });
         }
     }
+
+    private RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            if (adapter.getItemCount() == 0){
+                noStatus.setVisibility(View.VISIBLE);
+                noStatus.setText(R.string.no_having_status);
+            } else {
+                noStatus.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount) {
+            super.onItemRangeChanged(positionStart, itemCount);
+            onChanged();
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            super.onItemRangeRemoved(positionStart, itemCount);
+            onChanged();
+        }
+    };
 
     public class StatusVideoAdapter extends RecyclerView.Adapter<StatusVideoAdapter.ViewHolder> {
 
@@ -313,27 +342,18 @@ public class MainActivity extends AppCompatActivity {
             holder.iv_image.setImageBitmap(contentList.get(position).getThumbnails());
             holder.layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
             holder.layout.setAlpha(0);
+            Log.v(TAG, getClass().getSimpleName() + " -> Size: "+getItemCount());
             holder.layout.setOnClickListener(view -> {
-
-                if (contentList.get(position) == null) {
-                    ToastUtils.showLong("File: " + contentList.get(position).getPath() + contentList.get(position).getFormat() + " is an empty");
-                }
-                if (contentList.get(position).getFormat().toLowerCase().endsWith(EXT_MP4_LOWER_CASE) ||
-                        contentList.get(position).getFormat().toUpperCase().endsWith(EXT_MP4_UPPER_CASE)) {
-                    try {
-                        Bundle bundleMP4 = new Bundle();
-                        bundleMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "MP4");
-                        bundleMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "MP4 Video Viewed");
-                        firebaseAnalytics.logEvent("MP4_Open", bundleMP4);
-                        Intent intentVideo = new Intent(MainActivity.this, StatusViewVideo.class);
-                        intentVideo.putExtra("format", contentList.get(position).getFormat());
-                        intentVideo.putExtra("path", contentList.get(position).getPath());
-                        MainActivity.this.startActivity(intentVideo);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        ThrowableUtils.getFullStackTrace(e);
-                        Log.v(TAG, getClass().getSimpleName() + " -> " + e.getMessage());
-                    }
+                if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
+                        contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
+                    Bundle bundleMP4 = new Bundle();
+                    bundleMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "MP4");
+                    bundleMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "MP4 Video Viewed");
+                    firebaseAnalytics.logEvent("MP4_Open", bundleMP4);
+                    Intent intentVideo = new Intent(MainActivity.this, StatusViewVideo.class);
+                    intentVideo.putExtra("format", contentList.get(position).getFormat());
+                    intentVideo.putExtra("path", contentList.get(position).getPath());
+                    MainActivity.this.startActivity(intentVideo);
                 }
                 if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) ||
                         contentList.get(position).getFormat().endsWith(EXT_JPG_UPPER_CASE)) {
@@ -405,10 +425,10 @@ public class MainActivity extends AppCompatActivity {
                     firebaseAnalytics.logEvent("Download_MP4_Open", bundleDownloadMP4);
                     new MoveFiles(MainActivity.this, destPathMP4, progressBar).execute(source);
                     contentList.remove(position);
-                    adapter.notifyItemChanged(position);
-                    adapter.notifyItemRangeChanged(position, getItemCount());
+                    adapter.notifyItemRemoved(position);
+                    adapter.notifyItemRangeRemoved(position, getItemCount());
                 } else {
-                    Log.v(TAG, getClass().getSimpleName() + " -> onClick: no data saved");
+                    Log.v(TAG, getClass().getSimpleName() + " -> MP4: No data was discovered and saved");
                 }
                 if (source.getAbsolutePath().endsWith(EXT_JPG_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_JPG_UPPER_CASE)) {
                     File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_JPG_LOWER_CASE);
@@ -418,10 +438,10 @@ public class MainActivity extends AppCompatActivity {
                     firebaseAnalytics.logEvent("Download_JPG_Open", bundleDownloadJPG);
                     new MoveFiles(MainActivity.this, destPathJPG, progressBar).execute(source);
                     contentList.remove(position);
-                    adapter.notifyItemChanged(position);
-                    adapter.notifyItemRangeChanged(position, getItemCount());
+                    adapter.notifyItemRemoved(position);
+                    adapter.notifyItemRangeRemoved(position, getItemCount());
                 } else {
-                    Log.v(TAG, getClass().getSimpleName() + " -> onClick: no data saved");
+                    Log.v(TAG, getClass().getSimpleName() + " -> JPG: No data was discovered and saved");
                 }
                 if (source.getAbsolutePath().endsWith(EXT_GIF_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_GIF_UPPER_CASE)) {
                     File destPathGIF = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_GIF_LOWER_CASE);
@@ -431,10 +451,10 @@ public class MainActivity extends AppCompatActivity {
                     firebaseAnalytics.logEvent("Download_GIF_Open", bundleDownloadGIF);
                     new MoveFiles(MainActivity.this, destPathGIF, progressBar).execute(source);
                     contentList.remove(position);
-                    adapter.notifyItemChanged(position);
-                    adapter.notifyItemRangeChanged(position, getItemCount());
+                    adapter.notifyItemRemoved(position);
+                    adapter.notifyItemRangeRemoved(position, getItemCount());
                 } else {
-                    Log.v(TAG, getClass().getSimpleName() + " -> onClick: no data saved");
+                    Log.v(TAG, getClass().getSimpleName() + " -> GIF: No data was discovered and saved");
                 }
             });
         }
