@@ -21,4 +21,6 @@
     <string name="adLoaded">onAdLoaded: Ad loading…</string>
     <string name="adOpened">onAdOpened: Ad opening… user tap or click the ad</string>
     <string name="splash_title">Rose WhatsApp \nStatuses Downloader</string>
+    <string name="status_saved">Status have been successfully saved to:</string>
+    <string name="status_alert">Status Saved Alert!</string>
 </resources>

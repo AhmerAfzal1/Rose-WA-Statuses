@@ -321,7 +321,8 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(aBoolean);
             progressBar.get().setVisibility(View.GONE);
             ThreadUtils.runOnUiThread(() -> {
-                ToastUtils.showLong("Status have been successfully saved to: " + destination.getAbsolutePath());
+                //new DialogSaved(context.get(), destination).saved();
+                ToastUtils.showLong(context.get().getString(R.string.status_saved) + " " + destination.getAbsolutePath());
                 new MediaScanner(context.get(), destination);
             });
         }
