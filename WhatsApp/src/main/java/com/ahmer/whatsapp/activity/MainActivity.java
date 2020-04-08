@@ -64,13 +64,41 @@ import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<StatusItem> contentList = new ArrayList<>();
     private AdView adView;
+    private ArrayList<StatusItem> contentList = new ArrayList<>();
     private ContentLoadingProgressBar progressBar;
+    private File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
+    private File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
+    private File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
     private FirebaseAnalytics firebaseAnalytics;
     private RecyclerView recyclerView;
     private StatusVideoAdapter adapter;
     private TextView noStatus;
+
+    private RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            if (adapter.getItemCount() == 0) {
+                noStatus.setVisibility(View.VISIBLE);
+                noStatus.setText(R.string.no_having_status);
+            } else {
+                noStatus.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount) {
+            super.onItemRangeChanged(positionStart, itemCount);
+            onChanged();
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            super.onItemRangeRemoved(positionStart, itemCount);
+            onChanged();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +177,11 @@ public class MainActivity extends AppCompatActivity {
         });
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+        if (!dirWhatsApp.exists() && !dirFMWhatsApp.exists() && !dirYoWhatsApp.exists()) {
+            Log.v(TAG, MainActivity.class.getSimpleName() + " -> No kind of WhatsApp installed");
+            noStatus.setVisibility(View.VISIBLE);
+            noStatus.setText(R.string.no_whatsapp_installed);
+        }
         try {
             getData();
         } catch (Exception e) {
@@ -157,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
             Log.v(TAG, getClass().getSimpleName() + " -> Error during loading data: " + e.getMessage());
             FirebaseCrashlytics.getInstance().recordException(e);
         }
-        Log.v(TAG, getClass().getSimpleName() + " -> Size: " + adapter.getItemCount());
     }
 
     public void getData() {
@@ -175,9 +207,6 @@ public class MainActivity extends AppCompatActivity {
         if (moviesFolder.exists()) {
             getStatuses(moviesFolder.listFiles());
         }*/
-        File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
-        File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
-        File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
 
         if (dirWhatsApp.exists()) {
             getStatuses(dirWhatsApp.listFiles());
@@ -187,18 +216,6 @@ public class MainActivity extends AppCompatActivity {
         }
         if (dirYoWhatsApp.exists()) {
             getStatuses(dirYoWhatsApp.listFiles());
-        }/*
-        if (Objects.requireNonNull(dirWhatsApp.listFiles()).length > 0 ||
-                Objects.requireNonNull(dirFMWhatsApp.listFiles()).length > 0 ||
-                Objects.requireNonNull(dirYoWhatsApp.listFiles()).length > 0) {
-            noStatus.setVisibility(View.INVISIBLE);
-        } else {
-            noStatus.setText(R.string.no_having_status);
-            noStatus.setVisibility(View.VISIBLE);
-        }*/
-        if (!dirWhatsApp.exists() && !dirFMWhatsApp.exists() && !dirYoWhatsApp.exists()) {
-            Log.v(TAG, MainActivity.class.getSimpleName() + " -> No kind of WhatsApp installed");
-            noStatus.setText(R.string.no_whatsapp_installed);
         }
         recyclerView.setAdapter(adapter);
         adapter.registerAdapterDataObserver(observer);
@@ -268,9 +285,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static class MoveFiles extends AsyncTask<File, Integer, Boolean> {
 
-        private WeakReference<Context> context;
-        private WeakReference<ContentLoadingProgressBar> progressBar;
         private File destination;
+        private WeakReference<ContentLoadingProgressBar> progressBar;
+        private WeakReference<Context> context;
 
         private MoveFiles(Context context, File destination, ContentLoadingProgressBar progressBar) {
             this.context = new WeakReference<>(context);
@@ -310,31 +327,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
-        @Override
-        public void onChanged() {
-            super.onChanged();
-            if (adapter.getItemCount() == 0){
-                noStatus.setVisibility(View.VISIBLE);
-                noStatus.setText(R.string.no_having_status);
-            } else {
-                noStatus.setVisibility(View.INVISIBLE);
-            }
-        }
-
-        @Override
-        public void onItemRangeChanged(int positionStart, int itemCount) {
-            super.onItemRangeChanged(positionStart, itemCount);
-            onChanged();
-        }
-
-        @Override
-        public void onItemRangeRemoved(int positionStart, int itemCount) {
-            super.onItemRangeRemoved(positionStart, itemCount);
-            onChanged();
-        }
-    };
-
     public class StatusVideoAdapter extends RecyclerView.Adapter<StatusVideoAdapter.ViewHolder> {
 
         @Override
@@ -342,7 +334,6 @@ public class MainActivity extends AppCompatActivity {
             holder.iv_image.setImageBitmap(contentList.get(position).getThumbnails());
             holder.layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
             holder.layout.setAlpha(0);
-            Log.v(TAG, getClass().getSimpleName() + " -> Size: "+getItemCount());
             holder.layout.setOnClickListener(view -> {
                 if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                         contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {

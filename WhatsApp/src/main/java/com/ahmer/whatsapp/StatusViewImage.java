@@ -13,7 +13,6 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.Objects;
 
-import static com.ahmer.whatsapp.Constant.EXT_GIF_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.TAG;
 
@@ -30,7 +29,7 @@ public class StatusViewImage extends AppCompatActivity {
         String format = getIntent().getStringExtra("format");
         String path = getIntent().getStringExtra("path");
         try {
-            if (Objects.requireNonNull(format).equals(EXT_JPG_LOWER_CASE) || Objects.requireNonNull(format).equals(EXT_GIF_LOWER_CASE)) {
+            if (Objects.requireNonNull(format).equals(EXT_JPG_LOWER_CASE)) {
                 Bitmap bitmap = BitmapFactory.decodeFile(path);
                 Log.v(Constant.TAG, "Path is: " + bitmap);
                 imageView.setImageBitmap(bitmap);
