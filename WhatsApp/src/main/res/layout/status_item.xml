@@ -58,7 +58,6 @@
                 android:id="@+id/tvSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
                 android:text="@android:string/ok"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
@@ -66,7 +65,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginLeft="3dp"
                 android:layout_marginRight="3dp"
                 android:text="@string/period"
@@ -77,7 +75,8 @@
                 android:id="@+id/tvType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
                 android:text="@android:string/ok"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
@@ -86,7 +85,6 @@
                 android:id="@+id/download"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/circle"
@@ -98,19 +96,17 @@
                 android:id="@+id/whatsapp"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/circle"
                 android:contentDescription="@string/logo"
                 android:padding="5dp"
-                app:srcCompat="@drawable/ic_whatsapp" />
+                android:src="@drawable/ic_whatsapp" />
 
             <ImageView
                 android:id="@+id/share"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/circle"
