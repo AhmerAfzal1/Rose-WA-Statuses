@@ -20,7 +20,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        app:cardBackgroundColor="@color/colorPrimaryDark"
+        app:cardBackgroundColor="@android:color/white"
         card_view:cardCornerRadius="20dp"
         card_view:cardElevation="0dp"
         card_view:cardMaxElevation="10dp">
@@ -34,7 +34,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
-            app:cardBackgroundColor="@android:color/white"
+            app:cardBackgroundColor="@color/colorPrimaryDark"
             card_view:cardCornerRadius="20dp"
             card_view:cardElevation="0dp"
             card_view:cardMaxElevation="10dp">
@@ -57,8 +57,8 @@
                     android:paddingTop="10dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="10dp"
-                    android:text="@string/status_alert"
-                    android:textColor="@color/colorPrimary"
+                    android:text="App developed by"
+                    android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -74,9 +74,9 @@
                     android:fontFamily="@font/roboto"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="@string/status_saved"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="14sp" />
+                    android:text="Ahmer Afzal"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tvSaved"
@@ -91,8 +91,8 @@
                     android:fontFamily="@font/roboto"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="@string/status_saved"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:text="ahmerafzal@yahoo.com"
+                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
                 <TextView

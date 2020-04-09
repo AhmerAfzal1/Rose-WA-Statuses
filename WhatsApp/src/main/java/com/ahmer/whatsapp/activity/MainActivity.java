@@ -27,6 +27,7 @@ import com.ahmer.afzal.utils.utilcode.ThreadUtils;
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.ahmer.whatsapp.Constant;
+import com.ahmer.whatsapp.DialogSaved;
 import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
@@ -111,17 +112,19 @@ public class MainActivity extends AppCompatActivity {
         });
         MaterialTextView title = findViewById(R.id.tvTitle);
         title.setText(R.string.app_name);
+        ImageView info = findViewById(R.id.ivInfo);
+        info.setOnClickListener(v -> new DialogSaved(this));
         noStatus = findViewById(R.id.tvNoStatus);
-        adapter = new StatusVideoAdapter();
+        adView = findViewById(R.id.adView);
         progressBar = findViewById(R.id.progressBar);
-        recyclerView = findViewById(R.id.rvWhatsappStatusList);
+        recyclerView = findViewById(R.id.rvStatusList);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         recyclerView.getRecycledViewPool().clear();
-        adView = findViewById(R.id.adView);
+        adapter = new StatusVideoAdapter();
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
-        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         MobileAds.initialize(this, getResources().getString(R.string.banner_ad_app_id));
         adView.setAdListener(new AdListener() {
             @Override
@@ -206,8 +209,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if (moviesFolder.exists()) {
             getStatuses(moviesFolder.listFiles());
-        }*/
-
+        }
+        */
         if (dirWhatsApp.exists()) {
             getStatuses(dirWhatsApp.listFiles());
         }
@@ -321,8 +324,7 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(aBoolean);
             progressBar.get().setVisibility(View.GONE);
             ThreadUtils.runOnUiThread(() -> {
-                //new DialogSaved(context.get(), destination).saved();
-                ToastUtils.showLong(context.get().getString(R.string.status_saved) + " " + destination.getAbsolutePath());
+                ToastUtils.showLong(context.get().getString(R.string.status_saved) + "\n" + destination.getPath());
                 new MediaScanner(context.get(), destination);
             });
         }

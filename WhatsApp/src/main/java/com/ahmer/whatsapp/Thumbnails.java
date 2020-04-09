@@ -1,11 +1,11 @@
 package com.ahmer.whatsapp;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.os.CancellationSignal;
 import android.os.OperationCanceledException;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Size;
 
@@ -18,6 +18,7 @@ import static com.ahmer.whatsapp.Constant.IMAGE_HEIGHT;
 import static com.ahmer.whatsapp.Constant.IMAGE_WIDTH;
 import static com.ahmer.whatsapp.Constant.TAG;
 
+@SuppressWarnings("deprecation")
 public final class Thumbnails {
 
     public static Bitmap videoThumbnails(File file) {
@@ -26,11 +27,11 @@ public final class Thumbnails {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 CancellationSignal signal = new CancellationSignal();
                 bitmap = ThumbnailUtils.createVideoThumbnail(file, new Size(IMAGE_WIDTH, IMAGE_HEIGHT), signal);
-                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> MP4 files" + file.getName());
+                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> API 29 MP4 Thumbs: " + file.getName());
                 signal.throwIfCanceled();
             } else {
-                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> BitmapFactory.decodeFile works");
+                bitmap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
+                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> API 28 MP4 Thumbs: " + file.getName());
             }
         } catch (OperationCanceledException o) {
             o.printStackTrace();
@@ -52,11 +53,11 @@ public final class Thumbnails {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 CancellationSignal signal = new CancellationSignal();
                 bitmap = ThumbnailUtils.createImageThumbnail(file, new Size(IMAGE_WIDTH, IMAGE_HEIGHT), signal);
-                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> JPG files" + file.getName());
+                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> API 29 JPG Thumbs: " + file.getName());
                 signal.throwIfCanceled();
             } else {
-                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> BitmapFactory.decodeFile works");
+                bitmap = ThumbnailUtils.createImageThumbnail(file.getAbsolutePath(), MediaStore.Images.Thumbnails.MINI_KIND);
+                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> API 28 JPG Thumbs: " + file.getName());
             }
         } catch (OperationCanceledException o) {
             o.printStackTrace();

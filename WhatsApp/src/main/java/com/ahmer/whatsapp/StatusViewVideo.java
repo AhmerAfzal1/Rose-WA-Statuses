@@ -14,6 +14,7 @@ import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
+import java.io.File;
 import java.util.Objects;
 
 import static com.ahmer.whatsapp.Constant.EXT_MP4_LOWER_CASE;
@@ -36,7 +37,7 @@ public class StatusViewVideo extends AppCompatActivity implements MediaPlayer.On
         Log.v(Constant.TAG, "Path is: " + path);
         try {
             if (Objects.requireNonNull(format).equals(EXT_MP4_LOWER_CASE)) {
-                Uri uri = Uri.parse(path);
+                Uri uri = Uri.fromFile(new File(Objects.requireNonNull(path)));
                 MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                 retriever.setDataSource(getApplicationContext(), uri);
                 String hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO);

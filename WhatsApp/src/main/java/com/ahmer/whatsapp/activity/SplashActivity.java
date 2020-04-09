@@ -98,7 +98,6 @@ public class SplashActivity extends AppCompatActivity {
                     FirebaseCrashlytics.getInstance().recordException(e);
                 }
             });
-
             return null;
         }
 
