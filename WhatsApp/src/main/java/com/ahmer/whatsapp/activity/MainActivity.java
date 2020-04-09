@@ -46,6 +46,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static com.ahmer.whatsapp.Constant.EXT_GIF_LOWER_CASE;
@@ -210,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
         if (moviesFolder.exists()) {
             getStatuses(moviesFolder.listFiles());
         }
-        */
+         */
         if (dirWhatsApp.exists()) {
             getStatuses(dirWhatsApp.listFiles());
         }
@@ -241,18 +242,21 @@ public class MainActivity extends AppCompatActivity {
             StatusItem item = new StatusItem();
             if (file.getName().endsWith(EXT_MP4_LOWER_CASE) || file.getName().endsWith(EXT_MP4_UPPER_CASE)) {
                 item.setPath(file.getAbsolutePath());
+                item.setSize(file.length());
                 item.setFormat(EXT_MP4_LOWER_CASE);
                 Bitmap video = Thumbnails.videoThumbnails(file);
                 item.setThumbnails(video);
             }
             if (file.getName().endsWith(EXT_JPG_LOWER_CASE) || file.getName().endsWith(EXT_JPG_UPPER_CASE)) {
                 item.setPath(file.getAbsolutePath());
+                item.setSize(file.length());
                 item.setFormat(EXT_JPG_LOWER_CASE);
                 Bitmap jpg = Thumbnails.imageThumbnails(file);
                 item.setThumbnails(jpg);
             }
             if (file.getName().endsWith(EXT_GIF_LOWER_CASE) || file.getName().endsWith(EXT_GIF_UPPER_CASE)) {
                 item.setPath(file.getAbsolutePath());
+                item.setSize(file.length());
                 item.setFormat(EXT_GIF_LOWER_CASE);
                 Bitmap gif = Thumbnails.imageThumbnails(file);
                 item.setThumbnails(gif);
@@ -335,6 +339,22 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final StatusVideoAdapter.ViewHolder holder, final int position) {
             holder.iv_image.setImageBitmap(contentList.get(position).getThumbnails());
+            if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
+                    contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
+                String mp4 = "MP4";
+                holder.type.setText(mp4);
+            }
+            if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) ||
+                    contentList.get(position).getFormat().endsWith(EXT_JPG_UPPER_CASE)) {
+                String jpg = "JPG";
+                holder.type.setText(jpg);
+            }
+            if (contentList.get(position).getFormat().endsWith(EXT_GIF_LOWER_CASE) ||
+                    contentList.get(position).getFormat().endsWith(EXT_GIF_UPPER_CASE)) {
+                String gif = "GIF";
+                holder.type.setText(gif);
+            }
+            holder.size.setText(readableFileSize(contentList.get(position).getSize()));
             holder.layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
             holder.layout.setAlpha(0);
             holder.layout.setOnClickListener(view -> {
@@ -470,23 +490,34 @@ public class MainActivity extends AppCompatActivity {
             return super.getItemId(position);
         }
 
+        private String readableFileSize(long size) {
+            if (size <= 0) return "0 Bytes";
+            final String[] units = new String[]{"Bytes", "KB", "MB", "GB", "TB"};
+            int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+            return new DecimalFormat("#,##0.##").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+        }
+
         private class ViewHolder extends RecyclerView.ViewHolder {
 
-            ImageView iv_image;
-            RelativeLayout layout;
-            ImageView whatsAppShare;
-            ImageView share;
-            ImageView download;
             FloatingActionButton play_btn;
+            ImageView download;
+            ImageView iv_image;
+            ImageView share;
+            ImageView whatsAppShare;
+            RelativeLayout layout;
+            TextView size;
+            TextView type;
 
             private ViewHolder(View v) {
                 super(v);
+                download = v.findViewById(R.id.download);
                 iv_image = v.findViewById(R.id.iv_image);
                 layout = v.findViewById(R.id.rl_select);
-                whatsAppShare = v.findViewById(R.id.whatsapp);
-                share = v.findViewById(R.id.share);
-                download = v.findViewById(R.id.download);
                 play_btn = v.findViewById(R.id.play_btn);
+                share = v.findViewById(R.id.share);
+                size = v.findViewById(R.id.tvSize);
+                type = v.findViewById(R.id.tvType);
+                whatsAppShare = v.findViewById(R.id.whatsapp);
             }
         }
     }
