@@ -331,34 +331,34 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final StatusVideoAdapter.ViewHolder holder, final int position) {
-            holder.thumbnails.setImageBitmap(contentList.get(position).getThumbnails());
-            holder.layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
-            holder.layout.setAlpha(0);
+            holder.ivThumbnails.setImageBitmap(contentList.get(position).getThumbnails());
+            holder.relativeLayout.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            holder.relativeLayout.setAlpha(0);
             holder.progressBar.setVisibility(View.GONE);
-            holder.size.setText(readableFileSize(contentList.get(position).getSize()));
+            holder.showSize.setText(readableFileSize(contentList.get(position).getSize()));
             if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                     contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
                 String mp4 = "MP4";
-                holder.type.setText(mp4);
+                holder.showType.setText(mp4);
             }
             if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) ||
                     contentList.get(position).getFormat().endsWith(EXT_JPG_UPPER_CASE)) {
                 String jpg = "JPG";
-                holder.type.setText(jpg);
+                holder.showType.setText(jpg);
             }
             if (contentList.get(position).getFormat().endsWith(EXT_GIF_LOWER_CASE) ||
                     contentList.get(position).getFormat().endsWith(EXT_GIF_UPPER_CASE)) {
                 String gif = "GIF";
-                holder.type.setText(gif);
+                holder.showType.setText(gif);
             }
-            holder.close.setOnClickListener(v -> {
+            holder.btnClose.setOnClickListener(v -> {
                 File file = new File(contentList.get(position).getPath());
                 FileUtils.delete(file);
                 contentList.remove(position);
                 adapter.notifyItemRemoved(position);
                 adapter.notifyItemRangeRemoved(position, getItemCount());
             });
-            holder.play_btn.setOnClickListener(view -> {
+            holder.btnPlay.setOnClickListener(view -> {
                 if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                         contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
                     Bundle bundleMP4 = new Bundle();
@@ -394,7 +394,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            holder.share.setOnClickListener(v -> {
+            holder.btnShare.setOnClickListener(v -> {
                 Bundle bundleShare = new Bundle();
                 bundleShare.putString(FirebaseAnalytics.Param.ITEM_ID, "Share");
                 bundleShare.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Shared Something");
@@ -406,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(Intent.createChooser(sendIntent, "Send Status via:"));
             });
 
-            holder.whatsAppShare.setOnClickListener(v -> {
+            holder.btnShareWhatsApp.setOnClickListener(v -> {
                 Bundle bundleWhatsApp = new Bundle();
                 bundleWhatsApp.putString(FirebaseAnalytics.Param.ITEM_ID, "ShareWhatsApp");
                 bundleWhatsApp.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Shared Something on WhatsApp");
@@ -419,7 +419,7 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(Intent.createChooser(sendIntent, "Send Status via:"));
             });
 
-            holder.download.setOnClickListener(v -> {
+            holder.btnDownload.setOnClickListener(v -> {
                 File source = new File(contentList.get(position).getPath());
                 String directoryAndFileName = "/Rose WA Statuses/Status_" + FileUtils.getFileNameNoExtension(source.getAbsolutePath());
                 File statusDirectory = new File(PathUtils.getExternalStoragePath(), MainActivity.this.getString(R.string.app_name));
@@ -500,29 +500,29 @@ public class MainActivity extends AppCompatActivity {
 
         private class ViewHolder extends RecyclerView.ViewHolder {
 
-            FloatingActionButton play_btn;
-            ImageView download;
-            ImageView thumbnails;
-            ImageView share;
-            ImageView whatsAppShare;
+            FloatingActionButton btnPlay;
+            ImageView btnClose;
+            ImageView btnDownload;
+            ImageView btnShare;
+            ImageView btnShareWhatsApp;
+            ImageView ivThumbnails;
             ProgressBar progressBar;
-            RelativeLayout layout;
-            TextView size;
-            TextView type;
-            ImageView close;
+            RelativeLayout relativeLayout;
+            TextView showSize;
+            TextView showType;
 
             private ViewHolder(View v) {
                 super(v);
-                download = v.findViewById(R.id.ivDownload);
-                thumbnails = v.findViewById(R.id.ivImage);
-                layout = v.findViewById(R.id.layoutStatus);
-                play_btn = v.findViewById(R.id.buttonPlay);
+                btnClose = v.findViewById(R.id.ivClose);
+                btnDownload = v.findViewById(R.id.ivDownload);
+                btnPlay = v.findViewById(R.id.buttonPlay);
+                btnShare = v.findViewById(R.id.ivShare);
+                btnShareWhatsApp = v.findViewById(R.id.ivWhatsapp);
+                ivThumbnails = v.findViewById(R.id.ivImage);
                 progressBar = v.findViewById(R.id.progressBar);
-                share = v.findViewById(R.id.ivShare);
-                size = v.findViewById(R.id.tvSize);
-                close = v.findViewById(R.id.ivClose);
-                type = v.findViewById(R.id.tvType);
-                whatsAppShare = v.findViewById(R.id.ivWhatsapp);
+                relativeLayout = v.findViewById(R.id.layoutStatus);
+                showSize = v.findViewById(R.id.tvSize);
+                showType = v.findViewById(R.id.tvType);
             }
         }
     }
