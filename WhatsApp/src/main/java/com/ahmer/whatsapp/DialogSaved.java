@@ -12,10 +12,8 @@ import java.util.Objects;
 
 public class DialogSaved {
 
-    public DialogSaved(Context context/*, File file*/) {
+    public DialogSaved(Context context) {
         super();
-        //this.file = file;
-        //private File file;
         final Dialog dialog = new Dialog(context);
         try {
             Objects.requireNonNull(dialog.getWindow()).requestFeature(Window.FEATURE_NO_TITLE);
@@ -23,7 +21,6 @@ public class DialogSaved {
             dialog.setContentView(R.layout.status_saved);
             dialog.getWindow().setLayout(-1, -2);
             dialog.getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            //((TextView) dialog.findViewById(R.id.tvSaved)).setText(file.getPath());
             dialog.findViewById(R.id.tvOk).setOnClickListener(v -> dialog.dismiss());
             dialog.show();
         } catch (Exception e) {

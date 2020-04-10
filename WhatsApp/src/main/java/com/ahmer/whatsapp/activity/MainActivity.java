@@ -12,12 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -68,12 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
     private AdView adView;
     private ArrayList<StatusItem> contentList = new ArrayList<>();
-    private ContentLoadingProgressBar progressBar;
     private File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
     private File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
     private File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
     private FirebaseAnalytics firebaseAnalytics;
     private RecyclerView recyclerView;
+    private RelativeLayout noStatusLayout;
     private StatusVideoAdapter adapter;
     private TextView noStatus;
 
@@ -82,10 +82,10 @@ public class MainActivity extends AppCompatActivity {
         public void onChanged() {
             super.onChanged();
             if (adapter.getItemCount() == 0) {
-                noStatus.setVisibility(View.VISIBLE);
+                noStatusLayout.setVisibility(View.VISIBLE);
                 noStatus.setText(R.string.no_having_status);
             } else {
-                noStatus.setVisibility(View.INVISIBLE);
+                noStatusLayout.setVisibility(View.GONE);
             }
         }
 
@@ -116,8 +116,8 @@ public class MainActivity extends AppCompatActivity {
         ImageView info = findViewById(R.id.ivInfo);
         info.setOnClickListener(v -> new DialogSaved(this));
         noStatus = findViewById(R.id.tvNoStatus);
+        noStatusLayout = findViewById(R.id.layoutNoStatus);
         adView = findViewById(R.id.adView);
-        progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.rvStatusList);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         recyclerView.getRecycledViewPool().clear();
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
         adView.loadAd(adRequest);
         if (!dirWhatsApp.exists() && !dirFMWhatsApp.exists() && !dirYoWhatsApp.exists()) {
             Log.v(TAG, MainActivity.class.getSimpleName() + " -> No kind of WhatsApp installed");
-            noStatus.setVisibility(View.VISIBLE);
+            noStatusLayout.setVisibility(View.VISIBLE);
             noStatus.setText(R.string.no_whatsapp_installed);
         }
         try {
@@ -201,13 +201,6 @@ public class MainActivity extends AppCompatActivity {
         File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
         //File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/FMWhatsApp");
         Log.v(TAG, getClass().getSimpleName() + moviesFolder.getAbsolutePath());
-        if (Objects.requireNonNull(moviesFolder.listFiles()).length > 0) {
-            noStatus.setText(R.string.no_whatsapp_installed);
-            noStatus.setVisibility(View.VISIBLE);
-        } else {
-            noStatus.setText(R.string.no_having_status);
-            noStatus.setVisibility(View.VISIBLE);
-        }
         if (moviesFolder.exists()) {
             getStatuses(moviesFolder.listFiles());
         }
@@ -293,10 +286,10 @@ public class MainActivity extends AppCompatActivity {
     public static class MoveFiles extends AsyncTask<File, Integer, Boolean> {
 
         private File destination;
-        private WeakReference<ContentLoadingProgressBar> progressBar;
+        private WeakReference<ProgressBar> progressBar;
         private WeakReference<Context> context;
 
-        private MoveFiles(Context context, File destination, ContentLoadingProgressBar progressBar) {
+        private MoveFiles(Context context, File destination, ProgressBar progressBar) {
             this.context = new WeakReference<>(context);
             this.progressBar = new WeakReference<>(progressBar);
             this.destination = destination;
@@ -339,6 +332,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final StatusVideoAdapter.ViewHolder holder, final int position) {
             holder.iv_image.setImageBitmap(contentList.get(position).getThumbnails());
+            holder.progressBar.setVisibility(View.GONE);
             if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                     contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
                 String mp4 = "MP4";
@@ -437,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadMP4");
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download MP4 Status");
                     firebaseAnalytics.logEvent("Download_MP4_Open", bundleDownloadMP4);
-                    new MoveFiles(MainActivity.this, destPathMP4, progressBar).execute(source);
+                    new MoveFiles(MainActivity.this, destPathMP4, holder.progressBar).execute(source);
                     contentList.remove(position);
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeRemoved(position, getItemCount());
@@ -450,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadJPG");
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download JPG Status");
                     firebaseAnalytics.logEvent("Download_JPG_Open", bundleDownloadJPG);
-                    new MoveFiles(MainActivity.this, destPathJPG, progressBar).execute(source);
+                    new MoveFiles(MainActivity.this, destPathJPG, holder.progressBar).execute(source);
                     contentList.remove(position);
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeRemoved(position, getItemCount());
@@ -463,7 +457,7 @@ public class MainActivity extends AppCompatActivity {
                     bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadGIF");
                     bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download GIF Status");
                     firebaseAnalytics.logEvent("Download_GIF_Open", bundleDownloadGIF);
-                    new MoveFiles(MainActivity.this, destPathGIF, progressBar).execute(source);
+                    new MoveFiles(MainActivity.this, destPathGIF, holder.progressBar).execute(source);
                     contentList.remove(position);
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeRemoved(position, getItemCount());
@@ -504,6 +498,7 @@ public class MainActivity extends AppCompatActivity {
             ImageView iv_image;
             ImageView share;
             ImageView whatsAppShare;
+            ProgressBar progressBar;
             RelativeLayout layout;
             TextView size;
             TextView type;
@@ -514,6 +509,7 @@ public class MainActivity extends AppCompatActivity {
                 iv_image = v.findViewById(R.id.iv_image);
                 layout = v.findViewById(R.id.rl_select);
                 play_btn = v.findViewById(R.id.play_btn);
+                progressBar = v.findViewById(R.id.progressBar);
                 share = v.findViewById(R.id.share);
                 size = v.findViewById(R.id.tvSize);
                 type = v.findViewById(R.id.tvType);

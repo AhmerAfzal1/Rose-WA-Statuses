@@ -1,7 +1,6 @@
 package com.ahmer.whatsapp;
 
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +19,7 @@ import java.util.Objects;
 import static com.ahmer.whatsapp.Constant.EXT_MP4_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.TAG;
 
-public class StatusViewVideo extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
+public class StatusViewVideo extends AppCompatActivity {
 
     private VideoView view;
 
@@ -56,6 +55,10 @@ public class StatusViewVideo extends AppCompatActivity implements MediaPlayer.On
             ThrowableUtils.getFullStackTrace(e);
             Log.v(TAG, getClass().getSimpleName() + " -> " + e.getMessage());
         }
+        view.setOnCompletionListener(mp -> {
+            view.stopPlayback();
+            StatusViewVideo.this.finish();
+        });
     }
 
     @Override
@@ -68,10 +71,5 @@ public class StatusViewVideo extends AppCompatActivity implements MediaPlayer.On
     protected void onPause() {
         view.stopPlayback();
         super.onPause();
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-        ToastUtils.showShort("Video finished");
     }
 }
