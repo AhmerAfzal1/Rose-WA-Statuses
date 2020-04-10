@@ -48,6 +48,7 @@
         android:padding="10dp"
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
+        android:shrinkColumns="*"
         android:paddingBottom="5dp">
 
         <TableRow
@@ -60,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:text="@android:string/ok"
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -69,7 +70,7 @@
                 android:layout_marginRight="3dp"
                 android:text="@string/period"
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tvType"
@@ -79,7 +80,7 @@
                 android:layout_marginRight="10dp"
                 android:text="@android:string/ok"
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/download"

@@ -2,8 +2,8 @@ package com.ahmer.whatsapp;
 
 public class Constant {
     public static final String TAG = "WhatsApp";
-    public static final int IMAGE_HEIGHT = 256;
-    public static final int IMAGE_WIDTH = 256;
+    public static final int IMAGE_WIDTH = 512;
+    public static final int IMAGE_HEIGHT = 384;
     public static final String EXT_GIF_LOWER_CASE = ".gif";
     public static final String EXT_GIF_UPPER_CASE = ".GIF";
     public static final String EXT_JPG_LOWER_CASE = ".jpg";
