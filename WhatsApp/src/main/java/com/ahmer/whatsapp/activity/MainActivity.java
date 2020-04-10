@@ -331,8 +331,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final StatusVideoAdapter.ViewHolder holder, final int position) {
-            holder.iv_image.setImageBitmap(contentList.get(position).getThumbnails());
+            holder.thumbnails.setImageBitmap(contentList.get(position).getThumbnails());
+            holder.layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            holder.layout.setAlpha(0);
             holder.progressBar.setVisibility(View.GONE);
+            holder.size.setText(readableFileSize(contentList.get(position).getSize()));
             if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                     contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
                 String mp4 = "MP4";
@@ -348,10 +351,14 @@ public class MainActivity extends AppCompatActivity {
                 String gif = "GIF";
                 holder.type.setText(gif);
             }
-            holder.size.setText(readableFileSize(contentList.get(position).getSize()));
-            holder.layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
-            holder.layout.setAlpha(0);
-            holder.layout.setOnClickListener(view -> {
+            holder.close.setOnClickListener(v -> {
+                File file = new File(contentList.get(position).getPath());
+                FileUtils.delete(file);
+                contentList.remove(position);
+                adapter.notifyItemRemoved(position);
+                adapter.notifyItemRangeRemoved(position, getItemCount());
+            });
+            holder.play_btn.setOnClickListener(view -> {
                 if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                         contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
                     Bundle bundleMP4 = new Bundle();
@@ -495,25 +502,27 @@ public class MainActivity extends AppCompatActivity {
 
             FloatingActionButton play_btn;
             ImageView download;
-            ImageView iv_image;
+            ImageView thumbnails;
             ImageView share;
             ImageView whatsAppShare;
             ProgressBar progressBar;
             RelativeLayout layout;
             TextView size;
             TextView type;
+            ImageView close;
 
             private ViewHolder(View v) {
                 super(v);
-                download = v.findViewById(R.id.download);
-                iv_image = v.findViewById(R.id.iv_image);
-                layout = v.findViewById(R.id.rl_select);
-                play_btn = v.findViewById(R.id.play_btn);
+                download = v.findViewById(R.id.ivDownload);
+                thumbnails = v.findViewById(R.id.ivImage);
+                layout = v.findViewById(R.id.layoutStatus);
+                play_btn = v.findViewById(R.id.buttonPlay);
                 progressBar = v.findViewById(R.id.progressBar);
-                share = v.findViewById(R.id.share);
+                share = v.findViewById(R.id.ivShare);
                 size = v.findViewById(R.id.tvSize);
+                close = v.findViewById(R.id.ivClose);
                 type = v.findViewById(R.id.tvType);
-                whatsAppShare = v.findViewById(R.id.whatsapp);
+                whatsAppShare = v.findViewById(R.id.ivWhatsapp);
             }
         }
     }
