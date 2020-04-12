@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
         if (moviesFolder.exists()) {
             getStatuses(moviesFolder.listFiles());
         }
-         */
+        */
         if (dirWhatsApp.exists()) {
             getStatuses(dirWhatsApp.listFiles());
         }

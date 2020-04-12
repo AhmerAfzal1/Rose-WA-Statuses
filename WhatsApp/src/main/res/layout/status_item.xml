@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
@@ -25,13 +24,14 @@
 
         <ImageView
             android:id="@+id/ivClose"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_alignEnd="@+id/ivImage"
             android:layout_alignRight="@+id/ivImage"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
+            android:background="@drawable/background_alpha"
             android:contentDescription="@string/logo"
             app:srcCompat="@drawable/ic_close" />
 
@@ -40,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            app:backgroundTint="@color/colorPrimary"
             app:srcCompat="@drawable/ic_play" />
     </RelativeLayout>
 
@@ -49,22 +50,24 @@
         android:layout_height="170dp"
         android:alpha="0.5" />
 
-    <TableLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/status_view"
         android:background="@drawable/background"
-        android:gravity="center"
         android:orientation="horizontal"
-        android:padding="10dp"
         android:paddingStart="5dp"
+        android:paddingTop="5dp"
         android:paddingEnd="5dp"
-        android:paddingBottom="5dp"
-        android:shrinkColumns="*">
+        android:paddingBottom="5dp">
 
-        <TableRow
-            android:gravity="center"
-            tools:ignore="UselessParent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="start|center">
 
             <TextView
                 android:id="@+id/tvSize"
@@ -92,13 +95,21 @@
                 android:text="@android:string/ok"
                 android:textColor="@android:color/white"
                 android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="end">
 
             <ImageView
                 android:id="@+id/ivDownload"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:background="@drawable/circle"
                 android:contentDescription="@string/logo"
                 android:padding="4dp"
@@ -108,8 +119,8 @@
                 android:id="@+id/ivWhatsapp"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:background="@drawable/circle"
                 android:contentDescription="@string/logo"
                 android:padding="5dp"
@@ -119,14 +130,14 @@
                 android:id="@+id/ivShare"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:background="@drawable/circle"
                 android:contentDescription="@string/logo"
                 android:padding="4dp"
                 app:srcCompat="@drawable/ic_share" />
-        </TableRow>
-    </TableLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"

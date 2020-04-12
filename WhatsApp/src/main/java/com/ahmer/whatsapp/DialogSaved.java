@@ -18,7 +18,7 @@ public class DialogSaved {
         try {
             Objects.requireNonNull(dialog.getWindow()).requestFeature(Window.FEATURE_NO_TITLE);
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-            dialog.setContentView(R.layout.status_saved);
+            dialog.setContentView(R.layout.about_ahmer);
             dialog.getWindow().setLayout(-1, -2);
             dialog.getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             dialog.findViewById(R.id.tvOk).setOnClickListener(v -> dialog.dismiss());
