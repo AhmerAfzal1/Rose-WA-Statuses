@@ -23,11 +23,11 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
-                android:contentDescription="@string/logo"
+                android:contentDescription="@string/empty_description"
                 android:padding="4dp"
                 app:srcCompat="@drawable/ic_arrow_back" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
                     android:id="@+id/ivInfo"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:contentDescription="@string/logo"
+                    android:contentDescription="@string/empty_description"
                     app:srcCompat="@drawable/ic_info" />
             </LinearLayout>
         </RelativeLayout>
@@ -88,7 +88,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvStatusList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@id/adView"
         android:layout_below="@id/layoutNoStatus"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
@@ -99,21 +100,15 @@
         android:gravity="top"
         android:scrollbars="vertical" />
 
-    <LinearLayout
-        android:id="@+id/adLayout"
-        android:layout_width="match_parent"
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:gravity="center">
-
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            ads:adSize="LARGE_BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id" />
-    </LinearLayout>
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        ads:adSize="LARGE_BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id" />
 </RelativeLayout>

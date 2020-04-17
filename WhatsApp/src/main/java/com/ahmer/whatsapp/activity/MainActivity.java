@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.FileUtils;
 import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.afzal.utils.utilcode.ThreadUtils;
@@ -40,7 +41,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
@@ -81,11 +81,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onChanged() {
             super.onChanged();
-            if (adapter.getItemCount() == 0) {
+            if (!(AppUtils.isAppInstalled(Constant.PKG_WHATSAPP) || AppUtils.isAppInstalled(Constant.PKG_FM_WhatsApp)
+                    || AppUtils.isAppInstalled(Constant.PKG_Yo_WhatsApp))) {
+                Log.v(TAG, MainActivity.class.getSimpleName() + " -> No kind of WhatsApp installed");
                 noStatusLayout.setVisibility(View.VISIBLE);
-                noStatus.setText(R.string.no_having_status);
+                noStatus.setText(R.string.no_whatsapp_installed);
             } else {
-                noStatusLayout.setVisibility(View.GONE);
+                if (adapter.getItemCount() == 0) {
+                    noStatusLayout.setVisibility(View.VISIBLE);
+                    noStatus.setText(R.string.no_having_status);
+                } else {
+                    noStatusLayout.setVisibility(View.GONE);
+                }
             }
         }
 
@@ -111,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
         });
-        MaterialTextView title = findViewById(R.id.tvTitle);
+        TextView title = findViewById(R.id.tvTitle);
         title.setText(R.string.app_name);
         ImageView info = findViewById(R.id.ivInfo);
         info.setOnClickListener(v -> new DialogSaved(this));
@@ -121,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rvStatusList);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         recyclerView.getRecycledViewPool().clear();
+        recyclerView.setHasFixedSize(true);
         adapter = new StatusVideoAdapter();
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
@@ -181,11 +189,6 @@ public class MainActivity extends AppCompatActivity {
         });
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
-        if (!dirWhatsApp.exists() && !dirFMWhatsApp.exists() && !dirYoWhatsApp.exists()) {
-            Log.v(TAG, MainActivity.class.getSimpleName() + " -> No kind of WhatsApp installed");
-            noStatusLayout.setVisibility(View.VISIBLE);
-            noStatus.setText(R.string.no_whatsapp_installed);
-        }
         try {
             getData();
         } catch (Exception e) {
@@ -335,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
             holder.relativeLayout.setBackgroundColor(Color.parseColor("#FFFFFF"));
             holder.relativeLayout.setAlpha(0);
             holder.progressBar.setVisibility(View.GONE);
-            holder.showSize.setText(readableFileSize(contentList.get(position).getSize()));
+            holder.showSize.setText(getFileSize(contentList.get(position).getSize()));
             if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                     contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
                 String mp4 = "MP4";
@@ -421,8 +424,8 @@ public class MainActivity extends AppCompatActivity {
 
             holder.btnDownload.setOnClickListener(v -> {
                 File source = new File(contentList.get(position).getPath());
-                String directoryAndFileName = "/Rose WA Statuses/Status_" + FileUtils.getFileNameNoExtension(source.getAbsolutePath());
-                File statusDirectory = new File(PathUtils.getExternalStoragePath(), MainActivity.this.getString(R.string.app_name));
+                String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(source.getAbsolutePath());
+                File statusDirectory = new File(PathUtils.getExternalStoragePath(), MainActivity.this.getResources().getString(R.string.app_name));
                 if (!statusDirectory.exists()) {
                     if (statusDirectory.mkdirs()) {
                         Log.v(TAG, getClass().getSimpleName() + " -> The directory has been created: " + statusDirectory);
@@ -491,7 +494,7 @@ public class MainActivity extends AppCompatActivity {
             return super.getItemId(position);
         }
 
-        private String readableFileSize(long size) {
+        private String getFileSize(long size) {
             if (size <= 0) return "0 Bytes";
             final String[] units = new String[]{"Bytes", "KB", "MB", "GB", "TB"};
             int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
