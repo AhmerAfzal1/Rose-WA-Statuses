@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ahmer.afzal.utils.constants.AppPackageConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.FileUtils;
 import com.ahmer.afzal.utils.utilcode.PathUtils;
@@ -81,9 +82,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onChanged() {
             super.onChanged();
-            if (!(AppUtils.isAppInstalled(Constant.PKG_WHATSAPP) || AppUtils.isAppInstalled(Constant.PKG_FM_WhatsApp)
-                    || AppUtils.isAppInstalled(Constant.PKG_Yo_WhatsApp))) {
-                Log.v(TAG, MainActivity.class.getSimpleName() + " -> No kind of WhatsApp installed");
+            if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp)
+                    || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
+                Log.v(TAG, MainActivity.class.getSimpleName() + "-> No kind of WhatsApp installed");
                 noStatusLayout.setVisibility(View.VISIBLE);
                 noStatus.setText(R.string.no_whatsapp_installed);
             } else {
@@ -194,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
             ThrowableUtils.getFullStackTrace(e);
-            Log.v(TAG, getClass().getSimpleName() + " -> Error during loading data: " + e.getMessage());
+            Log.v(TAG, getClass().getSimpleName() + "-> Error during loading data: " + e.getMessage());
             FirebaseCrashlytics.getInstance().recordException(e);
         }
     }
@@ -207,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
         if (moviesFolder.exists()) {
             getStatuses(moviesFolder.listFiles());
         }
-        */
+       */
         if (dirWhatsApp.exists()) {
             getStatuses(dirWhatsApp.listFiles());
         }
@@ -428,12 +429,12 @@ public class MainActivity extends AppCompatActivity {
                 File statusDirectory = new File(PathUtils.getExternalStoragePath(), MainActivity.this.getResources().getString(R.string.app_name));
                 if (!statusDirectory.exists()) {
                     if (statusDirectory.mkdirs()) {
-                        Log.v(TAG, getClass().getSimpleName() + " -> The directory has been created: " + statusDirectory);
+                        Log.v(TAG, getClass().getSimpleName() + "-> The directory has been created: " + statusDirectory);
                     } else {
-                        Log.v(TAG, getClass().getSimpleName() + " -> Could not create the directory for some unknown reason");
+                        Log.v(TAG, getClass().getSimpleName() + "-> Could not create the directory for some unknown reason");
                     }
                 } else {
-                    Log.v(TAG, getClass().getSimpleName() + " -> This directory has already been created");
+                    Log.v(TAG, getClass().getSimpleName() + "-> This directory has already been created");
                 }
                 if (source.getAbsolutePath().endsWith(EXT_MP4_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_MP4_UPPER_CASE)) {
                     File destPathMP4 = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_MP4_LOWER_CASE);
@@ -446,7 +447,7 @@ public class MainActivity extends AppCompatActivity {
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeRemoved(position, getItemCount());
                 } else {
-                    Log.v(TAG, getClass().getSimpleName() + " -> MP4: No data was discovered and saved");
+                    Log.v(TAG, getClass().getSimpleName() + "-> MP4: No data was discovered and saved");
                 }
                 if (source.getAbsolutePath().endsWith(EXT_JPG_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_JPG_UPPER_CASE)) {
                     File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_JPG_LOWER_CASE);
@@ -459,7 +460,7 @@ public class MainActivity extends AppCompatActivity {
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeRemoved(position, getItemCount());
                 } else {
-                    Log.v(TAG, getClass().getSimpleName() + " -> JPG: No data was discovered and saved");
+                    Log.v(TAG, getClass().getSimpleName() + "-> JPG: No data was discovered and saved");
                 }
                 if (source.getAbsolutePath().endsWith(EXT_GIF_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_GIF_UPPER_CASE)) {
                     File destPathGIF = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_GIF_LOWER_CASE);
@@ -472,7 +473,7 @@ public class MainActivity extends AppCompatActivity {
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeRemoved(position, getItemCount());
                 } else {
-                    Log.v(TAG, getClass().getSimpleName() + " -> GIF: No data was discovered and saved");
+                    Log.v(TAG, getClass().getSimpleName() + "-> GIF: No data was discovered and saved");
                 }
             });
         }

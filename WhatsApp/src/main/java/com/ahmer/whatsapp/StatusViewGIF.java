@@ -35,12 +35,12 @@ public class StatusViewGIF extends AppCompatActivity {
                 webView.getSettings().setLoadsImagesAutomatically(true);
                 webView.getSettings().setJavaScriptEnabled(true);
                 webView.loadUrl("file:///" + path);
-                Log.v(TAG, getClass().getSimpleName() + " -> GIF path: " + "file:///" + path);
+                Log.v(TAG, getClass().getSimpleName() + "-> GIF path: " + "file:///" + path);
             }
         } catch (Exception e) {
             e.printStackTrace();
             ThrowableUtils.getFullStackTrace(e);
-            Log.v(TAG, getClass().getSimpleName() + " -> " + e.getMessage());
+            Log.v(TAG, getClass().getSimpleName() + "-> " + e.getMessage());
         }
     }
 }

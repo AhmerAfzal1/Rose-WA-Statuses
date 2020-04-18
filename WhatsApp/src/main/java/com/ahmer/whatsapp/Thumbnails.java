@@ -27,21 +27,21 @@ public final class Thumbnails {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 CancellationSignal signal = new CancellationSignal();
                 bitmap = ThumbnailUtils.createVideoThumbnail(file, new Size(IMAGE_WIDTH, IMAGE_HEIGHT), signal);
-                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> API 29 MP4 Thumbs: " + file.getName());
+                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> API 29 MP4 Thumbs: " + file.getName());
                 signal.throwIfCanceled();
             } else {
                 bitmap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
-                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> API 28 MP4 Thumbs: " + file.getName());
+                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> API 28 MP4 Thumbs: " + file.getName());
             }
         } catch (OperationCanceledException o) {
             o.printStackTrace();
             ThrowableUtils.getFullStackTrace(o);
-            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> OperationCanceledException during generating videos thumbnails: " + o.getMessage());
+            Log.v(TAG, Thumbnails.class.getSimpleName() + "-> OperationCanceledException during generating videos thumbnails: " + o.getMessage());
             FirebaseCrashlytics.getInstance().recordException(o);
         } catch (Exception e) {
             e.printStackTrace();
             ThrowableUtils.getFullStackTrace(e);
-            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> Error during generating videos thumbnails: " + e.getMessage());
+            Log.v(TAG, Thumbnails.class.getSimpleName() + "-> Error during generating videos thumbnails: " + e.getMessage());
             FirebaseCrashlytics.getInstance().recordException(e);
         }
         return bitmap;
@@ -53,21 +53,21 @@ public final class Thumbnails {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 CancellationSignal signal = new CancellationSignal();
                 bitmap = ThumbnailUtils.createImageThumbnail(file, new Size(IMAGE_WIDTH, IMAGE_HEIGHT), signal);
-                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> API 29 JPG Thumbs: " + file.getName());
+                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> API 29 JPG Thumbs: " + file.getName());
                 signal.throwIfCanceled();
             } else {
                 bitmap = ThumbnailUtils.createImageThumbnail(file.getAbsolutePath(), MediaStore.Images.Thumbnails.MINI_KIND);
-                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> API 28 JPG Thumbs: " + file.getName());
+                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> API 28 JPG Thumbs: " + file.getName());
             }
         } catch (OperationCanceledException o) {
             o.printStackTrace();
             ThrowableUtils.getFullStackTrace(o);
-            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> OperationCanceledException during generating videos thumbnails: " + o.getMessage());
+            Log.v(TAG, Thumbnails.class.getSimpleName() + "-> OperationCanceledException during generating videos thumbnails: " + o.getMessage());
             FirebaseCrashlytics.getInstance().recordException(o);
         } catch (Exception e) {
             e.printStackTrace();
             ThrowableUtils.getFullStackTrace(e);
-            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> Error during generating videos thumbnails: " + e.getMessage());
+            Log.v(TAG, Thumbnails.class.getSimpleName() + "-> Error during generating videos thumbnails: " + e.getMessage());
             FirebaseCrashlytics.getInstance().recordException(e);
         }
         return bitmap;

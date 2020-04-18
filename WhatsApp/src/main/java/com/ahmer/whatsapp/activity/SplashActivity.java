@@ -46,18 +46,18 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void rationale(UtilsTransActivity activity, ShouldRequest shouldRequest) {
                 shouldRequest.again(true);
-                Log.v(TAG, getClass().getSimpleName() + " -> Again permission checking");
+                Log.v(TAG, getClass().getSimpleName() + "-> Again permission checking");
             }
         }).callback(new PermissionUtils.FullCallback() {
             @Override
             public void onGranted(List<String> permissionsGranted) {
-                Log.v(TAG, getClass().getSimpleName() + " -> Permission has been granted");
+                Log.v(TAG, getClass().getSimpleName() + "-> Permission has been granted");
                 new RunProgram(SplashActivity.this).execute();
             }
 
             @Override
             public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied) {
-                Log.v(TAG, getClass().getSimpleName() + " -> Permission has not been granted");
+                Log.v(TAG, getClass().getSimpleName() + "-> Permission has not been granted");
                 if (!permissionsDenied.isEmpty() || !permissionsDeniedForever.isEmpty()) {
                     finish();
                 }
@@ -65,7 +65,7 @@ public class SplashActivity extends AppCompatActivity {
         }).theme(new PermissionUtils.ThemeCallback() {
             @Override
             public void onActivityCreate(Activity activity) {
-                Log.v(TAG, getClass().getSimpleName() + " -> Permission ThemeCallback runs");
+                Log.v(TAG, getClass().getSimpleName() + "-> Permission ThemeCallback runs");
                 //Must add this for run app properly
                 ScreenUtils.setFullScreen(activity);
             }
@@ -94,7 +94,7 @@ public class SplashActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                     ThrowableUtils.getFullStackTrace(e);
-                    Log.v(TAG, getClass().getSimpleName() + " -> Error during loading data: " + e.getMessage());
+                    Log.v(TAG, getClass().getSimpleName() + "-> Error during loading data: " + e.getMessage());
                     FirebaseCrashlytics.getInstance().recordException(e);
                 }
             });

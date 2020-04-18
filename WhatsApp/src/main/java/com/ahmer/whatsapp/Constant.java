@@ -13,10 +13,4 @@ public class Constant {
     public static final String FM_WHATSAPP_STATUSES_LOCATION = "/FMWhatsApp/Media/.Statuses";
     public static final String WHATSAPP_STATUSES_LOCATION = "/WhatsApp/Media/.Statuses";
     public static final String YO_WHATSAPP_STATUSES_LOCATION = "/YoWhatsApp/Media/.Statuses";
-
-    public static final String PKG_FM_WhatsApp = "com.fmwhatsapp";
-    public static final String PKG_GB_WhatsApp = "com.gbwhatsapp";
-    public static final String PKG_Yo_WhatsApp = "com.yowhatsapp";
-    public static final String PKG_WHATSAPP = "com.whatsapp";
-
 }

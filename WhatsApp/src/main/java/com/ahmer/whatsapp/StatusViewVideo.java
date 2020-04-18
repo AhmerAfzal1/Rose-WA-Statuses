@@ -53,7 +53,7 @@ public class StatusViewVideo extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
             ThrowableUtils.getFullStackTrace(e);
-            Log.v(TAG, getClass().getSimpleName() + " -> " + e.getMessage());
+            Log.v(TAG, getClass().getSimpleName() + "-> " + e.getMessage());
         }
         view.setOnCompletionListener(mp -> {
             view.stopPlayback();
