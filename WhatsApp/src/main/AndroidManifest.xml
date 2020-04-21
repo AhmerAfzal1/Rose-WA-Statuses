@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ahmer.whatsapp"
-    android:versionCode="31"
-    android:versionName="4.00">
+    android:versionCode="32"
+    android:versionName="4.10">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -38,15 +38,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".StatusViewVideo"
+            android:name=".view.StatusViewVideo"
             android:configChanges="orientation|keyboardHidden|screenLayout|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".StatusViewImage"
+            android:name=".view.StatusViewImage"
             android:configChanges="orientation|keyboardHidden|screenLayout|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".StatusViewGIF"
+            android:name=".view.StatusViewGIF"
             android:configChanges="orientation|keyboardHidden|screenLayout|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
 

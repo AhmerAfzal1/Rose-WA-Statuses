@@ -10,9 +10,9 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.Objects;
 
-public class DialogSaved {
+public class DialogAbout {
 
-    public DialogSaved(Context context) {
+    public DialogAbout(Context context) {
         super();
         final Dialog dialog = new Dialog(context);
         try {

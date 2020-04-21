@@ -29,14 +29,14 @@ import com.ahmer.afzal.utils.utilcode.ThreadUtils;
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.ahmer.whatsapp.Constant;
-import com.ahmer.whatsapp.DialogSaved;
+import com.ahmer.whatsapp.DialogAbout;
 import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
-import com.ahmer.whatsapp.StatusViewGIF;
-import com.ahmer.whatsapp.StatusViewImage;
-import com.ahmer.whatsapp.StatusViewVideo;
 import com.ahmer.whatsapp.Thumbnails;
+import com.ahmer.whatsapp.view.StatusViewGIF;
+import com.ahmer.whatsapp.view.StatusViewImage;
+import com.ahmer.whatsapp.view.StatusViewVideo;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -50,6 +50,7 @@ import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import static com.ahmer.whatsapp.Constant.BUSINESS_WHATSAPP_STATUSES_LOCATION;
 import static com.ahmer.whatsapp.Constant.EXT_GIF_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_GIF_UPPER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AdView adView;
     private ArrayList<StatusItem> contentList = new ArrayList<>();
+    private File dirBusinessWhatsApp = new File(PathUtils.getExternalStoragePath() + BUSINESS_WHATSAPP_STATUSES_LOCATION);
     private File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
     private File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
     private File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
@@ -82,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onChanged() {
             super.onChanged();
-            if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp)
-                    || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
+            if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(Constant.PKG_BUSINESS_WHATSAPP)
+                    || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp) || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
                 Log.v(TAG, MainActivity.class.getSimpleName() + "-> No kind of WhatsApp installed");
                 noStatusLayout.setVisibility(View.VISIBLE);
                 noStatus.setText(R.string.no_whatsapp_installed);
@@ -122,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         TextView title = findViewById(R.id.tvTitle);
         title.setText(R.string.app_name);
         ImageView info = findViewById(R.id.ivInfo);
-        info.setOnClickListener(v -> new DialogSaved(this));
+        info.setOnClickListener(v -> new DialogAbout(this));
         noStatus = findViewById(R.id.tvNoStatus);
         noStatusLayout = findViewById(R.id.layoutNoStatus);
         adView = findViewById(R.id.adView);
@@ -211,6 +213,9 @@ public class MainActivity extends AppCompatActivity {
        */
         if (dirWhatsApp.exists()) {
             getStatuses(dirWhatsApp.listFiles());
+        }
+        if (dirBusinessWhatsApp.exists()) {
+            getStatuses(dirBusinessWhatsApp.listFiles());
         }
         if (dirFMWhatsApp.exists()) {
             getStatuses(dirFMWhatsApp.listFiles());

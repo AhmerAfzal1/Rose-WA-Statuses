@@ -1,4 +1,4 @@
-package com.ahmer.whatsapp;
+package com.ahmer.whatsapp.view;
 
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
+import com.ahmer.whatsapp.Constant;
+import com.ahmer.whatsapp.R;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;

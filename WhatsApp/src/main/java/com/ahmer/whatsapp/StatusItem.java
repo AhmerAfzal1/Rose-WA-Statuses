@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 public class StatusItem {
 
     private Bitmap mThumbnails;
-    private boolean mSelect;
     private long mSize;
     private String mFormat;
     private String mPath;
@@ -40,13 +39,5 @@ public class StatusItem {
 
     public void setThumbnails(Bitmap thumbnails) {
         mThumbnails = thumbnails;
-    }
-
-    public boolean isSelect() {
-        return mSelect;
-    }
-
-    public void setSelect(boolean select) {
-        mSelect = select;
     }
 }
