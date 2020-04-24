@@ -6,7 +6,6 @@
     <string name="no_whatsapp_installed">WhatsApp not installed</string>
     <string name="period">●</string>
     <string name="splash_title">Rose WhatsApp \nStatuses Downloader</string>
-    <string name="status_alert">Status Saved Alert!</string>
     <string name="status_saved">Status have been successfully saved to:</string>
 
     <!-- Ads log strings -->
@@ -23,5 +22,7 @@
     <!-- Ads key strings -->
     <string name="banner_ad_app_id">ca-app-pub-0672688958454166~1575550090</string>
     <string name="banner_ad_unit_id">ca-app-pub-0672688958454166/9041948903</string>
-    <string name="native_ad_unit_id">ca-app-pub-0672688958454166/6534919656</string>
+    <string name="app_developed_by">App developed by</string>
+    <string name="ahmer_afzal">Ahmer Afzal</string>
+    <string name="ahmerafzal_yahoo_com">ahmerafzal@yahoo.com</string>
 </resources>

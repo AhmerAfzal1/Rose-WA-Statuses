@@ -68,23 +68,23 @@ import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final ArrayList<StatusItem> contentList = new ArrayList<>();
+    private final File dirBusinessWhatsApp = new File(PathUtils.getExternalStoragePath() + BUSINESS_WHATSAPP_STATUSES_LOCATION);
+    private final File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
+    private final File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
+    private final File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
     private AdView adView;
-    private ArrayList<StatusItem> contentList = new ArrayList<>();
-    private File dirBusinessWhatsApp = new File(PathUtils.getExternalStoragePath() + BUSINESS_WHATSAPP_STATUSES_LOCATION);
-    private File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
-    private File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
-    private File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
     private FirebaseAnalytics firebaseAnalytics;
     private RecyclerView recyclerView;
     private RelativeLayout noStatusLayout;
     private StatusVideoAdapter adapter;
     private TextView noStatus;
 
-    private RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+    private final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
         @Override
         public void onChanged() {
             super.onChanged();
-            if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(Constant.PKG_BUSINESS_WHATSAPP)
+            if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_BUSINESS_WHATSAPP)
                     || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp) || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
                 Log.v(TAG, MainActivity.class.getSimpleName() + "-> No kind of WhatsApp installed");
                 noStatusLayout.setVisibility(View.VISIBLE);
@@ -137,7 +137,9 @@ public class MainActivity extends AppCompatActivity {
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
-        MobileAds.initialize(this, getResources().getString(R.string.banner_ad_app_id));
+        MobileAds.initialize(MainActivity.this, initializationStatus -> {
+            //Keep empty
+        });
         adView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
@@ -292,11 +294,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static class MoveFiles extends AsyncTask<File, Integer, Boolean> {
+    static class MoveFiles extends AsyncTask<File, Integer, Boolean> {
 
-        private File destination;
-        private WeakReference<ProgressBar> progressBar;
-        private WeakReference<Context> context;
+        private final File destination;
+        private final WeakReference<ProgressBar> progressBar;
+        private final WeakReference<Context> context;
 
         private MoveFiles(Context context, File destination, ProgressBar progressBar) {
             this.context = new WeakReference<>(context);
@@ -509,16 +511,16 @@ public class MainActivity extends AppCompatActivity {
 
         private class ViewHolder extends RecyclerView.ViewHolder {
 
-            FloatingActionButton btnPlay;
-            ImageView btnClose;
-            ImageView btnDownload;
-            ImageView btnShare;
-            ImageView btnShareWhatsApp;
-            ImageView ivThumbnails;
-            ProgressBar progressBar;
-            RelativeLayout relativeLayout;
-            TextView showSize;
-            TextView showType;
+            final FloatingActionButton btnPlay;
+            final ImageView btnClose;
+            final ImageView btnDownload;
+            final ImageView btnShare;
+            final ImageView btnShareWhatsApp;
+            final ImageView ivThumbnails;
+            final ProgressBar progressBar;
+            final RelativeLayout relativeLayout;
+            final TextView showSize;
+            final TextView showType;
 
             private ViewHolder(View v) {
                 super(v);

@@ -9,7 +9,6 @@
     tools:context=".activity.SplashActivity">
 
     <RelativeLayout
-        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
@@ -45,7 +44,6 @@
             android:layout_marginBottom="30dp">
 
             <com.github.ybq.android.spinkit.SpinKitView
-                android:id="@+id/spin_kit"
                 style="@style/SpinKitView.Large.Circle"
                 android:layout_width="64dp"
                 android:layout_height="64dp"

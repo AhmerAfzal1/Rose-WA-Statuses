@@ -43,7 +43,6 @@
                 android:textStyle="bold" />
 
             <LinearLayout
-                android:id="@+id/iconLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -89,7 +88,7 @@
         android:id="@+id/rvStatusList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/adView"
+        android:layout_above="@id/adViewLayout"
         android:layout_below="@id/layoutNoStatus"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
@@ -100,8 +99,8 @@
         android:gravity="top"
         android:scrollbars="vertical" />
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
+    <LinearLayout
+        android:id="@+id/adViewLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -109,6 +108,14 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:gravity="center"
-        ads:adSize="LARGE_BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id" />
+        android:visibility="visible"
+        android:orientation="vertical">
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            ads:adSize="LARGE_BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id" />
+    </LinearLayout>
 </RelativeLayout>

@@ -72,17 +72,12 @@ public class SplashActivity extends AppCompatActivity {
         }).request();
     }
 
-    public static class RunProgram extends AsyncTask<Void, Void, Void> {
+    static class RunProgram extends AsyncTask<Void, Void, Void> {
 
         private final WeakReference<Context> weakContext;
 
         private RunProgram(final Context context) {
             weakContext = new WeakReference<>(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
         }
 
         @Override
@@ -99,11 +94,6 @@ public class SplashActivity extends AppCompatActivity {
                 }
             });
             return null;
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
         }
 
         @Override

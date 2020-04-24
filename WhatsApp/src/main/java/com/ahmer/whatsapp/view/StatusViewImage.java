@@ -4,10 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ahmer.afzal.utils.imageview.ZoomImageView;
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.whatsapp.Constant;
 import com.ahmer.whatsapp.R;
@@ -27,12 +27,14 @@ public class StatusViewImage extends AppCompatActivity {
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
-        ImageView imageView = findViewById(R.id.imageView);
+        ZoomImageView imageView = findViewById(R.id.imageView);
         String format = getIntent().getStringExtra("format");
         String path = getIntent().getStringExtra("path");
         try {
             if (Objects.requireNonNull(format).equals(EXT_JPG_LOWER_CASE)) {
-                Bitmap bitmap = BitmapFactory.decodeFile(path);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                Bitmap bitmap = BitmapFactory.decodeFile(path, options);
                 Log.v(Constant.TAG, "Path is: " + bitmap);
                 imageView.setImageBitmap(bitmap);
             }

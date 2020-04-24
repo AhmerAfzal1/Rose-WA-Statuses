@@ -9,8 +9,8 @@ import java.io.File;
 
 public class MediaScanner implements MediaScannerConnectionClient {
 
-    private File file;
-    private MediaScannerConnection scannerConnection;
+    private final File file;
+    private final MediaScannerConnection scannerConnection;
 
     public MediaScanner(Context context, File file) {
         this.file = file;
