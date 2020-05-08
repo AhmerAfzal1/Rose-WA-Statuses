@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static com.ahmer.whatsapp.Constant.BUSINESS_WHATSAPP_STATUSES_LOCATION;
 import static com.ahmer.whatsapp.Constant.EXT_GIF_LOWER_CASE;
@@ -73,13 +75,13 @@ public class MainActivity extends AppCompatActivity {
     private final File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
     private final File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
     private final File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
+    private final String KEY_RECYCLER_STATE = "STATE";
     private AdView adView;
     private FirebaseAnalytics firebaseAnalytics;
     private RecyclerView recyclerView;
     private RelativeLayout noStatusLayout;
     private StatusVideoAdapter adapter;
     private TextView noStatus;
-
     private final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
         @Override
         public void onChanged() {
@@ -111,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
             onChanged();
         }
     };
+    private Bundle savedBundle;
+    private Parcelable savedParcel = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,6 +208,52 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (adView != null) {
+            adView.pause();
+        }
+        savedBundle = new Bundle();
+        savedParcel = Objects.requireNonNull(recyclerView.getLayoutManager()).onSaveInstanceState();
+        savedBundle.putParcelable(KEY_RECYCLER_STATE, savedParcel);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        firebaseAnalytics.setCurrentScreen(this, "CurrentScreen: " + getClass().getSimpleName(), null);
+        if (adView != null) {
+            adView.resume();
+        }
+        if (savedBundle != null) {
+            savedParcel = savedBundle.getParcelable(KEY_RECYCLER_STATE);
+            Objects.requireNonNull(recyclerView.getLayoutManager()).onRestoreInstanceState(savedParcel);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (adView != null) {
+            adView.destroy();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        savedBundle = new Bundle();
+        savedParcel = Objects.requireNonNull(recyclerView.getLayoutManager()).onSaveInstanceState();
+        savedBundle.putParcelable(KEY_RECYCLER_STATE, savedParcel);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        savedParcel = savedBundle.getParcelable(KEY_RECYCLER_STATE);
+    }
+
     public void getData() {
         /*
         File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
@@ -266,31 +316,6 @@ public class MainActivity extends AppCompatActivity {
                 item.setThumbnails(gif);
             }
             contentList.add(item);
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (adView != null) {
-            adView.pause();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        firebaseAnalytics.setCurrentScreen(this, "CurrentScreen: " + getClass().getSimpleName(), null);
-        if (adView != null) {
-            adView.resume();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (adView != null) {
-            adView.destroy();
         }
     }
 
