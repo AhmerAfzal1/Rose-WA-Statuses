@@ -125,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
         title.setText(R.string.app_name);
         ImageView info = findViewById(R.id.ivInfo);
         info.setOnClickListener(v -> new DialogAbout(this));
+        ImageView switchTo = findViewById(R.id.ivSwitch);
+        switchTo.setOnClickListener(v -> ToastUtils.showShort("This feature is under progress"));
         noStatus = findViewById(R.id.tvNoStatus);
         noStatusLayout = findViewById(R.id.layoutNoStatus);
         adView = findViewById(R.id.adView);
@@ -341,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
     public class StatusVideoAdapter extends RecyclerView.Adapter<StatusVideoAdapter.ViewHolder> {
 
         @Override
-        public void onBindViewHolder(final StatusVideoAdapter.ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             holder.ivThumbnails.setImageBitmap(contentList.get(position).getThumbnails());
             holder.relativeLayout.setBackgroundColor(Color.parseColor("#FFFFFF"));
             holder.relativeLayout.setAlpha(0);
