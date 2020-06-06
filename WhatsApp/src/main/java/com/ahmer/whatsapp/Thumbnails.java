@@ -18,7 +18,6 @@ import static com.ahmer.whatsapp.Constant.IMAGE_HEIGHT;
 import static com.ahmer.whatsapp.Constant.IMAGE_WIDTH;
 import static com.ahmer.whatsapp.Constant.TAG;
 
-@SuppressWarnings("deprecation")
 public final class Thumbnails {
 
     public static Bitmap videoThumbnails(File file) {

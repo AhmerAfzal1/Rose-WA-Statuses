@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ahmer.afzal.utils.constants.PermissionConstants;
@@ -50,13 +51,13 @@ public class SplashActivity extends AppCompatActivity {
             }
         }).callback(new PermissionUtils.FullCallback() {
             @Override
-            public void onGranted(List<String> permissionsGranted) {
+            public void onGranted(@NonNull List<String> permissionsGranted) {
                 Log.v(TAG, getClass().getSimpleName() + "-> Permission has been granted");
                 new RunProgram(SplashActivity.this).execute();
             }
 
             @Override
-            public void onDenied(List<String> permissionsDeniedForever, List<String> permissionsDenied) {
+            public void onDenied(@NonNull List<String> permissionsDeniedForever, @NonNull List<String> permissionsDenied) {
                 Log.v(TAG, getClass().getSimpleName() + "-> Permission has not been granted");
                 if (!permissionsDenied.isEmpty() || !permissionsDeniedForever.isEmpty()) {
                     finish();

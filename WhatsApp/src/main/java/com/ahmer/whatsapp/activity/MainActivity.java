@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +49,6 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import static com.ahmer.whatsapp.Constant.BUSINESS_WHATSAPP_STATUSES_LOCATION;
 import static com.ahmer.whatsapp.Constant.EXT_GIF_LOWER_CASE;
@@ -75,13 +73,13 @@ public class MainActivity extends AppCompatActivity {
     private final File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
     private final File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
     private final File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
-    private final String KEY_RECYCLER_STATE = "STATE";
     private AdView adView;
     private FirebaseAnalytics firebaseAnalytics;
     private RecyclerView recyclerView;
     private RelativeLayout noStatusLayout;
     private StatusVideoAdapter adapter;
     private TextView noStatus;
+
     private final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
         @Override
         public void onChanged() {
@@ -113,8 +111,6 @@ public class MainActivity extends AppCompatActivity {
             onChanged();
         }
     };
-    private Bundle savedBundle;
-    private Parcelable savedParcel = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,9 +210,6 @@ public class MainActivity extends AppCompatActivity {
         if (adView != null) {
             adView.pause();
         }
-        savedBundle = new Bundle();
-        savedParcel = Objects.requireNonNull(recyclerView.getLayoutManager()).onSaveInstanceState();
-        savedBundle.putParcelable(KEY_RECYCLER_STATE, savedParcel);
     }
 
     @Override
@@ -226,10 +219,6 @@ public class MainActivity extends AppCompatActivity {
         if (adView != null) {
             adView.resume();
         }
-        if (savedBundle != null) {
-            savedParcel = savedBundle.getParcelable(KEY_RECYCLER_STATE);
-            Objects.requireNonNull(recyclerView.getLayoutManager()).onRestoreInstanceState(savedParcel);
-        }
     }
 
     @Override
@@ -238,20 +227,6 @@ public class MainActivity extends AppCompatActivity {
         if (adView != null) {
             adView.destroy();
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        savedBundle = new Bundle();
-        savedParcel = Objects.requireNonNull(recyclerView.getLayoutManager()).onSaveInstanceState();
-        savedBundle.putParcelable(KEY_RECYCLER_STATE, savedParcel);
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        savedParcel = savedBundle.getParcelable(KEY_RECYCLER_STATE);
     }
 
     public void getData() {
@@ -394,6 +369,20 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyItemRemoved(position);
                 adapter.notifyItemRangeRemoved(position, getItemCount());
             });
+            if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) ||
+                    contentList.get(position).getFormat().endsWith(EXT_JPG_UPPER_CASE)) {
+                holder.btnPlay.setVisibility(View.GONE);
+                holder.relativeLayout.setOnClickListener(view -> {
+                    Bundle bundleJPG = new Bundle();
+                    bundleJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "JPG");
+                    bundleJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "JPG Image Viewed");
+                    firebaseAnalytics.logEvent("JPG_Open", bundleJPG);
+                    Intent intentJPG = new Intent(MainActivity.this, StatusViewImage.class);
+                    intentJPG.putExtra("format", contentList.get(position).getFormat());
+                    intentJPG.putExtra("path", contentList.get(position).getPath());
+                    MainActivity.this.startActivity(intentJPG);
+                });
+            }
             holder.btnPlay.setOnClickListener(view -> {
                 if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                         contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
@@ -406,17 +395,7 @@ public class MainActivity extends AppCompatActivity {
                     intentVideo.putExtra("path", contentList.get(position).getPath());
                     MainActivity.this.startActivity(intentVideo);
                 }
-                if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) ||
-                        contentList.get(position).getFormat().endsWith(EXT_JPG_UPPER_CASE)) {
-                    Bundle bundleJPG = new Bundle();
-                    bundleJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "JPG");
-                    bundleJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "JPG Image Viewed");
-                    firebaseAnalytics.logEvent("JPG_Open", bundleJPG);
-                    Intent intentJPG = new Intent(MainActivity.this, StatusViewImage.class);
-                    intentJPG.putExtra("format", contentList.get(position).getFormat());
-                    intentJPG.putExtra("path", contentList.get(position).getPath());
-                    MainActivity.this.startActivity(intentJPG);
-                }
+
                 if (contentList.get(position).getFormat().endsWith(EXT_GIF_LOWER_CASE) ||
                         contentList.get(position).getFormat().endsWith(EXT_GIF_UPPER_CASE)) {
                     Bundle bundleGIF = new Bundle();
@@ -478,6 +457,7 @@ public class MainActivity extends AppCompatActivity {
                     contentList.remove(position);
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeRemoved(position, getItemCount());
+                    recyclerView.scrollToPosition(position);
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + "-> MP4: No data was discovered and saved");
                 }
@@ -491,6 +471,7 @@ public class MainActivity extends AppCompatActivity {
                     contentList.remove(position);
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeRemoved(position, getItemCount());
+                    recyclerView.scrollToPosition(position);
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + "-> JPG: No data was discovered and saved");
                 }
@@ -504,6 +485,7 @@ public class MainActivity extends AppCompatActivity {
                     contentList.remove(position);
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeRemoved(position, getItemCount());
+                    recyclerView.scrollToPosition(position);
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + "-> GIF: No data was discovered and saved");
                 }
