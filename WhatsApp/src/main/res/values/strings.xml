@@ -24,5 +24,9 @@
     <string name="banner_ad_unit_id">ca-app-pub-0672688958454166/9041948903</string>
     <string name="app_developed_by">App developed by</string>
     <string name="ahmer_afzal">Ahmer Afzal</string>
-    <string name="ahmerafzal_yahoo_com">ahmerafzal@yahoo.com</string>
+    <string name="email_address">ahmerafzal@yahoo.com</string>
+
+    <string name="title_activity_main_tabbed">MainTabbedActivity</string>
+    <string name="tab_text_1">Images</string>
+    <string name="tab_text_2">Videos</string>
 </resources>

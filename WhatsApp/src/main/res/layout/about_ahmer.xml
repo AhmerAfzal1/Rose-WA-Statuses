@@ -90,7 +90,7 @@
                     android:fontFamily="@font/roboto"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="@string/ahmerafzal_yahoo_com"
+                    android:text="@string/email_address"
                     android:textColor="@android:color/white"
                     android:textSize="14sp" />
 

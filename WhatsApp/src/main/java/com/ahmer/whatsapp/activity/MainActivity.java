@@ -126,7 +126,13 @@ public class MainActivity extends AppCompatActivity {
         ImageView info = findViewById(R.id.ivInfo);
         info.setOnClickListener(v -> new DialogAbout(this));
         ImageView switchTo = findViewById(R.id.ivSwitch);
-        switchTo.setOnClickListener(v -> ToastUtils.showShort("This feature is under progress"));
+        switchTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MainTabbedActivity.class);
+                startActivity(intent);
+            }
+        });
         noStatus = findViewById(R.id.tvNoStatus);
         noStatusLayout = findViewById(R.id.layoutNoStatus);
         adView = findViewById(R.id.adView);
