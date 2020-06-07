@@ -34,7 +34,6 @@ import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
 import com.ahmer.whatsapp.Thumbnails;
-import com.ahmer.whatsapp.view.StatusViewGIF;
 import com.ahmer.whatsapp.view.StatusViewImage;
 import com.ahmer.whatsapp.view.StatusViewVideo;
 import com.google.android.gms.ads.AdListener;
@@ -51,8 +50,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static com.ahmer.whatsapp.Constant.BUSINESS_WHATSAPP_STATUSES_LOCATION;
-import static com.ahmer.whatsapp.Constant.EXT_GIF_LOWER_CASE;
-import static com.ahmer.whatsapp.Constant.EXT_GIF_UPPER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_UPPER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_MP4_LOWER_CASE;
@@ -126,12 +123,12 @@ public class MainActivity extends AppCompatActivity {
         ImageView info = findViewById(R.id.ivInfo);
         info.setOnClickListener(v -> new DialogAbout(this));
         ImageView switchTo = findViewById(R.id.ivSwitch);
-        switchTo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MainTabbedActivity.class);
-                startActivity(intent);
-            }
+        switchTo.setOnClickListener(v -> {
+            /*
+            Intent intent = new Intent(MainActivity.this, MainTabbedActivity.class);
+            startActivity(intent);
+            */
+            ToastUtils.showShort("This feature is under progress");
         });
         noStatus = findViewById(R.id.tvNoStatus);
         noStatusLayout = findViewById(R.id.layoutNoStatus);
@@ -274,8 +271,7 @@ public class MainActivity extends AppCompatActivity {
     private void getStatusesContent(File file) {
         String filePath = file.getAbsolutePath();
         if (filePath.endsWith(EXT_MP4_LOWER_CASE) || filePath.endsWith(EXT_MP4_UPPER_CASE) ||
-                filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE) ||
-                filePath.endsWith(EXT_GIF_LOWER_CASE) || filePath.endsWith(EXT_GIF_UPPER_CASE)) {
+                filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE)) {
             StatusItem item = new StatusItem();
             if (file.getName().endsWith(EXT_MP4_LOWER_CASE) || file.getName().endsWith(EXT_MP4_UPPER_CASE)) {
                 item.setPath(file.getAbsolutePath());
@@ -290,13 +286,6 @@ public class MainActivity extends AppCompatActivity {
                 item.setFormat(EXT_JPG_LOWER_CASE);
                 Bitmap jpg = Thumbnails.imageThumbnails(file);
                 item.setThumbnails(jpg);
-            }
-            if (file.getName().endsWith(EXT_GIF_LOWER_CASE) || file.getName().endsWith(EXT_GIF_UPPER_CASE)) {
-                item.setPath(file.getAbsolutePath());
-                item.setSize(file.length());
-                item.setFormat(EXT_GIF_LOWER_CASE);
-                Bitmap gif = Thumbnails.imageThumbnails(file);
-                item.setThumbnails(gif);
             }
             contentList.add(item);
         }
@@ -355,45 +344,39 @@ public class MainActivity extends AppCompatActivity {
             holder.relativeLayout.setAlpha(0);
             holder.progressBar.setVisibility(View.GONE);
             holder.showSize.setText(getFileSize(contentList.get(position).getSize()));
+
             if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                     contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
                 String mp4 = "MP4";
                 holder.showType.setText(mp4);
             }
+
             if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) ||
                     contentList.get(position).getFormat().endsWith(EXT_JPG_UPPER_CASE)) {
                 String jpg = "JPG";
                 holder.showType.setText(jpg);
             }
-            if (contentList.get(position).getFormat().endsWith(EXT_GIF_LOWER_CASE) ||
-                    contentList.get(position).getFormat().endsWith(EXT_GIF_UPPER_CASE)) {
-                String gif = "GIF";
-                holder.showType.setText(gif);
-            }
-            holder.btnClose.setOnClickListener(v -> {
+
+            holder.btnDelete.setOnClickListener(v -> {
                 File file = new File(contentList.get(position).getPath());
                 FileUtils.delete(file);
                 contentList.remove(position);
                 adapter.notifyItemRemoved(position);
                 adapter.notifyItemRangeRemoved(position, getItemCount());
             });
+            if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
+                    contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
+                holder.btnPlay.setVisibility(View.VISIBLE);
+            }
             if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) ||
                     contentList.get(position).getFormat().endsWith(EXT_JPG_UPPER_CASE)) {
                 holder.btnPlay.setVisibility(View.GONE);
-                holder.relativeLayout.setOnClickListener(view -> {
-                    Bundle bundleJPG = new Bundle();
-                    bundleJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "JPG");
-                    bundleJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "JPG Image Viewed");
-                    firebaseAnalytics.logEvent("JPG_Open", bundleJPG);
-                    Intent intentJPG = new Intent(MainActivity.this, StatusViewImage.class);
-                    intentJPG.putExtra("format", contentList.get(position).getFormat());
-                    intentJPG.putExtra("path", contentList.get(position).getPath());
-                    MainActivity.this.startActivity(intentJPG);
-                });
             }
-            holder.btnPlay.setOnClickListener(view -> {
+
+            holder.relativeLayout.setOnClickListener(view -> {
                 if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                         contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
+                    holder.relativeLayout.setClickable(false);
                     Bundle bundleMP4 = new Bundle();
                     bundleMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "MP4");
                     bundleMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "MP4 Video Viewed");
@@ -404,16 +387,17 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.this.startActivity(intentVideo);
                 }
 
-                if (contentList.get(position).getFormat().endsWith(EXT_GIF_LOWER_CASE) ||
-                        contentList.get(position).getFormat().endsWith(EXT_GIF_UPPER_CASE)) {
-                    Bundle bundleGIF = new Bundle();
-                    bundleGIF.putString(FirebaseAnalytics.Param.ITEM_ID, "GIF");
-                    bundleGIF.putString(FirebaseAnalytics.Param.ITEM_NAME, "GIF Image Viewed");
-                    firebaseAnalytics.logEvent("GIF_Open", bundleGIF);
-                    Intent intentGIF = new Intent(MainActivity.this, StatusViewGIF.class);
-                    intentGIF.putExtra("format", contentList.get(position).getFormat());
-                    intentGIF.putExtra("path", contentList.get(position).getPath());
-                    MainActivity.this.startActivity(intentGIF);
+                if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) ||
+                        contentList.get(position).getFormat().endsWith(EXT_JPG_UPPER_CASE)) {
+                    holder.relativeLayout.setClickable(true);
+                    Bundle bundleJPG = new Bundle();
+                    bundleJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "JPG");
+                    bundleJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "JPG Image Viewed");
+                    firebaseAnalytics.logEvent("JPG_Open", bundleJPG);
+                    Intent intentJPG = new Intent(MainActivity.this, StatusViewImage.class);
+                    intentJPG.putExtra("format", contentList.get(position).getFormat());
+                    intentJPG.putExtra("path", contentList.get(position).getPath());
+                    MainActivity.this.startActivity(intentJPG);
                 }
             });
 
@@ -446,6 +430,7 @@ public class MainActivity extends AppCompatActivity {
                 File source = new File(contentList.get(position).getPath());
                 String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(source.getAbsolutePath());
                 File statusDirectory = new File(PathUtils.getExternalStoragePath(), MainActivity.this.getResources().getString(R.string.app_name));
+
                 if (!statusDirectory.exists()) {
                     if (statusDirectory.mkdirs()) {
                         Log.v(TAG, getClass().getSimpleName() + "-> The directory has been created: " + statusDirectory);
@@ -455,6 +440,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + "-> This directory has already been created");
                 }
+
                 if (source.getAbsolutePath().endsWith(EXT_MP4_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_MP4_UPPER_CASE)) {
                     File destPathMP4 = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_MP4_LOWER_CASE);
                     Bundle bundleDownloadMP4 = new Bundle();
@@ -469,6 +455,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + "-> MP4: No data was discovered and saved");
                 }
+
                 if (source.getAbsolutePath().endsWith(EXT_JPG_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_JPG_UPPER_CASE)) {
                     File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_JPG_LOWER_CASE);
                     Bundle bundleDownloadJPG = new Bundle();
@@ -482,20 +469,6 @@ public class MainActivity extends AppCompatActivity {
                     recyclerView.scrollToPosition(position);
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + "-> JPG: No data was discovered and saved");
-                }
-                if (source.getAbsolutePath().endsWith(EXT_GIF_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_GIF_UPPER_CASE)) {
-                    File destPathGIF = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_GIF_LOWER_CASE);
-                    Bundle bundleDownloadGIF = new Bundle();
-                    bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadGIF");
-                    bundleDownloadGIF.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download GIF Status");
-                    firebaseAnalytics.logEvent("Download_GIF_Open", bundleDownloadGIF);
-                    new MoveFiles(MainActivity.this, destPathGIF, holder.progressBar).execute(source);
-                    contentList.remove(position);
-                    adapter.notifyItemRemoved(position);
-                    adapter.notifyItemRangeRemoved(position, getItemCount());
-                    recyclerView.scrollToPosition(position);
-                } else {
-                    Log.v(TAG, getClass().getSimpleName() + "-> GIF: No data was discovered and saved");
                 }
             });
         }
@@ -527,7 +500,7 @@ public class MainActivity extends AppCompatActivity {
         private class ViewHolder extends RecyclerView.ViewHolder {
 
             final FloatingActionButton btnPlay;
-            final ImageView btnClose;
+            final ImageView btnDelete;
             final ImageView btnDownload;
             final ImageView btnShare;
             final ImageView btnShareWhatsApp;
@@ -539,7 +512,7 @@ public class MainActivity extends AppCompatActivity {
 
             private ViewHolder(View v) {
                 super(v);
-                btnClose = v.findViewById(R.id.ivClose);
+                btnDelete = v.findViewById(R.id.ivDelete);
                 btnDownload = v.findViewById(R.id.ivDownload);
                 btnPlay = v.findViewById(R.id.buttonPlay);
                 btnShare = v.findViewById(R.id.ivShare);

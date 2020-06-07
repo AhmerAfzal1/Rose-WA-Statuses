@@ -46,6 +46,7 @@ public final class Thumbnails {
         return bitmap;
     }
 
+
     public static Bitmap imageThumbnails(File file) {
         Bitmap bitmap = null;
         try {
