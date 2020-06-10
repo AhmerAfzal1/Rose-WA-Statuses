@@ -1,2 +1,2 @@
-rootProject.name='Rose WhatsApp Status Downloader'
+rootProject.name='Rose WA Statuses'
 include ':WhatsApp'

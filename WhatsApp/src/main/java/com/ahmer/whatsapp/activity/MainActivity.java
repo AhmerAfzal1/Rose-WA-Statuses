@@ -3,6 +3,7 @@ package com.ahmer.whatsapp.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -45,9 +46,11 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static com.ahmer.whatsapp.Constant.BUSINESS_WHATSAPP_STATUSES_LOCATION;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
@@ -72,11 +75,10 @@ public class MainActivity extends AppCompatActivity {
     private final File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
     private AdView adView;
     private FirebaseAnalytics firebaseAnalytics;
-    private RecyclerView recyclerView;
-    private RelativeLayout noStatusLayout;
-    private StatusVideoAdapter adapter;
-    private TextView noStatus;
-
+    private RecyclerView recyclerView = null;
+    private RelativeLayout noStatusLayout = null;
+    private StatusVideoAdapter adapter = null;
+    private TextView noStatus = null;
     private final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
         @Override
         public void onChanged() {
@@ -108,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
             onChanged();
         }
     };
+    private String fileName = null;
+    private File appPackageFolder = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
             */
             ToastUtils.showShort("This feature is under progress");
         });
+        appPackageFolder = this.getDir("Thumbnails", Context.MODE_PRIVATE);
         noStatus = findViewById(R.id.tvNoStatus);
         noStatusLayout = findViewById(R.id.layoutNoStatus);
         adView = findViewById(R.id.adView);
@@ -270,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getStatusesContent(File file) {
         String filePath = file.getAbsolutePath();
+        File preExistedThumbnails = new File(appPackageFolder + "/" + fileName + ".png");
         if (filePath.endsWith(EXT_MP4_LOWER_CASE) || filePath.endsWith(EXT_MP4_UPPER_CASE) ||
                 filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE)) {
             StatusItem item = new StatusItem();
@@ -277,17 +283,62 @@ public class MainActivity extends AppCompatActivity {
                 item.setPath(file.getAbsolutePath());
                 item.setSize(file.length());
                 item.setFormat(EXT_MP4_LOWER_CASE);
-                Bitmap video = Thumbnails.videoThumbnails(file);
-                item.setThumbnails(video);
+                if (!preExistedThumbnails.exists()) {
+                    Log.v(TAG, getClass().getSimpleName() + "-> First time generate thumbnails for videos");
+                    Bitmap video = Thumbnails.videoThumbnails(file);
+                    item.setThumbnails(video);
+                    saveImage(video, fileName);
+                } else {
+                    Log.v(TAG, getClass().getSimpleName() + "-> Load pre-existed thumbnails for videos");
+                    Bitmap videoThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
+                    item.setThumbnails(videoThumbnail);
+                }
             }
             if (file.getName().endsWith(EXT_JPG_LOWER_CASE) || file.getName().endsWith(EXT_JPG_UPPER_CASE)) {
                 item.setPath(file.getAbsolutePath());
                 item.setSize(file.length());
                 item.setFormat(EXT_JPG_LOWER_CASE);
-                Bitmap jpg = Thumbnails.imageThumbnails(file);
-                item.setThumbnails(jpg);
+                if (!preExistedThumbnails.exists()) {
+                    Log.v(TAG, getClass().getSimpleName() + "-> First time generate thumbnails for images");
+                    Bitmap jpg = Thumbnails.imageThumbnails(file);
+                    item.setThumbnails(jpg);
+                    saveImage(jpg, fileName);
+                } else {
+                    Log.v(TAG, getClass().getSimpleName() + "-> Load pre-existed thumbnails for images");
+                    Bitmap imageThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
+                    item.setThumbnails(imageThumbnail);
+                }
             }
             contentList.add(item);
+        }
+    }
+
+    private void saveImage(Bitmap bmp, String fileName) {
+        File newFolder = new File(String.valueOf(appPackageFolder));
+        if (!newFolder.exists()) {
+            boolean mkdir = newFolder.mkdir();
+            if (!mkdir) {
+                Log.v(TAG, getClass().getSimpleName() + "-> New folder for " + appPackageFolder + "is not created.");
+            }
+        }
+        File file = new File(newFolder, fileName + ".png");
+        FileOutputStream out = null;
+        try {
+            Log.v(TAG, getClass().getSimpleName() + "-> Thumbnail saved on: " + file);
+            out = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+            Log.v(TAG, getClass().getSimpleName() + "-> Thumbnail successfully saved! with name: " + fileName);
+        } catch (Exception e) {
+            Log.v(TAG, Objects.requireNonNull(e.getMessage()));
+            FirebaseCrashlytics.getInstance().recordException(e);
+        } finally {
+            try {
+                if (out != null)
+                    out.close();
+            } catch (Exception e) {
+                Log.v(TAG, getClass().getSimpleName() + "-> Image not saved due to: " + e.getMessage(), e);
+                FirebaseCrashlytics.getInstance().recordException(e);
+            }
         }
     }
 
@@ -344,15 +395,22 @@ public class MainActivity extends AppCompatActivity {
             holder.relativeLayout.setAlpha(0);
             holder.progressBar.setVisibility(View.GONE);
             holder.showSize.setText(getFileSize(contentList.get(position).getSize()));
+            File source = new File(contentList.get(position).getPath());
+            fileName = FileUtils.getFileNameNoExtension(source.getAbsolutePath());
+            String directoryAndFileName = "/Rose Statuses/Status_" + fileName;
 
             if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                     contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
+                holder.btnPlay.setVisibility(View.VISIBLE);
+                holder.relativeLayout.setClickable(false);
                 String mp4 = "MP4";
                 holder.showType.setText(mp4);
             }
 
             if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) ||
                     contentList.get(position).getFormat().endsWith(EXT_JPG_UPPER_CASE)) {
+                holder.btnPlay.setVisibility(View.GONE);
+                holder.relativeLayout.setClickable(true);
                 String jpg = "JPG";
                 holder.showType.setText(jpg);
             }
@@ -364,19 +422,10 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyItemRemoved(position);
                 adapter.notifyItemRangeRemoved(position, getItemCount());
             });
-            if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
-                    contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
-                holder.btnPlay.setVisibility(View.VISIBLE);
-            }
-            if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) ||
-                    contentList.get(position).getFormat().endsWith(EXT_JPG_UPPER_CASE)) {
-                holder.btnPlay.setVisibility(View.GONE);
-            }
 
             holder.relativeLayout.setOnClickListener(view -> {
                 if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                         contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
-                    holder.relativeLayout.setClickable(false);
                     Bundle bundleMP4 = new Bundle();
                     bundleMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "MP4");
                     bundleMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "MP4 Video Viewed");
@@ -389,7 +438,6 @@ public class MainActivity extends AppCompatActivity {
 
                 if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) ||
                         contentList.get(position).getFormat().endsWith(EXT_JPG_UPPER_CASE)) {
-                    holder.relativeLayout.setClickable(true);
                     Bundle bundleJPG = new Bundle();
                     bundleJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "JPG");
                     bundleJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "JPG Image Viewed");
@@ -427,8 +475,6 @@ public class MainActivity extends AppCompatActivity {
             });
 
             holder.btnDownload.setOnClickListener(v -> {
-                File source = new File(contentList.get(position).getPath());
-                String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(source.getAbsolutePath());
                 File statusDirectory = new File(PathUtils.getExternalStoragePath(), MainActivity.this.getResources().getString(R.string.app_name));
 
                 if (!statusDirectory.exists()) {

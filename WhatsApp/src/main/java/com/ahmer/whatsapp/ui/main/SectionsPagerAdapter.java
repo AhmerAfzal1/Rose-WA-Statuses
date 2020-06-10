@@ -14,20 +14,31 @@ import com.ahmer.whatsapp.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
+    private static final int[] TAB_TITLES = new int[]{
+            R.string.tab_text_1,
+            R.string.tab_text_2
+    };
     private final Context mContext;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm) {
-        super(fm);
+    public SectionsPagerAdapter(Context context, @NonNull FragmentManager fm, int behavior) {
+        super(fm, behavior);
         mContext = context;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position + 1);
+        Fragment fragment = null;
+        switch (position) {
+            case 0:
+                fragment = new FragmentImages();
+                break;
+            case 1:
+                fragment = new FragmentVideos();
+                break;
+        }
+        assert fragment != null;
+        return fragment;
     }
 
     @Nullable
