@@ -110,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
             onChanged();
         }
     };
-    private String fileName = null;
     private File appPackageFolder = null;
 
     @Override
@@ -275,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getStatusesContent(File file) {
         String filePath = file.getAbsolutePath();
-        File preExistedThumbnails = new File(appPackageFolder + "/" + fileName + ".png");
+        File preExistedThumbnails = new File(appPackageFolder + "/" + file.getName() + ".png");
         if (filePath.endsWith(EXT_MP4_LOWER_CASE) || filePath.endsWith(EXT_MP4_UPPER_CASE) ||
                 filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE)) {
             StatusItem item = new StatusItem();
@@ -287,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.v(TAG, getClass().getSimpleName() + "-> First time generate thumbnails for videos");
                     Bitmap video = Thumbnails.videoThumbnails(file);
                     item.setThumbnails(video);
-                    saveImage(video, fileName);
+                    saveImage(video, file.getName());
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + "-> Load pre-existed thumbnails for videos");
                     Bitmap videoThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
@@ -302,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.v(TAG, getClass().getSimpleName() + "-> First time generate thumbnails for images");
                     Bitmap jpg = Thumbnails.imageThumbnails(file);
                     item.setThumbnails(jpg);
-                    saveImage(jpg, fileName);
+                    saveImage(jpg, file.getName());
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + "-> Load pre-existed thumbnails for images");
                     Bitmap imageThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
@@ -395,8 +394,7 @@ public class MainActivity extends AppCompatActivity {
             holder.progressBar.setVisibility(View.GONE);
             holder.showSize.setText(getFileSize(contentList.get(position).getSize()));
             File source = new File(contentList.get(position).getPath());
-            fileName = FileUtils.getFileNameNoExtension(source.getAbsolutePath());
-            String directoryAndFileName = "/Rose Statuses/Status_" + fileName;
+            String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(source.getAbsolutePath());
 
             if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                     contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
