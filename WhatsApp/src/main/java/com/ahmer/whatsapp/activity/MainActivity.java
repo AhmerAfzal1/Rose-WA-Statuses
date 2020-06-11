@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
             */
             ToastUtils.showShort("This feature is under progress");
         });
-        appPackageFolder = this.getDir("Thumbnails", Context.MODE_PRIVATE);
+        appPackageFolder = new File(PathUtils.getInternalAppCachePath(), "Thumbnails");
         noStatus = findViewById(R.id.tvNoStatus);
         noStatusLayout = findViewById(R.id.layoutNoStatus);
         adView = findViewById(R.id.adView);
@@ -240,14 +240,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getData() {
-        /*
+
         File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
         //File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/FMWhatsApp");
         Log.v(TAG, getClass().getSimpleName() + moviesFolder.getAbsolutePath());
         if (moviesFolder.exists()) {
             getStatuses(moviesFolder.listFiles());
         }
-       */
+       /*
         if (dirWhatsApp.exists()) {
             getStatuses(dirWhatsApp.listFiles());
         }
@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (dirYoWhatsApp.exists()) {
             getStatuses(dirYoWhatsApp.listFiles());
-        }
+        }*/
         recyclerView.setAdapter(adapter);
         adapter.registerAdapterDataObserver(observer);
         observer.onChanged();
@@ -314,14 +314,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveImage(Bitmap bmp, String fileName) {
-        File newFolder = new File(String.valueOf(appPackageFolder));
-        if (!newFolder.exists()) {
-            boolean mkdir = newFolder.mkdir();
+        if (!appPackageFolder.exists()) {
+            boolean mkdir = appPackageFolder.mkdir();
             if (!mkdir) {
-                Log.v(TAG, getClass().getSimpleName() + "-> New folder for " + appPackageFolder + "is not created.");
+                Log.v(TAG, getClass().getSimpleName() + "-> New folder for " + appPackageFolder + " is not created.");
             }
         }
-        File file = new File(newFolder, fileName + ".png");
+        File file = new File(appPackageFolder, fileName + ".png");
         FileOutputStream out = null;
         try {
             Log.v(TAG, getClass().getSimpleName() + "-> Thumbnail saved on: " + file);
