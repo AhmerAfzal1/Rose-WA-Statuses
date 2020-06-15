@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             onChanged();
         }
     };
-    private File appPackageFolder = null;
+    private File thumbnailsFolder = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
             */
             ToastUtils.showShort("This feature is under progress");
         });
-        appPackageFolder = new File(PathUtils.getInternalAppCachePath(), "Thumbnails");
+        thumbnailsFolder = new File(PathUtils.getInternalAppCachePath(), "Thumbnails");
         noStatus = findViewById(R.id.tvNoStatus);
         noStatusLayout = findViewById(R.id.layoutNoStatus);
         adView = findViewById(R.id.adView);
@@ -239,14 +239,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getData() {
-
+        /*
         File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
         //File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/FMWhatsApp");
         Log.v(TAG, getClass().getSimpleName() + moviesFolder.getAbsolutePath());
         if (moviesFolder.exists()) {
             getStatuses(moviesFolder.listFiles());
         }
-       /*
+       */
         if (dirWhatsApp.exists()) {
             getStatuses(dirWhatsApp.listFiles());
         }
@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (dirYoWhatsApp.exists()) {
             getStatuses(dirYoWhatsApp.listFiles());
-        }*/
+        }
         recyclerView.setAdapter(adapter);
         adapter.registerAdapterDataObserver(observer);
         observer.onChanged();
@@ -274,7 +274,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void getStatusesContent(File file) {
         String filePath = file.getAbsolutePath();
-        File preExistedThumbnails = new File(appPackageFolder + "/" + file.getName() + ".png");
+        String fileName = FileUtils.getFileNameNoExtension(file.getName());
+        File preExistedThumbnails = new File(thumbnailsFolder + "/" + fileName + ".png");
         if (filePath.endsWith(EXT_MP4_LOWER_CASE) || filePath.endsWith(EXT_MP4_UPPER_CASE) ||
                 filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE)) {
             StatusItem item = new StatusItem();
@@ -286,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.v(TAG, getClass().getSimpleName() + "-> First time generate thumbnails for videos");
                     Bitmap video = Thumbnails.videoThumbnails(file);
                     item.setThumbnails(video);
-                    saveImage(video, file.getName());
+                    saveImage(video, FileUtils.getFileNameNoExtension(file.getName()));
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + "-> Load pre-existed thumbnails for videos");
                     Bitmap videoThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
@@ -301,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.v(TAG, getClass().getSimpleName() + "-> First time generate thumbnails for images");
                     Bitmap jpg = Thumbnails.imageThumbnails(file);
                     item.setThumbnails(jpg);
-                    saveImage(jpg, file.getName());
+                    saveImage(jpg, FileUtils.getFileNameNoExtension(file.getName()));
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + "-> Load pre-existed thumbnails for images");
                     Bitmap imageThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
@@ -313,19 +314,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveImage(Bitmap bmp, String fileName) {
-        if (!appPackageFolder.exists()) {
-            boolean mkdir = appPackageFolder.mkdir();
+        if (!thumbnailsFolder.exists()) {
+            boolean mkdir = thumbnailsFolder.mkdir();
             if (!mkdir) {
-                Log.v(TAG, getClass().getSimpleName() + "-> New folder for " + appPackageFolder + " is not created.");
+                Log.v(TAG, getClass().getSimpleName() + "-> New folder for " + thumbnailsFolder + " is not created.");
             }
         }
-        File file = new File(appPackageFolder, fileName + ".png");
+        File file = new File(thumbnailsFolder, fileName + ".png");
         FileOutputStream out = null;
         try {
-            Log.v(TAG, getClass().getSimpleName() + "-> Thumbnail saved on: " + file);
             out = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
-            Log.v(TAG, getClass().getSimpleName() + "-> Thumbnail successfully saved! with name: " + fileName);
+            Log.v(TAG, getClass().getSimpleName() + "-> Thumbnail saved on: " + file);
         } catch (Exception e) {
             Log.v(TAG, Objects.requireNonNull(e.getMessage()));
             FirebaseCrashlytics.getInstance().recordException(e);
