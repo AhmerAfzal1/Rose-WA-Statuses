@@ -138,9 +138,13 @@ public class MainActivity extends AppCompatActivity {
         noStatusLayout = findViewById(R.id.layoutNoStatus);
         adView = findViewById(R.id.adView);
         recyclerView = findViewById(R.id.rvStatusList);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 1);
+        gridLayoutManager.isAutoMeasureEnabled();
+        gridLayoutManager.setSmoothScrollbarEnabled(true);
         recyclerView.getRecycledViewPool().clear();
         recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setLayoutManager(gridLayoutManager);
         adapter = new StatusVideoAdapter();
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
