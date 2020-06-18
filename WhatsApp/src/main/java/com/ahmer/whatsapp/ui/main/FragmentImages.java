@@ -1,5 +1,7 @@
 package com.ahmer.whatsapp.ui.main;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
 import com.ahmer.whatsapp.Thumbnails;
 import com.ahmer.whatsapp.activity.MainActivity;
+import com.ahmer.whatsapp.view.StatusViewImage;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
@@ -101,7 +104,7 @@ public class FragmentImages extends Fragment {
         recyclerViewImages.setHasFixedSize(true);
         recyclerViewImages.setNestedScrollingEnabled(false);
         recyclerViewImages.setLayoutManager(gridLayoutManager);
-        adapter = new ImagesAdapter();
+        adapter = new ImagesAdapter(getContext());
         try {
             loadData();
         } catch (Exception e) {
@@ -166,6 +169,12 @@ public class FragmentImages extends Fragment {
 
     public static class ImagesAdapter extends RecyclerView.Adapter<ImageViewHolder> {
 
+        private Context context;
+
+        public ImagesAdapter(Context context) {
+            this.context = context;
+        }
+
         @NonNull
         @Override
         public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -176,6 +185,13 @@ public class FragmentImages extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
             holder.imageView.setImageBitmap(statusItemFile.get(position).getThumbnails());
+            holder.imageView.setOnClickListener(v -> {
+                Intent intent = new Intent(context, StatusViewImage.class);
+                intent.putExtra("path", statusItemFile.get(position).getPath());
+                intent.putExtra("format", statusItemFile.get(position).getFormat());
+                intent.putExtra("from", "Fragment");
+                context.startActivity(intent);
+            });
         }
 
         @Override

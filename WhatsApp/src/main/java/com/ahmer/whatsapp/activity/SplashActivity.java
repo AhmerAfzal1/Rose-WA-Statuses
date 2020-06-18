@@ -19,6 +19,7 @@ import com.ahmer.afzal.utils.utilcode.ThreadUtils;
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.UtilsTransActivity;
 import com.ahmer.whatsapp.R;
+import com.ahmer.whatsapp.Thumbnails;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.lang.ref.WeakReference;
@@ -53,6 +54,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onGranted(@NonNull List<String> permissionsGranted) {
                 Log.v(TAG, getClass().getSimpleName() + "-> Permission has been granted");
+                Thumbnails.thumbnailDir();
                 new RunProgram(SplashActivity.this).execute();
             }
 

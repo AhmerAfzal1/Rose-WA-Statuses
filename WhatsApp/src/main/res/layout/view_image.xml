@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
@@ -11,4 +12,53 @@
         android:layout_centerInParent="true"
         android:contentDescription="@string/empty_description"
         android:src="@drawable/ic_whatsapp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true">
+
+        <com.ahmer.afzal.utils.fab.FloatingActionsMenu
+            android:id="@+id/fabImageMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            app:fab_addButtonColorNormal="@color/blue_semi_transparent"
+            app:fab_addButtonColorPressed="@color/blue_semi_transparent_pressed"
+            app:fab_addButtonPlusIconColor="@color/colorPrimary"
+            app:fab_labelStyle="@style/menu_labels_style"
+            app:srcCompat="@drawable/ic_save">
+
+            <com.ahmer.afzal.utils.fab.FloatingActionButton
+                android:id="@+id/fabDownloadImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@android:color/white"
+                app:fab_icon="@drawable/ic_save"
+                app:fab_size="mini"
+                app:fab_title="Download" />
+
+            <com.ahmer.afzal.utils.fab.FloatingActionButton
+                android:id="@+id/fabShareWAImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@android:color/white"
+                app:fab_icon="@drawable/ic_whatsapp"
+                app:fab_size="mini"
+                app:fab_title="Share to WhatsApp" />
+
+            <com.ahmer.afzal.utils.fab.FloatingActionButton
+                android:id="@+id/fabShareImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@android:color/white"
+                app:fab_icon="@drawable/ic_share"
+                app:fab_size="mini"
+                app:fab_title="Share" />
+        </com.ahmer.afzal.utils.fab.FloatingActionsMenu>
+    </LinearLayout>
 </RelativeLayout>

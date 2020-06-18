@@ -415,6 +415,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intentJPG = new Intent(MainActivity.this, StatusViewImage.class);
                     intentJPG.putExtra("format", contentList.get(position).getFormat());
                     intentJPG.putExtra("path", contentList.get(position).getPath());
+                    intentJPG.putExtra("from", "MainActivity");
                     MainActivity.this.startActivity(intentJPG);
                 }
             });
