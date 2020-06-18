@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
     private void getStatusesContent(File file) {
         String filePath = file.getAbsolutePath();
         String fileName = FileUtils.getFileNameNoExtension(file.getName());
-        File preExistedThumbnails = new File(Thumbnails.isThumbnailFolderExist() + "/" + fileName + ".png");
+        File preExistedThumbnails = new File(Thumbnails.thumbnailDir() + "/" + fileName + ".png");
         if (filePath.endsWith(EXT_MP4_LOWER_CASE) || filePath.endsWith(EXT_MP4_UPPER_CASE) ||
                 filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE)) {
             StatusItem item = new StatusItem();

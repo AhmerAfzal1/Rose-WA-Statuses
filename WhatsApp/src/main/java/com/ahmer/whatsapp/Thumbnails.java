@@ -107,7 +107,7 @@ public final class Thumbnails {
         return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
     }
 
-    public static File isThumbnailFolderExist() {
+    public static File thumbnailDir() {
         File thumbnailDir = new File(PathUtils.getInternalAppCachePath(), Constant.FOLDER_THUMBNAIL);
         if (!thumbnailDir.exists()) {
             boolean mkdir = thumbnailDir.mkdir();
@@ -119,7 +119,7 @@ public final class Thumbnails {
     }
 
     public static void saveImage(Bitmap bmp, String fileName) {
-        File file = new File(isThumbnailFolderExist(), fileName + ".png");
+        File file = new File(thumbnailDir(), fileName + ".png");
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(file);

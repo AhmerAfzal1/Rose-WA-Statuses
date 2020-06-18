@@ -7,6 +7,6 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Thumbnails.isThumbnailFolderExist();
+        Thumbnails.thumbnailDir();
     }
 }

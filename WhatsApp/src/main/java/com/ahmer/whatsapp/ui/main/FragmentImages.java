@@ -142,7 +142,7 @@ public class FragmentImages extends Fragment {
     private void getImagesStatus(File file) {
         String filePath = file.getAbsolutePath();
         String fileName = FileUtils.getFileNameNoExtension(file.getName());
-        File preExistedThumbnails = new File(Thumbnails.isThumbnailFolderExist() + "/" + fileName + ".png");
+        File preExistedThumbnails = new File(Thumbnails.thumbnailDir() + "/" + fileName + ".png");
         if (filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE)) {
             StatusItem item = new StatusItem();
             if (file.getName().endsWith(EXT_JPG_LOWER_CASE) || file.getName().endsWith(EXT_JPG_UPPER_CASE)) {
