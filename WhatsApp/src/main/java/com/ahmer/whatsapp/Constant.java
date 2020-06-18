@@ -12,4 +12,5 @@ public class Constant {
     public static final String WHATSAPP_STATUSES_LOCATION = "/WhatsApp/Media/.Statuses";
     public static final String BUSINESS_WHATSAPP_STATUSES_LOCATION = "/WhatsApp Business/Media/.Statuses";
     public static final String YO_WHATSAPP_STATUSES_LOCATION = "/YoWhatsApp/Media/.Statuses";
+    public static final String FOLDER_THUMBNAIL = "Thumbnails";
 }

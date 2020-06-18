@@ -11,11 +11,14 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Size;
 
+import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.Objects;
 
 import static com.ahmer.whatsapp.Constant.IMAGE_HEIGHT;
 import static com.ahmer.whatsapp.Constant.IMAGE_WIDTH;
@@ -102,5 +105,37 @@ public final class Thumbnails {
 
         // Recreate the new bitmap
         return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
+    }
+
+    public static File isThumbnailFolderExist() {
+        File thumbnailDir = new File(PathUtils.getInternalAppCachePath(), Constant.FOLDER_THUMBNAIL);
+        if (!thumbnailDir.exists()) {
+            boolean mkdir = thumbnailDir.mkdir();
+            if (!mkdir) {
+                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> New folder for " + thumbnailDir + " is not created.");
+            }
+        }
+        return thumbnailDir;
+    }
+
+    public static void saveImage(Bitmap bmp, String fileName) {
+        File file = new File(isThumbnailFolderExist(), fileName + ".png");
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+            Log.v(TAG, Thumbnails.class.getSimpleName() + "-> Thumbnail saved on: " + file);
+        } catch (Exception e) {
+            Log.v(TAG, Objects.requireNonNull(e.getMessage()));
+            FirebaseCrashlytics.getInstance().recordException(e);
+        } finally {
+            try {
+                if (out != null)
+                    out.close();
+            } catch (Exception e) {
+                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> Image not saved due to: " + e.getMessage(), e);
+                FirebaseCrashlytics.getInstance().recordException(e);
+            }
+        }
     }
 }

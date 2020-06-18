@@ -6,9 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.FragmentImages">
 
+    <RelativeLayout
+        android:id="@+id/layoutNoStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/tvNoStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="top|center"
+            android:padding="10dp"
+            android:text="@string/no_having_status"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvVideos"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/layoutNoStatus"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="top"
+        android:scrollbars="vertical" />
 
 </RelativeLayout>

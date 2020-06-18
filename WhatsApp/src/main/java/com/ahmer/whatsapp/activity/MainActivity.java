@@ -46,11 +46,9 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import static com.ahmer.whatsapp.Constant.BUSINESS_WHATSAPP_STATUSES_LOCATION;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
@@ -68,11 +66,11 @@ import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final File dirBusinessWhatsApp = new File(PathUtils.getExternalStoragePath() + BUSINESS_WHATSAPP_STATUSES_LOCATION);
+    public static final File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
+    public static final File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
+    public static final File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
     private final ArrayList<StatusItem> contentList = new ArrayList<>();
-    private final File dirBusinessWhatsApp = new File(PathUtils.getExternalStoragePath() + BUSINESS_WHATSAPP_STATUSES_LOCATION);
-    private final File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
-    private final File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
-    private final File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
     private AdView adView;
     private FirebaseAnalytics firebaseAnalytics;
     private RecyclerView recyclerView = null;
@@ -110,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
             onChanged();
         }
     };
-    private File thumbnailsFolder = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
             */
             ToastUtils.showShort("This feature is under progress");
         });
-        thumbnailsFolder = new File(PathUtils.getInternalAppCachePath(), "Thumbnails");
         noStatus = findViewById(R.id.tvNoStatus);
         noStatusLayout = findViewById(R.id.layoutNoStatus);
         adView = findViewById(R.id.adView);
@@ -279,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
     private void getStatusesContent(File file) {
         String filePath = file.getAbsolutePath();
         String fileName = FileUtils.getFileNameNoExtension(file.getName());
-        File preExistedThumbnails = new File(thumbnailsFolder + "/" + fileName + ".png");
+        File preExistedThumbnails = new File(Thumbnails.isThumbnailFolderExist() + "/" + fileName + ".png");
         if (filePath.endsWith(EXT_MP4_LOWER_CASE) || filePath.endsWith(EXT_MP4_UPPER_CASE) ||
                 filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE)) {
             StatusItem item = new StatusItem();
@@ -291,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.v(TAG, getClass().getSimpleName() + "-> First time generate thumbnails for videos");
                     Bitmap video = Thumbnails.videoThumbnails(file);
                     item.setThumbnails(video);
-                    saveImage(video, FileUtils.getFileNameNoExtension(file.getName()));
+                    Thumbnails.saveImage(video, FileUtils.getFileNameNoExtension(file.getName()));
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + "-> Load pre-existed thumbnails for videos");
                     Bitmap videoThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
@@ -306,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.v(TAG, getClass().getSimpleName() + "-> First time generate thumbnails for images");
                     Bitmap jpg = Thumbnails.imageThumbnails(file);
                     item.setThumbnails(jpg);
-                    saveImage(jpg, FileUtils.getFileNameNoExtension(file.getName()));
+                    Thumbnails.saveImage(jpg, FileUtils.getFileNameNoExtension(file.getName()));
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + "-> Load pre-existed thumbnails for images");
                     Bitmap imageThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
@@ -314,33 +310,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             contentList.add(item);
-        }
-    }
-
-    private void saveImage(Bitmap bmp, String fileName) {
-        if (!thumbnailsFolder.exists()) {
-            boolean mkdir = thumbnailsFolder.mkdir();
-            if (!mkdir) {
-                Log.v(TAG, getClass().getSimpleName() + "-> New folder for " + thumbnailsFolder + " is not created.");
-            }
-        }
-        File file = new File(thumbnailsFolder, fileName + ".png");
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
-            Log.v(TAG, getClass().getSimpleName() + "-> Thumbnail saved on: " + file);
-        } catch (Exception e) {
-            Log.v(TAG, Objects.requireNonNull(e.getMessage()));
-            FirebaseCrashlytics.getInstance().recordException(e);
-        } finally {
-            try {
-                if (out != null)
-                    out.close();
-            } catch (Exception e) {
-                Log.v(TAG, getClass().getSimpleName() + "-> Image not saved due to: " + e.getMessage(), e);
-                FirebaseCrashlytics.getInstance().recordException(e);
-            }
         }
     }
 
