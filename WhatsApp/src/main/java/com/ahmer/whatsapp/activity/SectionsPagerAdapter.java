@@ -1,4 +1,4 @@
-package com.ahmer.whatsapp.ui.main;
+package com.ahmer.whatsapp.activity;
 
 import android.content.Context;
 

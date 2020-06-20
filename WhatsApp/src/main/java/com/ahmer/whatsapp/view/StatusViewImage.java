@@ -65,7 +65,7 @@ public class StatusViewImage extends AppCompatActivity {
                     Bitmap bitmap = BitmapFactory.decodeFile(path, options);
                     //Log.v(Constant.TAG, "Path is: " + bitmap);
                     imageView.setImageBitmap(bitmap);
-                    bgLayout.setVisibility(View.VISIBLE);
+                    bgLayout.setVisibility(View.GONE);
                     fabMain.setVisibility(View.VISIBLE);
                     fabMain.setOnClickListener(v -> {
                         if (!isFabOpened) {

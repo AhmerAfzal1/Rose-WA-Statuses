@@ -122,14 +122,8 @@ public class MainActivity extends AppCompatActivity {
         title.setText(R.string.app_name);
         ImageView info = findViewById(R.id.ivInfo);
         info.setOnClickListener(v -> new DialogAbout(this));
-        ImageView switchTo = findViewById(R.id.ivSwitch);
-        switchTo.setOnClickListener(v -> {
-            /*
-            Intent intent = new Intent(MainActivity.this, MainTabbedActivity.class);
-            startActivity(intent);
-            */
-            ToastUtils.showShort("This feature is under progress");
-        });
+        ImageView settings = findViewById(R.id.ivSettings);
+        settings.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
         noStatus = findViewById(R.id.tvNoStatus);
         noStatusLayout = findViewById(R.id.layoutNoStatus);
         adView = findViewById(R.id.adView);
@@ -239,14 +233,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getData() {
-        /*
+
         File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
         //File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/FMWhatsApp");
         Log.v(TAG, getClass().getSimpleName() + moviesFolder.getAbsolutePath());
         if (moviesFolder.exists()) {
             getStatuses(moviesFolder.listFiles());
         }
-       */
+       /*
         if (dirWhatsApp.exists()) {
             getStatuses(dirWhatsApp.listFiles());
         }
@@ -258,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (dirYoWhatsApp.exists()) {
             getStatuses(dirYoWhatsApp.listFiles());
-        }
+        }*/
         recyclerView.setAdapter(adapter);
         adapter.registerAdapterDataObserver(observer);
         observer.onChanged();

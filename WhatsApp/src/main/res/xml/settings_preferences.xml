@@ -1,0 +1,24 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:fontFamily="@font/roboto"
+        android:key="@string/button_change_view"
+        android:title="@string/msg_change_view"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        android:fontFamily="@font/roboto"
+        android:key="@string/button_clear_caches"
+        android:summary="@string/msg_cache_size"
+        android:title="@string/title_cache"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        android:fontFamily="@font/roboto"
+        android:key="@string/button_about"
+        android:summary="@string/msg_version"
+        android:title="@string/title_version"
+        app:iconSpaceReserved="false" />
+</PreferenceScreen>

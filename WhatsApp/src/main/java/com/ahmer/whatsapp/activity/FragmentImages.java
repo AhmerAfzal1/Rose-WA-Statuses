@@ -1,4 +1,4 @@
-package com.ahmer.whatsapp.ui.main;
+package com.ahmer.whatsapp.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,11 +22,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ahmer.afzal.utils.constants.AppPackageConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.FileUtils;
+import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
 import com.ahmer.whatsapp.Thumbnails;
-import com.ahmer.whatsapp.activity.MainActivity;
 import com.ahmer.whatsapp.view.StatusViewImage;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
@@ -117,18 +117,25 @@ public class FragmentImages extends Fragment {
 
     private void loadData() {
 
-        if (MainActivity.dirWhatsApp.exists()) {
-            getStatuses(MainActivity.dirWhatsApp.listFiles());
+        File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
+        //File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/FMWhatsApp");
+        Log.v(TAG, getClass().getSimpleName() + moviesFolder.getAbsolutePath());
+        if (moviesFolder.exists()) {
+            getStatuses(moviesFolder.listFiles());
         }
-        if (MainActivity.dirBusinessWhatsApp.exists()) {
-            getStatuses(MainActivity.dirBusinessWhatsApp.listFiles());
+       /*
+        if (dirWhatsApp.exists()) {
+            getStatuses(dirWhatsApp.listFiles());
         }
-        if (MainActivity.dirFMWhatsApp.exists()) {
-            getStatuses(MainActivity.dirFMWhatsApp.listFiles());
+        if (dirBusinessWhatsApp.exists()) {
+            getStatuses(dirBusinessWhatsApp.listFiles());
         }
-        if (MainActivity.dirYoWhatsApp.exists()) {
-            getStatuses(MainActivity.dirYoWhatsApp.listFiles());
+        if (dirFMWhatsApp.exists()) {
+            getStatuses(dirFMWhatsApp.listFiles());
         }
+        if (dirYoWhatsApp.exists()) {
+            getStatuses(dirYoWhatsApp.listFiles());
+        }*/
         recyclerViewImages.setAdapter(adapter);
         adapter.registerAdapterDataObserver(observer);
         observer.onChanged();

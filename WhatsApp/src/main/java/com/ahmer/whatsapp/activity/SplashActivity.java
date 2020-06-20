@@ -3,6 +3,7 @@ package com.ahmer.whatsapp.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.ahmer.afzal.utils.utilcode.ScreenUtils;
 import com.ahmer.afzal.utils.utilcode.ThreadUtils;
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.UtilsTransActivity;
+import com.ahmer.whatsapp.Constant;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.Thumbnails;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -102,7 +104,12 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            weakContext.get().startActivity(new Intent(weakContext.get(), MainActivity.class));
+            SharedPreferences pref = weakContext.get().getSharedPreferences(Constant.PREFERENCE_LAUNCHER, Context.MODE_PRIVATE);
+            if (!pref.getBoolean(Constant.PREFERENCE_TRANSPARENT, false)) {
+                weakContext.get().startActivity(new Intent(weakContext.get(), MainActivity.class));
+            } else {
+                weakContext.get().startActivity(new Intent(weakContext.get(), MainTabbedActivity.class));
+            }
             ((SplashActivity) weakContext.get()).finish();
         }
     }
