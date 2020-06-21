@@ -12,6 +12,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.CleanUtils;
 import com.ahmer.afzal.utils.utilcode.Utils;
 import com.ahmer.whatsapp.Constant;
@@ -19,6 +20,7 @@ import com.ahmer.whatsapp.R;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.Locale;
 import java.util.Objects;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -55,6 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
                 SharedPreferences.Editor editorSplash = prefLauncher.edit();
                 editorSplash.putBoolean(Constant.PREFERENCE_TRANSPARENT, (Boolean) newValue);
                 editorSplash.apply();
+                AppUtils.relaunchApp();
                 return true;
             });
             buttonCaches = findPreference(getString(R.string.button_clear_caches));
@@ -65,6 +68,9 @@ public class SettingsActivity extends AppCompatActivity {
                 initializeCache();
                 return true;
             });
+            Preference versionApp = findPreference(getString(R.string.button_about));
+            Objects.requireNonNull(versionApp).setSummary(String.format(Locale.getDefault(),
+                    "App Version: %s(%d)", AppUtils.getAppVersionName(), AppUtils.getAppVersionCode()));
             initializeCache();
         }
 

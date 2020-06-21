@@ -11,11 +11,19 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ahmer.afzal.utils.imageview.ZoomImageView;
+import com.ahmer.afzal.utils.utilcode.FileUtils;
+import com.ahmer.afzal.utils.utilcode.PathUtils;
+import com.ahmer.afzal.utils.utilcode.ThreadUtils;
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
+import com.ahmer.afzal.utils.utilcode.ToastUtils;
+import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
+import com.ahmer.whatsapp.StatusItem;
+import com.ahmer.whatsapp.activity.FragmentImages;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
+import java.io.File;
 import java.util.Objects;
 
 import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
@@ -24,7 +32,6 @@ import static com.ahmer.whatsapp.Constant.TAG;
 public class StatusViewImage extends AppCompatActivity {
 
     private FloatingActionButton fabMain;
-    private FloatingActionButton fileDownload;
     private FloatingActionButton shareWhatsApp;
     private FloatingActionButton share;
     private View bgLayout;
@@ -45,44 +52,53 @@ public class StatusViewImage extends AppCompatActivity {
         shareWhatsAppLayout = findViewById(R.id.fabLayoutShareWhatsApp);
         shareLayout = findViewById(R.id.fabLayoutShare);
         fabMain = findViewById(R.id.fabMain);
-        fileDownload = findViewById(R.id.fabDownloadFile);
+        FloatingActionButton fileDownload = findViewById(R.id.fabDownloadFile);
         shareWhatsApp = findViewById(R.id.fabShareWhatsApp);
         share = findViewById(R.id.fabShare);
         ZoomImageView imageView = findViewById(R.id.imageView);
         String format = getIntent().getStringExtra("format");
         String path = getIntent().getStringExtra("path");
         String fileFrom = getIntent().getStringExtra("from");
+        if (Objects.requireNonNull(fileFrom).equals("MainActivity")) {
+            fabMain.setVisibility(View.GONE);
+            bgLayout.setVisibility(View.GONE);
+        } else if (Objects.requireNonNull(fileFrom).equals("Fragment")) {
+            bgLayout.setVisibility(View.GONE);
+            fabMain.setVisibility(View.VISIBLE);
+            fabMain.setOnClickListener(v -> {
+                if (!isFabOpened) {
+                    showFAB();
+                } else {
+                    closeFAB();
+                }
+            });
+        } else {
+            Log.v(TAG, getClass().getSimpleName() + "-> There is no found file");
+        }
         try {
             if (Objects.requireNonNull(format).equals(EXT_JPG_LOWER_CASE)) {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                if (Objects.requireNonNull(fileFrom).equals("MainActivity")) {
-                    fabMain.setVisibility(View.GONE);
-                    bgLayout.setVisibility(View.GONE);
-                    Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-                    imageView.setImageBitmap(bitmap);
-                } else if (Objects.requireNonNull(fileFrom).equals("Fragment")) {
-                    Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-                    //Log.v(Constant.TAG, "Path is: " + bitmap);
-                    imageView.setImageBitmap(bitmap);
-                    bgLayout.setVisibility(View.GONE);
-                    fabMain.setVisibility(View.VISIBLE);
-                    fabMain.setOnClickListener(v -> {
-                        if (!isFabOpened) {
-                            showFAB();
-                        } else {
-                            closeFAB();
-                        }
-                    });
-                } else {
-                    Log.v(TAG, getClass().getSimpleName() + "-> There is no found file");
-                }
+                Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+                imageView.setImageBitmap(bitmap);
             }
         } catch (Exception e) {
             e.printStackTrace();
             ThrowableUtils.getFullStackTrace(e);
             Log.v(TAG, getClass().getSimpleName() + "-> " + e.getMessage());
         }
+        fileDownload.setOnClickListener(v -> {
+            String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(path);
+            File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_JPG_LOWER_CASE);
+            FileUtils.move(new File(Objects.requireNonNull(path)), destPathJPG);
+            FragmentImages.ImagesAdapter adapter = new FragmentImages.ImagesAdapter();
+            //adapter.update(FragmentImages.statusItemFile);
+            ThreadUtils.runOnUiThread(() -> {
+                ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
+                new MediaScanner(this, destPathJPG);
+            });
+            finish();
+        });
     }
 
     private void showFAB() {

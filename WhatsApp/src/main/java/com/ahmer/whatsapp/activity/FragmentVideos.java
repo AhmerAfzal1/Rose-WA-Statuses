@@ -1,6 +1,5 @@
 package com.ahmer.whatsapp.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,7 +26,6 @@ import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
 import com.ahmer.whatsapp.Thumbnails;
-import com.ahmer.whatsapp.view.StatusViewImage;
 import com.ahmer.whatsapp.view.StatusViewVideo;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
@@ -41,7 +39,6 @@ import static com.ahmer.whatsapp.Constant.TAG;
 public class FragmentVideos extends Fragment {
 
     private static final ArrayList<StatusItem> statusItemFile = new ArrayList<>();
-    private RecyclerView recyclerViewVideos = null;
     private VideosAdapter adapter = null;
     private TextView noStatus = null;
     private RelativeLayout noStatusLayout = null;
@@ -95,7 +92,7 @@ public class FragmentVideos extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerViewVideos = view.findViewById(R.id.rvVideos);
+        RecyclerView recyclerViewVideos = view.findViewById(R.id.rvVideos);
         noStatus = view.findViewById(R.id.tvNoStatus);
         noStatusLayout = view.findViewById(R.id.layoutNoStatus);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
@@ -105,7 +102,10 @@ public class FragmentVideos extends Fragment {
         recyclerViewVideos.setHasFixedSize(true);
         recyclerViewVideos.setNestedScrollingEnabled(false);
         recyclerViewVideos.setLayoutManager(gridLayoutManager);
-        adapter = new VideosAdapter(getContext());
+        adapter = new VideosAdapter();
+        recyclerViewVideos.setAdapter(adapter);
+        adapter.registerAdapterDataObserver(observer);
+        observer.onChanged();
         try {
             loadData();
         } catch (Exception e) {
@@ -117,29 +117,27 @@ public class FragmentVideos extends Fragment {
     }
 
     private void loadData() {
-
+        /*
         File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
         //File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/FMWhatsApp");
         Log.v(TAG, getClass().getSimpleName() + moviesFolder.getAbsolutePath());
         if (moviesFolder.exists()) {
             getStatuses(moviesFolder.listFiles());
         }
-       /*
-        if (dirWhatsApp.exists()) {
-            getStatuses(dirWhatsApp.listFiles());
+       */
+        if (SplashActivity.dirWhatsApp.exists()) {
+            getStatuses(SplashActivity.dirWhatsApp.listFiles());
         }
-        if (dirBusinessWhatsApp.exists()) {
-            getStatuses(dirBusinessWhatsApp.listFiles());
+        if (SplashActivity.dirBusinessWhatsApp.exists()) {
+            getStatuses(SplashActivity.dirBusinessWhatsApp.listFiles());
         }
-        if (dirFMWhatsApp.exists()) {
-            getStatuses(dirFMWhatsApp.listFiles());
+        if (SplashActivity.dirFMWhatsApp.exists()) {
+            getStatuses(SplashActivity.dirFMWhatsApp.listFiles());
         }
-        if (dirYoWhatsApp.exists()) {
-            getStatuses(dirYoWhatsApp.listFiles());
-        }*/
-        recyclerViewVideos.setAdapter(adapter);
-        adapter.registerAdapterDataObserver(observer);
-        observer.onChanged();
+        if (SplashActivity.dirYoWhatsApp.exists()) {
+            getStatuses(SplashActivity.dirYoWhatsApp.listFiles());
+        }
+
     }
 
     private void getStatuses(File[] filesList) {
@@ -177,16 +175,10 @@ public class FragmentVideos extends Fragment {
 
     public static class VideosAdapter extends RecyclerView.Adapter<VideoViewHolder> {
 
-        private Context context;
-
-        public VideosAdapter(Context context) {
-            this.context = context;
-        }
-
         @NonNull
         @Override
         public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.status_fragment_image, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.status_item_frag, parent, false);
             return new FragmentVideos.VideoViewHolder(view);
         }
 
@@ -194,11 +186,11 @@ public class FragmentVideos extends Fragment {
         public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
             holder.imageView.setImageBitmap(statusItemFile.get(position).getThumbnails());
             holder.imageView.setOnClickListener(v -> {
-                Intent intent = new Intent(context, StatusViewVideo.class);
+                Intent intent = new Intent(v.getContext(), StatusViewVideo.class);
                 intent.putExtra("path", statusItemFile.get(position).getPath());
                 intent.putExtra("format", statusItemFile.get(position).getFormat());
                 intent.putExtra("from", "Fragment");
-                context.startActivity(intent);
+                v.getContext().startActivity(intent);
             });
         }
 

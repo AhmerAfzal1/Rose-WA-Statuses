@@ -11,14 +11,12 @@
     <Preference
         android:fontFamily="@font/roboto"
         android:key="@string/button_clear_caches"
-        android:summary="@string/msg_cache_size"
         android:title="@string/title_cache"
         app:iconSpaceReserved="false" />
 
     <Preference
         android:fontFamily="@font/roboto"
         android:key="@string/button_about"
-        android:summary="@string/msg_version"
         android:title="@string/title_version"
         app:iconSpaceReserved="false" />
 </PreferenceScreen>

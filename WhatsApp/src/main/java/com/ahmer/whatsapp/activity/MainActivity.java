@@ -2,8 +2,6 @@ package com.ahmer.whatsapp.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -27,14 +25,12 @@ import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.FileUtils;
 import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.afzal.utils.utilcode.ThreadUtils;
-import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.ahmer.whatsapp.Constant;
 import com.ahmer.whatsapp.DialogAbout;
 import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
-import com.ahmer.whatsapp.Thumbnails;
 import com.ahmer.whatsapp.view.StatusViewImage;
 import com.ahmer.whatsapp.view.StatusViewVideo;
 import com.google.android.gms.ads.AdListener;
@@ -50,15 +46,11 @@ import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import static com.ahmer.whatsapp.Constant.BUSINESS_WHATSAPP_STATUSES_LOCATION;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_UPPER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_MP4_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_MP4_UPPER_CASE;
-import static com.ahmer.whatsapp.Constant.FM_WHATSAPP_STATUSES_LOCATION;
 import static com.ahmer.whatsapp.Constant.TAG;
-import static com.ahmer.whatsapp.Constant.WHATSAPP_STATUSES_LOCATION;
-import static com.ahmer.whatsapp.Constant.YO_WHATSAPP_STATUSES_LOCATION;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INTERNAL_ERROR;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INVALID_REQUEST;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NETWORK_ERROR;
@@ -66,11 +58,7 @@ import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final File dirBusinessWhatsApp = new File(PathUtils.getExternalStoragePath() + BUSINESS_WHATSAPP_STATUSES_LOCATION);
-    public static final File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
-    public static final File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
-    public static final File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
-    private final ArrayList<StatusItem> contentList = new ArrayList<>();
+    private final ArrayList<StatusItem> contentList = SplashActivity.allStatuses;
     private AdView adView;
     private FirebaseAnalytics firebaseAnalytics;
     private RecyclerView recyclerView = null;
@@ -136,6 +124,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(gridLayoutManager);
         adapter = new StatusVideoAdapter();
+        recyclerView.setAdapter(adapter);
+        adapter.registerAdapterDataObserver(observer);
+        observer.onChanged();
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
@@ -197,14 +188,6 @@ public class MainActivity extends AppCompatActivity {
         });
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
-        try {
-            getData();
-        } catch (Exception e) {
-            e.printStackTrace();
-            ThrowableUtils.getFullStackTrace(e);
-            Log.v(TAG, getClass().getSimpleName() + "-> Error during loading data: " + e.getMessage());
-            FirebaseCrashlytics.getInstance().recordException(e);
-        }
     }
 
     @Override
@@ -229,81 +212,6 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         if (adView != null) {
             adView.destroy();
-        }
-    }
-
-    public void getData() {
-
-        File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
-        //File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/FMWhatsApp");
-        Log.v(TAG, getClass().getSimpleName() + moviesFolder.getAbsolutePath());
-        if (moviesFolder.exists()) {
-            getStatuses(moviesFolder.listFiles());
-        }
-       /*
-        if (dirWhatsApp.exists()) {
-            getStatuses(dirWhatsApp.listFiles());
-        }
-        if (dirBusinessWhatsApp.exists()) {
-            getStatuses(dirBusinessWhatsApp.listFiles());
-        }
-        if (dirFMWhatsApp.exists()) {
-            getStatuses(dirFMWhatsApp.listFiles());
-        }
-        if (dirYoWhatsApp.exists()) {
-            getStatuses(dirYoWhatsApp.listFiles());
-        }*/
-        recyclerView.setAdapter(adapter);
-        adapter.registerAdapterDataObserver(observer);
-        observer.onChanged();
-    }
-
-    private void getStatuses(File[] filesList) {
-        if (filesList != null) {
-            for (File file : filesList) {
-                getStatusesContent(file);
-            }
-        }
-    }
-
-    private void getStatusesContent(File file) {
-        String filePath = file.getAbsolutePath();
-        String fileName = FileUtils.getFileNameNoExtension(file.getName());
-        File preExistedThumbnails = new File(Thumbnails.thumbnailDir() + "/" + fileName + ".png");
-        if (filePath.endsWith(EXT_MP4_LOWER_CASE) || filePath.endsWith(EXT_MP4_UPPER_CASE) ||
-                filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE)) {
-            StatusItem item = new StatusItem();
-            if (file.getName().endsWith(EXT_MP4_LOWER_CASE) || file.getName().endsWith(EXT_MP4_UPPER_CASE)) {
-                item.setPath(file.getAbsolutePath());
-                item.setSize(file.length());
-                item.setFormat(EXT_MP4_LOWER_CASE);
-                if (!preExistedThumbnails.exists()) {
-                    Log.v(TAG, getClass().getSimpleName() + "-> First time generate thumbnails for videos");
-                    Bitmap video = Thumbnails.videoThumbnails(file);
-                    item.setThumbnails(video);
-                    Thumbnails.saveImage(video, FileUtils.getFileNameNoExtension(file.getName()));
-                } else {
-                    Log.v(TAG, getClass().getSimpleName() + "-> Load pre-existed thumbnails for videos");
-                    Bitmap videoThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
-                    item.setThumbnails(videoThumbnail);
-                }
-            }
-            if (file.getName().endsWith(EXT_JPG_LOWER_CASE) || file.getName().endsWith(EXT_JPG_UPPER_CASE)) {
-                item.setPath(file.getAbsolutePath());
-                item.setSize(file.length());
-                item.setFormat(EXT_JPG_LOWER_CASE);
-                if (!preExistedThumbnails.exists()) {
-                    Log.v(TAG, getClass().getSimpleName() + "-> First time generate thumbnails for images");
-                    Bitmap jpg = Thumbnails.imageThumbnails(file);
-                    item.setThumbnails(jpg);
-                    Thumbnails.saveImage(jpg, FileUtils.getFileNameNoExtension(file.getName()));
-                } else {
-                    Log.v(TAG, getClass().getSimpleName() + "-> Load pre-existed thumbnails for images");
-                    Bitmap imageThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
-                    item.setThumbnails(imageThumbnail);
-                }
-            }
-            contentList.add(item);
         }
     }
 
