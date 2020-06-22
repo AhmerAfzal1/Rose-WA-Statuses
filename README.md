@@ -1,6 +1,6 @@
 # Download WhatsApp Statuses
 
-[![auc][aucSvg]][auc] [![result][apiSvg]][result] [![build][buildSvg]][build] [![License][licenseSvg]][license]
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Author, Developer & Thanks
 * [Ahmer Afzal](http://ahmerafzal1.blogspot.com/)  - Blogspot
