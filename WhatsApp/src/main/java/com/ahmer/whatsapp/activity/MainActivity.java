@@ -3,7 +3,6 @@ package com.ahmer.whatsapp.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +30,7 @@ import com.ahmer.whatsapp.DialogAbout;
 import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
+import com.ahmer.whatsapp.Utilities;
 import com.ahmer.whatsapp.view.StatusViewImage;
 import com.ahmer.whatsapp.view.StatusViewVideo;
 import com.google.android.gms.ads.AdListener;
@@ -43,7 +43,6 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
@@ -65,37 +64,6 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout noStatusLayout = null;
     private StatusVideoAdapter adapter = null;
     private TextView noStatus = null;
-    private final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
-        @Override
-        public void onChanged() {
-            super.onChanged();
-            if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_BUSINESS_WHATSAPP)
-                    || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp) || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
-                Log.v(TAG, MainActivity.class.getSimpleName() + "-> No kind of WhatsApp installed");
-                noStatusLayout.setVisibility(View.VISIBLE);
-                noStatus.setText(R.string.no_whatsapp_installed);
-            } else {
-                if (adapter.getItemCount() == 0) {
-                    noStatusLayout.setVisibility(View.VISIBLE);
-                    noStatus.setText(R.string.no_having_status);
-                } else {
-                    noStatusLayout.setVisibility(View.GONE);
-                }
-            }
-        }
-
-        @Override
-        public void onItemRangeChanged(int positionStart, int itemCount) {
-            super.onItemRangeChanged(positionStart, itemCount);
-            onChanged();
-        }
-
-        @Override
-        public void onItemRangeRemoved(int positionStart, int itemCount) {
-            super.onItemRangeRemoved(positionStart, itemCount);
-            onChanged();
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,12 +79,12 @@ public class MainActivity extends AppCompatActivity {
         ImageView info = findViewById(R.id.ivInfo);
         info.setOnClickListener(v -> new DialogAbout(this));
         ImageView settings = findViewById(R.id.ivSettings);
-        settings.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
+        settings.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), SettingsActivity.class)));
         noStatus = findViewById(R.id.tvNoStatus);
         noStatusLayout = findViewById(R.id.layoutNoStatus);
         adView = findViewById(R.id.adView);
         recyclerView = findViewById(R.id.rvStatusList);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 1);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);
         gridLayoutManager.isAutoMeasureEnabled();
         gridLayoutManager.setSmoothScrollbarEnabled(true);
         recyclerView.getRecycledViewPool().clear();
@@ -125,13 +93,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(gridLayoutManager);
         adapter = new StatusVideoAdapter();
         recyclerView.setAdapter(adapter);
-        adapter.registerAdapterDataObserver(observer);
-        observer.onChanged();
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
-        MobileAds.initialize(MainActivity.this, initializationStatus -> {
+        MobileAds.initialize(getApplicationContext(), initializationStatus -> {
             //Keep empty
         });
         adView.setAdListener(new AdListener() {
@@ -188,6 +154,39 @@ public class MainActivity extends AppCompatActivity {
         });
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+        RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_BUSINESS_WHATSAPP)
+                        || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp) || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
+                    Log.v(TAG, MainActivity.class.getSimpleName() + "-> No kind of WhatsApp installed");
+                    noStatusLayout.setVisibility(View.VISIBLE);
+                    noStatus.setText(R.string.no_whatsapp_installed);
+                } else {
+                    if (adapter.getItemCount() == 0) {
+                        noStatusLayout.setVisibility(View.VISIBLE);
+                        noStatus.setText(R.string.no_having_status);
+                    } else {
+                        noStatusLayout.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                super.onItemRangeChanged(positionStart, itemCount);
+                onChanged();
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+                onChanged();
+            }
+        };
+        adapter.registerAdapterDataObserver(observer);
+        observer.onChanged();
     }
 
     @Override
@@ -267,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
             holder.relativeLayout.setBackgroundColor(Color.parseColor("#FFFFFF"));
             holder.relativeLayout.setAlpha(0);
             holder.progressBar.setVisibility(View.GONE);
-            holder.showSize.setText(getFileSize(contentList.get(position).getSize()));
+            holder.showSize.setText(Utilities.getFileSize(contentList.get(position).getSize()));
             File source = new File(contentList.get(position).getPath());
             String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(source.getAbsolutePath());
 
@@ -295,17 +294,17 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyItemRangeRemoved(position, getItemCount());
             });
 
-            holder.relativeLayout.setOnClickListener(view -> {
+            holder.relativeLayout.setOnClickListener(v -> {
                 if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                         contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
                     Bundle bundleMP4 = new Bundle();
                     bundleMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "MP4");
                     bundleMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "MP4 Video Viewed");
                     firebaseAnalytics.logEvent("MP4_Open", bundleMP4);
-                    Intent intentVideo = new Intent(MainActivity.this, StatusViewVideo.class);
+                    Intent intentVideo = new Intent(v.getContext(), StatusViewVideo.class);
                     intentVideo.putExtra("format", contentList.get(position).getFormat());
                     intentVideo.putExtra("path", contentList.get(position).getPath());
-                    MainActivity.this.startActivity(intentVideo);
+                    v.getContext().startActivity(intentVideo);
                 }
 
                 if (contentList.get(position).getFormat().endsWith(EXT_JPG_LOWER_CASE) ||
@@ -314,11 +313,11 @@ public class MainActivity extends AppCompatActivity {
                     bundleJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "JPG");
                     bundleJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "JPG Image Viewed");
                     firebaseAnalytics.logEvent("JPG_Open", bundleJPG);
-                    Intent intentJPG = new Intent(MainActivity.this, StatusViewImage.class);
+                    Intent intentJPG = new Intent(v.getContext(), StatusViewImage.class);
                     intentJPG.putExtra("format", contentList.get(position).getFormat());
                     intentJPG.putExtra("path", contentList.get(position).getPath());
                     intentJPG.putExtra("from", "MainActivity");
-                    MainActivity.this.startActivity(intentJPG);
+                    v.getContext().startActivity(intentJPG);
                 }
             });
 
@@ -327,11 +326,7 @@ public class MainActivity extends AppCompatActivity {
                 bundleShare.putString(FirebaseAnalytics.Param.ITEM_ID, "Share");
                 bundleShare.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Shared Something");
                 firebaseAnalytics.logEvent("Share_Open", bundleShare);
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(contentList.get(position).getPath()));
-                sendIntent.setType("file/*");
-                MainActivity.this.startActivity(Intent.createChooser(sendIntent, "Send Status via:"));
+                Utilities.shareFile(v.getContext(), contentList, position);
             });
 
             holder.btnShareWhatsApp.setOnClickListener(v -> {
@@ -339,16 +334,11 @@ public class MainActivity extends AppCompatActivity {
                 bundleWhatsApp.putString(FirebaseAnalytics.Param.ITEM_ID, "ShareWhatsApp");
                 bundleWhatsApp.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Shared Something on WhatsApp");
                 firebaseAnalytics.logEvent("WhatsApp_Share_Open", bundleWhatsApp);
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.setPackage("com.whatsapp");
-                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(contentList.get(position).getPath()));
-                sendIntent.setType("file/*");
-                MainActivity.this.startActivity(Intent.createChooser(sendIntent, "Send Status via:"));
+                Utilities.shareToWhatsApp(v.getContext(), contentList, position);
             });
 
             holder.btnDownload.setOnClickListener(v -> {
-                File statusDirectory = new File(PathUtils.getExternalStoragePath(), MainActivity.this.getResources().getString(R.string.app_name));
+                File statusDirectory = new File(PathUtils.getExternalStoragePath(), v.getContext().getResources().getString(R.string.app_name));
 
                 if (!statusDirectory.exists()) {
                     if (statusDirectory.mkdirs()) {
@@ -366,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadMP4");
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download MP4 Status");
                     firebaseAnalytics.logEvent("Download_MP4_Open", bundleDownloadMP4);
-                    new MoveFiles(MainActivity.this, destPathMP4, holder.progressBar).execute(source);
+                    new MoveFiles(v.getContext(), destPathMP4, holder.progressBar).execute(source);
                     contentList.remove(position);
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeRemoved(position, getItemCount());
@@ -381,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadJPG");
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download JPG Status");
                     firebaseAnalytics.logEvent("Download_JPG_Open", bundleDownloadJPG);
-                    new MoveFiles(MainActivity.this, destPathJPG, holder.progressBar).execute(source);
+                    new MoveFiles(v.getContext(), destPathJPG, holder.progressBar).execute(source);
                     contentList.remove(position);
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeRemoved(position, getItemCount());
@@ -407,13 +397,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public long getItemId(int position) {
             return super.getItemId(position);
-        }
-
-        private String getFileSize(long size) {
-            if (size <= 0) return "0 Bytes";
-            final String[] units = new String[]{"Bytes", "KB", "MB", "GB", "TB"};
-            int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
-            return new DecimalFormat("#,##0.##").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
         }
 
         private class ViewHolder extends RecyclerView.ViewHolder {

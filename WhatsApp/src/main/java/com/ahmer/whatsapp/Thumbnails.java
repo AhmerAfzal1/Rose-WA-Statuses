@@ -92,17 +92,13 @@ public final class Thumbnails {
     public static Bitmap getBitmap(Bitmap bitmap, int newWidth, int newHeight) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-
         float scaleWidth = ((float) newWidth) / width;
         float scaleHeight = ((float) newHeight) / height;
-
         Matrix matrix = new Matrix();
         // Resize the bit map
         matrix.postScale(scaleWidth, scaleHeight);
-
         //Rotate is needed here because somehow the bitmap factory is getting my image rotated
         matrix.postRotate(-90);
-
         // Recreate the new bitmap
         return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
     }

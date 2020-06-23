@@ -150,7 +150,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onGranted(@NonNull List<String> permissionsGranted) {
                 Log.v(TAG, getClass().getSimpleName() + "-> Permission has been granted");
-                new RunProgram(SplashActivity.this).execute();
+                new RunProgram(getApplicationContext()).execute();
             }
 
             @Override

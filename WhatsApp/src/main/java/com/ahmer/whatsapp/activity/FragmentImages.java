@@ -39,10 +39,10 @@ import static com.ahmer.whatsapp.Constant.TAG;
 public class FragmentImages extends Fragment {
 
     public final ArrayList<StatusItem> statusItemFile = new ArrayList<>();
-    public RecyclerView recyclerViewImages = null;
     public ImagesAdapter adapter = null;
-    private TextView noStatus = null;
+    public RecyclerView recyclerViewImages = null;
     private RelativeLayout noStatusLayout = null;
+    private TextView noStatus = null;
 
     public FragmentImages() {
         // Required empty public constructor
@@ -259,6 +259,14 @@ public class FragmentImages extends Fragment {
             adapter.notifyItemRangeRemoved(position, getItemCount());
             recyclerView.scrollToPosition(position);
             adapter.notifyDataSetChanged();
+        }
+
+        public int getPosition() {
+            int position = 0;
+            for (ImageViewHolder holder : holders) {
+                position = holder.getBindingAdapterPosition();
+            }
+            return position;
         }
     }
 
