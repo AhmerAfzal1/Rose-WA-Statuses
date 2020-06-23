@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ahmer.afzal.utils.constants.AppPackageConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.FileUtils;
-import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
@@ -31,6 +30,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import static com.ahmer.whatsapp.Constant.EXT_MP4_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_MP4_UPPER_CASE;
@@ -38,41 +38,11 @@ import static com.ahmer.whatsapp.Constant.TAG;
 
 public class FragmentVideos extends Fragment {
 
-    private static final ArrayList<StatusItem> statusItemFile = new ArrayList<>();
-    private VideosAdapter adapter = null;
+    public final ArrayList<StatusItem> statusItemFile = new ArrayList<>();
+    public RecyclerView recyclerViewVideos = null;
+    public VideosAdapter adapter = null;
     private TextView noStatus = null;
     private RelativeLayout noStatusLayout = null;
-    private final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
-        @Override
-        public void onChanged() {
-            super.onChanged();
-            if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_BUSINESS_WHATSAPP)
-                    || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp) || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
-                Log.v(TAG, MainActivity.class.getSimpleName() + "-> No kind of WhatsApp installed");
-                noStatusLayout.setVisibility(View.VISIBLE);
-                noStatus.setText(R.string.no_whatsapp_installed);
-            } else {
-                if (adapter.getItemCount() == 0) {
-                    noStatusLayout.setVisibility(View.VISIBLE);
-                    noStatus.setText(R.string.no_having_status);
-                } else {
-                    noStatusLayout.setVisibility(View.GONE);
-                }
-            }
-        }
-
-        @Override
-        public void onItemRangeChanged(int positionStart, int itemCount) {
-            super.onItemRangeChanged(positionStart, itemCount);
-            onChanged();
-        }
-
-        @Override
-        public void onItemRangeRemoved(int positionStart, int itemCount) {
-            super.onItemRangeRemoved(positionStart, itemCount);
-            onChanged();
-        }
-    };
 
     public FragmentVideos() {
         // Required empty public constructor
@@ -92,7 +62,7 @@ public class FragmentVideos extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        RecyclerView recyclerViewVideos = view.findViewById(R.id.rvVideos);
+        recyclerViewVideos = view.findViewById(R.id.rvVideos);
         noStatus = view.findViewById(R.id.tvNoStatus);
         noStatusLayout = view.findViewById(R.id.layoutNoStatus);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
@@ -102,10 +72,8 @@ public class FragmentVideos extends Fragment {
         recyclerViewVideos.setHasFixedSize(true);
         recyclerViewVideos.setNestedScrollingEnabled(false);
         recyclerViewVideos.setLayoutManager(gridLayoutManager);
-        adapter = new VideosAdapter();
+        adapter = new VideosAdapter(statusItemFile, recyclerViewVideos, adapter);
         recyclerViewVideos.setAdapter(adapter);
-        adapter.registerAdapterDataObserver(observer);
-        observer.onChanged();
         try {
             loadData();
         } catch (Exception e) {
@@ -114,6 +82,51 @@ public class FragmentVideos extends Fragment {
             Log.v(TAG, getClass().getSimpleName() + "-> Error during loading data: " + e.getMessage());
             FirebaseCrashlytics.getInstance().recordException(e);
         }
+        RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_BUSINESS_WHATSAPP)
+                        || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp) || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
+                    Log.v(TAG, MainActivity.class.getSimpleName() + "-> No kind of WhatsApp installed");
+                    noStatusLayout.setVisibility(View.VISIBLE);
+                    noStatus.setText(R.string.no_whatsapp_installed);
+                } else {
+                    if (adapter.getItemCount() == 0) {
+                        noStatusLayout.setVisibility(View.VISIBLE);
+                        noStatus.setText(R.string.no_having_status);
+                    } else {
+                        noStatusLayout.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                super.onItemRangeChanged(positionStart, itemCount);
+                onChanged();
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                onChanged();
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+                onChanged();
+            }
+
+            @Override
+            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+                super.onItemRangeMoved(fromPosition, toPosition, itemCount);
+                onChanged();
+            }
+        };
+        adapter.registerAdapterDataObserver(observer);
+        observer.onChanged();
     }
 
     private void loadData() {
@@ -173,7 +186,35 @@ public class FragmentVideos extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        recyclerViewVideos.swapAdapter(null, true);
+        statusItemFile.clear();
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (recyclerViewVideos != null) {
+            recyclerViewVideos.swapAdapter(null, true);
+        }
+        statusItemFile.clear();
+        super.onDestroy();
+    }
+
     public static class VideosAdapter extends RecyclerView.Adapter<VideoViewHolder> {
+
+        final HashSet<VideoViewHolder> holders;
+        private final ArrayList<StatusItem> statusItem;
+        private final RecyclerView recyclerView;
+        private final VideosAdapter adapter;
+
+        public VideosAdapter(ArrayList<StatusItem> list, RecyclerView rv, VideosAdapter adapter) {
+            this.holders = new HashSet<>();
+            this.statusItem = list;
+            this.recyclerView = rv;
+            this.adapter = adapter;
+        }
 
         @NonNull
         @Override
@@ -184,11 +225,11 @@ public class FragmentVideos extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
-            holder.imageView.setImageBitmap(statusItemFile.get(position).getThumbnails());
+            holder.imageView.setImageBitmap(statusItem.get(position).getThumbnails());
             holder.imageView.setOnClickListener(v -> {
                 Intent intent = new Intent(v.getContext(), StatusViewVideo.class);
-                intent.putExtra("path", statusItemFile.get(position).getPath());
-                intent.putExtra("format", statusItemFile.get(position).getFormat());
+                intent.putExtra("path", statusItem.get(position).getPath());
+                intent.putExtra("format", statusItem.get(position).getFormat());
                 intent.putExtra("from", "Fragment");
                 v.getContext().startActivity(intent);
             });
@@ -206,7 +247,19 @@ public class FragmentVideos extends Fragment {
 
         @Override
         public int getItemCount() {
-            return statusItemFile.size();
+            return statusItem.size();
+        }
+
+        public void updateList() {
+            int position = 0;
+            for (VideoViewHolder holder : holders) {
+                position = holder.getBindingAdapterPosition();
+            }
+            statusItem.remove(position);
+            adapter.notifyItemRemoved(position);
+            adapter.notifyItemRangeRemoved(position, getItemCount());
+            recyclerView.scrollToPosition(position);
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -219,5 +272,4 @@ public class FragmentVideos extends Fragment {
             imageView = itemView.findViewById(R.id.ivImagesView);
         }
     }
-
 }

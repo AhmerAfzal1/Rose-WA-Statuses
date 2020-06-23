@@ -30,6 +30,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_UPPER_CASE;
@@ -37,42 +38,11 @@ import static com.ahmer.whatsapp.Constant.TAG;
 
 public class FragmentImages extends Fragment {
 
-    private static final ArrayList<StatusItem> statusItemFile = new ArrayList<>();
-    private static RecyclerView recyclerViewImages = null;
-    private static ImagesAdapter adapter = null;
+    public final ArrayList<StatusItem> statusItemFile = new ArrayList<>();
+    public RecyclerView recyclerViewImages = null;
+    public ImagesAdapter adapter = null;
     private TextView noStatus = null;
     private RelativeLayout noStatusLayout = null;
-    private final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
-        @Override
-        public void onChanged() {
-            super.onChanged();
-            if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_BUSINESS_WHATSAPP)
-                    || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp) || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
-                Log.v(TAG, MainActivity.class.getSimpleName() + "-> No kind of WhatsApp installed");
-                noStatusLayout.setVisibility(View.VISIBLE);
-                noStatus.setText(R.string.no_whatsapp_installed);
-            } else {
-                if (adapter.getItemCount() == 0) {
-                    noStatusLayout.setVisibility(View.VISIBLE);
-                    noStatus.setText(R.string.no_having_status);
-                } else {
-                    noStatusLayout.setVisibility(View.GONE);
-                }
-            }
-        }
-
-        @Override
-        public void onItemRangeChanged(int positionStart, int itemCount) {
-            super.onItemRangeChanged(positionStart, itemCount);
-            onChanged();
-        }
-
-        @Override
-        public void onItemRangeRemoved(int positionStart, int itemCount) {
-            super.onItemRangeRemoved(positionStart, itemCount);
-            onChanged();
-        }
-    };
 
     public FragmentImages() {
         // Required empty public constructor
@@ -102,10 +72,8 @@ public class FragmentImages extends Fragment {
         recyclerViewImages.setHasFixedSize(true);
         recyclerViewImages.setNestedScrollingEnabled(false);
         recyclerViewImages.setLayoutManager(gridLayoutManager);
-        adapter = new ImagesAdapter();
+        adapter = new ImagesAdapter(statusItemFile, recyclerViewImages, adapter);
         recyclerViewImages.setAdapter(adapter);
-        adapter.registerAdapterDataObserver(observer);
-        observer.onChanged();
         try {
             loadData();
         } catch (Exception e) {
@@ -114,6 +82,51 @@ public class FragmentImages extends Fragment {
             Log.v(TAG, getClass().getSimpleName() + "-> Error during loading data: " + e.getMessage());
             FirebaseCrashlytics.getInstance().recordException(e);
         }
+        RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_BUSINESS_WHATSAPP)
+                        || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp) || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
+                    Log.v(TAG, MainActivity.class.getSimpleName() + "-> No kind of WhatsApp installed");
+                    noStatusLayout.setVisibility(View.VISIBLE);
+                    noStatus.setText(R.string.no_whatsapp_installed);
+                } else {
+                    if (adapter.getItemCount() == 0) {
+                        noStatusLayout.setVisibility(View.VISIBLE);
+                        noStatus.setText(R.string.no_having_status);
+                    } else {
+                        noStatusLayout.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                super.onItemRangeChanged(positionStart, itemCount);
+                onChanged();
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                onChanged();
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+                onChanged();
+            }
+
+            @Override
+            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+                super.onItemRangeMoved(fromPosition, toPosition, itemCount);
+                onChanged();
+            }
+        };
+        adapter.registerAdapterDataObserver(observer);
+        observer.onChanged();
     }
 
     private void loadData() {
@@ -172,7 +185,35 @@ public class FragmentImages extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        recyclerViewImages.swapAdapter(null, true);
+        statusItemFile.clear();
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (recyclerViewImages != null) {
+            recyclerViewImages.swapAdapter(null, true);
+        }
+        statusItemFile.clear();
+        super.onDestroy();
+    }
+
     public static class ImagesAdapter extends RecyclerView.Adapter<ImageViewHolder> {
+
+        final HashSet<ImageViewHolder> holders;
+        private final ArrayList<StatusItem> statusItem;
+        private final RecyclerView recyclerView;
+        private final ImagesAdapter adapter;
+
+        public ImagesAdapter(ArrayList<StatusItem> list, RecyclerView rv, ImagesAdapter adapter) {
+            this.holders = new HashSet<>();
+            this.statusItem = list;
+            this.recyclerView = rv;
+            this.adapter = adapter;
+        }
 
         @NonNull
         @Override
@@ -183,19 +224,13 @@ public class FragmentImages extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-            holder.imageView.setImageBitmap(statusItemFile.get(position).getThumbnails());
+            holder.imageView.setImageBitmap(statusItem.get(position).getThumbnails());
             holder.imageView.setOnClickListener(v -> {
                 Intent intent = new Intent(v.getContext(), StatusViewImage.class);
-                intent.putExtra("path", statusItemFile.get(position).getPath());
-                intent.putExtra("format", statusItemFile.get(position).getFormat());
+                intent.putExtra("path", statusItem.get(position).getPath());
+                intent.putExtra("format", statusItem.get(position).getFormat());
                 intent.putExtra("from", "Fragment");
                 v.getContext().startActivity(intent);
-                statusItemFile.remove(position);
-                adapter.notifyItemRemoved(position);
-                adapter.notifyItemRangeRemoved(position, getItemCount());
-                recyclerViewImages.scrollToPosition(position);
-                adapter.notifyDataSetChanged();
-                Log.v(TAG, "Position is: " + position + " & holder pos is: ");
             });
         }
 
@@ -211,7 +246,19 @@ public class FragmentImages extends Fragment {
 
         @Override
         public int getItemCount() {
-            return statusItemFile.size();
+            return statusItem.size();
+        }
+
+        public void updateList() {
+            int position = 0;
+            for (ImageViewHolder holder : holders) {
+                position = holder.getBindingAdapterPosition();
+            }
+            statusItem.remove(position);
+            adapter.notifyItemRemoved(position);
+            adapter.notifyItemRangeRemoved(position, getItemCount());
+            recyclerView.scrollToPosition(position);
+            adapter.notifyDataSetChanged();
         }
     }
 

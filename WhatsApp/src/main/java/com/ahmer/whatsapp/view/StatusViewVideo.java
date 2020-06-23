@@ -12,15 +12,21 @@ import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ahmer.afzal.utils.utilcode.FileUtils;
+import com.ahmer.afzal.utils.utilcode.PathUtils;
+import com.ahmer.afzal.utils.utilcode.ThreadUtils;
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
+import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
+import com.ahmer.whatsapp.activity.FragmentVideos;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
 import java.util.Objects;
 
+import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_MP4_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.TAG;
 
@@ -28,7 +34,6 @@ public class StatusViewVideo extends AppCompatActivity {
 
     private VideoView view;
     private FloatingActionButton fabMain;
-    private FloatingActionButton fileDownload;
     private FloatingActionButton shareWhatsApp;
     private FloatingActionButton share;
     private View bgLayout;
@@ -49,7 +54,7 @@ public class StatusViewVideo extends AppCompatActivity {
         shareWhatsAppLayout = findViewById(R.id.fabLayoutShareWhatsApp);
         shareLayout = findViewById(R.id.fabLayoutShare);
         fabMain = findViewById(R.id.fabMain);
-        fileDownload = findViewById(R.id.fabDownloadFile);
+        FloatingActionButton fileDownload = findViewById(R.id.fabDownloadFile);
         shareWhatsApp = findViewById(R.id.fabShareWhatsApp);
         share = findViewById(R.id.fabShare);
         view = findViewById(R.id.videoView);
@@ -96,6 +101,20 @@ public class StatusViewVideo extends AppCompatActivity {
         view.setOnCompletionListener(mp -> {
             view.stopPlayback();
             StatusViewVideo.this.finish();
+        });
+        fileDownload.setOnClickListener(v -> {
+            String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(path);
+            File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_JPG_LOWER_CASE);
+            FileUtils.move(new File(Objects.requireNonNull(path)), destPathJPG);
+            FragmentVideos fragmentVideos = new FragmentVideos();
+            FragmentVideos.VideosAdapter adapter = new FragmentVideos.VideosAdapter(fragmentVideos.statusItemFile,
+                    fragmentVideos.recyclerViewVideos, fragmentVideos.adapter);
+            adapter.updateList();
+            ThreadUtils.runOnUiThread(() -> {
+                ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
+                new MediaScanner(this, destPathJPG);
+            });
+            finish();
         });
     }
 

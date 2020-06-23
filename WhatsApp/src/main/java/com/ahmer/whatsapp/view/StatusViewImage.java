@@ -18,7 +18,6 @@ import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
-import com.ahmer.whatsapp.StatusItem;
 import com.ahmer.whatsapp.activity.FragmentImages;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -91,8 +90,10 @@ public class StatusViewImage extends AppCompatActivity {
             String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(path);
             File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_JPG_LOWER_CASE);
             FileUtils.move(new File(Objects.requireNonNull(path)), destPathJPG);
-            FragmentImages.ImagesAdapter adapter = new FragmentImages.ImagesAdapter();
-            //adapter.update(FragmentImages.statusItemFile);
+            FragmentImages fragmentImages = new FragmentImages();
+            FragmentImages.ImagesAdapter adapter = new FragmentImages.ImagesAdapter(fragmentImages.statusItemFile,
+                    fragmentImages.recyclerViewImages, fragmentImages.adapter);
+            adapter.updateList();
             ThreadUtils.runOnUiThread(() -> {
                 ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
                 new MediaScanner(this, destPathJPG);
