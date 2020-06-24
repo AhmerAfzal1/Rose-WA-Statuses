@@ -19,6 +19,7 @@ import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
+import com.ahmer.whatsapp.Utilities;
 import com.ahmer.whatsapp.activity.FragmentVideos;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -32,15 +33,13 @@ import static com.ahmer.whatsapp.Constant.TAG;
 
 public class StatusViewVideo extends AppCompatActivity {
 
-    private VideoView view;
-    private FloatingActionButton fabMain;
-    private FloatingActionButton shareWhatsApp;
-    private FloatingActionButton share;
-    private View bgLayout;
-    private LinearLayout fileDownloadLayout;
-    private LinearLayout shareWhatsAppLayout;
-    private LinearLayout shareLayout;
     private boolean isFabOpened = false;
+    private FloatingActionButton fabMain;
+    private LinearLayout fileDownloadLayout;
+    private LinearLayout shareLayout;
+    private LinearLayout shareWhatsAppLayout;
+    private VideoView view;
+    private View bgLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +54,8 @@ public class StatusViewVideo extends AppCompatActivity {
         shareLayout = findViewById(R.id.fabLayoutShare);
         fabMain = findViewById(R.id.fabMain);
         FloatingActionButton fileDownload = findViewById(R.id.fabDownloadFile);
-        shareWhatsApp = findViewById(R.id.fabShareWhatsApp);
-        share = findViewById(R.id.fabShare);
+        FloatingActionButton shareWhatsApp = findViewById(R.id.fabShareWhatsApp);
+        FloatingActionButton share = findViewById(R.id.fabShare);
         view = findViewById(R.id.videoView);
         String format = getIntent().getStringExtra("format");
         String path = getIntent().getStringExtra("path");
@@ -85,7 +84,7 @@ public class StatusViewVideo extends AppCompatActivity {
                 String hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO);
                 boolean isVideo = "yes".equals(hasVideo);
                 if (isVideo) {
-                    MediaController mediaController = new MediaController(StatusViewVideo.this);
+                    MediaController mediaController = new MediaController(getApplicationContext());
                     mediaController.setAnchorView(view);
                     view.setMediaController(mediaController);
                     view.setVideoURI(uri);
@@ -102,20 +101,24 @@ public class StatusViewVideo extends AppCompatActivity {
             view.stopPlayback();
             StatusViewVideo.this.finish();
         });
+        FragmentVideos fragmentVideos = new FragmentVideos();
+        FragmentVideos.VideosAdapter adapter = new FragmentVideos.VideosAdapter(fragmentVideos.statusItemFile,
+                fragmentVideos.recyclerViewVideos, fragmentVideos.adapter);
         fileDownload.setOnClickListener(v -> {
             String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(path);
             File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_JPG_LOWER_CASE);
             FileUtils.move(new File(Objects.requireNonNull(path)), destPathJPG);
-            FragmentVideos fragmentVideos = new FragmentVideos();
-            FragmentVideos.VideosAdapter adapter = new FragmentVideos.VideosAdapter(fragmentVideos.statusItemFile,
-                    fragmentVideos.recyclerViewVideos, fragmentVideos.adapter);
             adapter.updateList();
             ThreadUtils.runOnUiThread(() -> {
                 ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
-                new MediaScanner(this, destPathJPG);
+                new MediaScanner(getApplicationContext(), destPathJPG);
             });
             finish();
         });
+        share.setOnClickListener(v -> Utilities.shareFile(getApplicationContext(),
+                fragmentVideos.statusItemFile, adapter.getPosition()));
+        shareWhatsApp.setOnClickListener(v -> Utilities.shareToWhatsApp(getApplicationContext(),
+                fragmentVideos.statusItemFile, adapter.getPosition()));
     }
 
     private void showFAB() {

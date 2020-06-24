@@ -17,9 +17,9 @@ import com.ahmer.afzal.utils.utilcode.CleanUtils;
 import com.ahmer.afzal.utils.utilcode.Utils;
 import com.ahmer.whatsapp.Constant;
 import com.ahmer.whatsapp.R;
+import com.ahmer.whatsapp.Utilities;
 
 import java.io.File;
-import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -78,7 +78,7 @@ public class SettingsActivity extends AppCompatActivity {
             long size = 0;
             size += getDirSize(Utils.getApp().getCacheDir());
             size += getDirSize(Objects.requireNonNull(Utils.getApp().getExternalCacheDir()));
-            buttonCaches.setSummary("Caches Size " + readableFileSize(size));
+            buttonCaches.setSummary("Caches Size " + Utilities.getFileSize(size));
         }
 
         private long getDirSize(File dir) {
@@ -91,13 +91,6 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
             return size;
-        }
-
-        private String readableFileSize(long size) {
-            if (size <= 0) return "0 Bytes";
-            final String[] units = new String[]{"Bytes", "KB", "MB", "GB", "TB"};
-            int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
-            return new DecimalFormat("#,##0.##").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
         }
     }
 }

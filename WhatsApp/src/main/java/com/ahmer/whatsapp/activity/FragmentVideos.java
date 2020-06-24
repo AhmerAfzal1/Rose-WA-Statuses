@@ -41,8 +41,8 @@ public class FragmentVideos extends Fragment {
     public final ArrayList<StatusItem> statusItemFile = new ArrayList<>();
     public RecyclerView recyclerViewVideos = null;
     public VideosAdapter adapter = null;
-    private TextView noStatus = null;
     private RelativeLayout noStatusLayout = null;
+    private TextView noStatus = null;
 
     public FragmentVideos() {
         // Required empty public constructor
@@ -260,6 +260,14 @@ public class FragmentVideos extends Fragment {
             adapter.notifyItemRangeRemoved(position, getItemCount());
             recyclerView.scrollToPosition(position);
             adapter.notifyDataSetChanged();
+        }
+
+        public int getPosition() {
+            int position = 0;
+            for (VideoViewHolder holder : holders) {
+                position = holder.getBindingAdapterPosition();
+            }
+            return position;
         }
     }
 

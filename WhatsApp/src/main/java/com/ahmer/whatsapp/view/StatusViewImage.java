@@ -18,6 +18,7 @@ import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
+import com.ahmer.whatsapp.Utilities;
 import com.ahmer.whatsapp.activity.FragmentImages;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -30,14 +31,12 @@ import static com.ahmer.whatsapp.Constant.TAG;
 
 public class StatusViewImage extends AppCompatActivity {
 
-    private FloatingActionButton fabMain;
-    private FloatingActionButton shareWhatsApp;
-    private FloatingActionButton share;
-    private View bgLayout;
-    private LinearLayout fileDownloadLayout;
-    private LinearLayout shareWhatsAppLayout;
-    private LinearLayout shareLayout;
     private boolean isFabOpened = false;
+    private FloatingActionButton fabMain;
+    private LinearLayout fileDownloadLayout;
+    private LinearLayout shareLayout;
+    private LinearLayout shareWhatsAppLayout;
+    private View bgLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +51,8 @@ public class StatusViewImage extends AppCompatActivity {
         shareLayout = findViewById(R.id.fabLayoutShare);
         fabMain = findViewById(R.id.fabMain);
         FloatingActionButton fileDownload = findViewById(R.id.fabDownloadFile);
-        shareWhatsApp = findViewById(R.id.fabShareWhatsApp);
-        share = findViewById(R.id.fabShare);
+        FloatingActionButton shareWhatsApp = findViewById(R.id.fabShareWhatsApp);
+        FloatingActionButton share = findViewById(R.id.fabShare);
         ZoomImageView imageView = findViewById(R.id.imageView);
         String format = getIntent().getStringExtra("format");
         String path = getIntent().getStringExtra("path");
@@ -86,20 +85,24 @@ public class StatusViewImage extends AppCompatActivity {
             ThrowableUtils.getFullStackTrace(e);
             Log.v(TAG, getClass().getSimpleName() + "-> " + e.getMessage());
         }
+        FragmentImages fragmentImages = new FragmentImages();
+        FragmentImages.ImagesAdapter adapter = new FragmentImages.ImagesAdapter(fragmentImages.statusItemFile,
+                fragmentImages.recyclerViewImages, fragmentImages.adapter);
         fileDownload.setOnClickListener(v -> {
             String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(path);
             File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_JPG_LOWER_CASE);
             FileUtils.move(new File(Objects.requireNonNull(path)), destPathJPG);
-            FragmentImages fragmentImages = new FragmentImages();
-            FragmentImages.ImagesAdapter adapter = new FragmentImages.ImagesAdapter(fragmentImages.statusItemFile,
-                    fragmentImages.recyclerViewImages, fragmentImages.adapter);
             adapter.updateList();
             ThreadUtils.runOnUiThread(() -> {
                 ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
-                new MediaScanner(this, destPathJPG);
+                new MediaScanner(getApplicationContext(), destPathJPG);
             });
             finish();
         });
+        share.setOnClickListener(v -> Utilities.shareFile(getApplicationContext(),
+                fragmentImages.statusItemFile, adapter.getPosition()));
+        shareWhatsApp.setOnClickListener(v -> Utilities.shareToWhatsApp(getApplicationContext(),
+                fragmentImages.statusItemFile, adapter.getPosition()));
     }
 
     private void showFAB() {
