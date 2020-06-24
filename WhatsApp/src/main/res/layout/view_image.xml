@@ -39,7 +39,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/save" />
+            android:background="@drawable/background_fab_label"
+            android:text="@string/save"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabDownloadFile"
@@ -70,7 +73,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/share_to_whatsapp" />
+            android:background="@drawable/background_fab_label"
+            android:text="@string/share_to_whatsapp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabShareWhatsApp"
@@ -101,7 +107,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/share" />
+            android:background="@drawable/background_fab_label"
+            android:text="@string/share"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabShare"
