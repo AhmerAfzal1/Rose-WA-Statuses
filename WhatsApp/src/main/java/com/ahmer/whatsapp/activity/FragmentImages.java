@@ -1,8 +1,6 @@
 package com.ahmer.whatsapp.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,25 +18,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmer.afzal.utils.constants.AppPackageConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
-import com.ahmer.afzal.utils.utilcode.FileUtils;
-import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
-import com.ahmer.whatsapp.Thumbnails;
 import com.ahmer.whatsapp.view.StatusViewImage;
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
-import static com.ahmer.whatsapp.Constant.EXT_JPG_UPPER_CASE;
 import static com.ahmer.whatsapp.Constant.TAG;
 
 public class FragmentImages extends Fragment {
 
-    public final ArrayList<StatusItem> statusItemFile = new ArrayList<>();
+    public final ArrayList<StatusItem> statusItemFile = new ArrayList<>(SplashActivity.imageStatuses);
     public ImagesAdapter adapter = null;
     public RecyclerView recyclerViewImages = null;
     private RelativeLayout noStatusLayout = null;
@@ -74,14 +65,6 @@ public class FragmentImages extends Fragment {
         recyclerViewImages.setLayoutManager(gridLayoutManager);
         adapter = new ImagesAdapter(statusItemFile, recyclerViewImages, adapter);
         recyclerViewImages.setAdapter(adapter);
-        try {
-            loadData();
-        } catch (Exception e) {
-            e.printStackTrace();
-            ThrowableUtils.getFullStackTrace(e);
-            Log.v(TAG, getClass().getSimpleName() + "-> Error during loading data: " + e.getMessage());
-            FirebaseCrashlytics.getInstance().recordException(e);
-        }
         RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -127,62 +110,6 @@ public class FragmentImages extends Fragment {
         };
         adapter.registerAdapterDataObserver(observer);
         observer.onChanged();
-    }
-
-    private void loadData() {
-        /*
-        File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
-        //File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/FMWhatsApp");
-        Log.v(TAG, getClass().getSimpleName() + moviesFolder.getAbsolutePath());
-        if (moviesFolder.exists()) {
-            getStatuses(moviesFolder.listFiles());
-        }
-       */
-        if (SplashActivity.dirWhatsApp.exists()) {
-            getStatuses(SplashActivity.dirWhatsApp.listFiles());
-        }
-        if (SplashActivity.dirBusinessWhatsApp.exists()) {
-            getStatuses(SplashActivity.dirBusinessWhatsApp.listFiles());
-        }
-        if (SplashActivity.dirFMWhatsApp.exists()) {
-            getStatuses(SplashActivity.dirFMWhatsApp.listFiles());
-        }
-        if (SplashActivity.dirYoWhatsApp.exists()) {
-            getStatuses(SplashActivity.dirYoWhatsApp.listFiles());
-        }
-    }
-
-    private void getStatuses(File[] filesList) {
-        if (filesList != null) {
-            for (File file : filesList) {
-                getImagesStatus(file);
-            }
-        }
-    }
-
-    private void getImagesStatus(File file) {
-        String filePath = file.getAbsolutePath();
-        String fileName = FileUtils.getFileNameNoExtension(file.getName());
-        File preExistedThumbnails = new File(Thumbnails.thumbnailDir() + "/" + fileName + ".png");
-        if (filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE)) {
-            StatusItem item = new StatusItem();
-            if (file.getName().endsWith(EXT_JPG_LOWER_CASE) || file.getName().endsWith(EXT_JPG_UPPER_CASE)) {
-                item.setPath(file.getAbsolutePath());
-                item.setSize(file.length());
-                item.setFormat(EXT_JPG_LOWER_CASE);
-                if (!preExistedThumbnails.exists()) {
-                    Log.v(TAG, getClass().getSimpleName() + "-> First time generate thumbnails for images");
-                    Bitmap jpg = Thumbnails.imageThumbnails(file);
-                    item.setThumbnails(jpg);
-                    Thumbnails.saveImage(jpg, FileUtils.getFileNameNoExtension(file.getName()));
-                } else {
-                    Log.v(TAG, getClass().getSimpleName() + "-> Load pre-existed thumbnails for images");
-                    Bitmap imageThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
-                    item.setThumbnails(imageThumbnail);
-                }
-            }
-            statusItemFile.add(item);
-        }
     }
 
     @Override

@@ -44,6 +44,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_UPPER_CASE;
@@ -57,7 +58,7 @@ import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final ArrayList<StatusItem> contentList = SplashActivity.allStatuses;
+    private final ArrayList<StatusItem> contentList = new ArrayList<>(SplashActivity.imageStatuses);
     private AdView adView;
     private FirebaseAnalytics firebaseAnalytics;
     private RecyclerView recyclerView = null;
@@ -74,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
             finish();
             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
         });
+        contentList.addAll(SplashActivity.videoStatuses);
+        Collections.sort(contentList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
         TextView title = findViewById(R.id.tvTitle);
         title.setText(R.string.app_name);
         ImageView info = findViewById(R.id.ivInfo);
@@ -211,6 +214,9 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         if (adView != null) {
             adView.destroy();
+        }
+        if (contentList != null) {
+            contentList.clear();
         }
     }
 

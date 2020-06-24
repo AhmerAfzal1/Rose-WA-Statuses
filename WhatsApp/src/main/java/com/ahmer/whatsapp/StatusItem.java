@@ -7,6 +7,7 @@ public class StatusItem {
     private Bitmap mThumbnails;
     private long mSize;
     private String mFormat;
+    private String mName;
     private String mPath;
 
     public String getFormat() {
@@ -23,6 +24,14 @@ public class StatusItem {
 
     public void setPath(String path) {
         mPath = path;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String name) {
+        mName = name;
     }
 
     public long getSize() {

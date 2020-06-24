@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -47,7 +48,8 @@ import static com.ahmer.whatsapp.Constant.YO_WHATSAPP_STATUSES_LOCATION;
 
 public class SplashActivity extends AppCompatActivity {
 
-    public static final ArrayList<StatusItem> allStatuses = new ArrayList<>();
+    public static final ArrayList<StatusItem> videoStatuses = new ArrayList<>();
+    public static final ArrayList<StatusItem> imageStatuses = new ArrayList<>();
     public static final File dirBusinessWhatsApp = new File(PathUtils.getExternalStoragePath() + BUSINESS_WHATSAPP_STATUSES_LOCATION);
     public static final File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
     public static final File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
@@ -79,49 +81,57 @@ public class SplashActivity extends AppCompatActivity {
     private static void getStatuses(File[] filesList) {
         if (filesList != null) {
             for (File file : filesList) {
-                getStatusesContent(file);
+                getVideoStatuses(file);
+                getImageStatuses(file);
             }
         }
     }
 
-    private static void getStatusesContent(File file) {
+    private static void getVideoStatuses(File file) {
         String filePath = file.getAbsolutePath();
         String fileName = FileUtils.getFileNameNoExtension(file.getName());
         File preExistedThumbnails = new File(Thumbnails.thumbnailDir() + "/" + fileName + ".png");
-        if (filePath.endsWith(EXT_MP4_LOWER_CASE) || filePath.endsWith(EXT_MP4_UPPER_CASE) ||
-                filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE)) {
+        if (filePath.endsWith(EXT_MP4_LOWER_CASE) || filePath.endsWith(EXT_MP4_UPPER_CASE)) {
             StatusItem item = new StatusItem();
-            if (file.getName().endsWith(EXT_MP4_LOWER_CASE) || file.getName().endsWith(EXT_MP4_UPPER_CASE)) {
-                item.setPath(file.getAbsolutePath());
-                item.setSize(file.length());
-                item.setFormat(EXT_MP4_LOWER_CASE);
-                if (!preExistedThumbnails.exists()) {
-                    Log.v(TAG, SplashActivity.class.getSimpleName() + "-> First time generate thumbnails for videos");
-                    Bitmap video = Thumbnails.videoThumbnails(file);
-                    item.setThumbnails(video);
-                    Thumbnails.saveImage(video, FileUtils.getFileNameNoExtension(file.getName()));
-                } else {
-                    Log.v(TAG, SplashActivity.class.getSimpleName() + "-> Load pre-existed thumbnails for videos");
-                    Bitmap videoThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
-                    item.setThumbnails(videoThumbnail);
-                }
+            item.setPath(file.getAbsolutePath());
+            item.setName(file.getName());
+            item.setSize(file.length());
+            item.setFormat(EXT_MP4_LOWER_CASE);
+            if (!preExistedThumbnails.exists()) {
+                Log.v(TAG, SplashActivity.class.getSimpleName() + "-> First time generate thumbnails for videos");
+                Bitmap video = Thumbnails.videoThumbnails(file);
+                item.setThumbnails(video);
+                Thumbnails.saveImage(video, FileUtils.getFileNameNoExtension(file.getName()));
+            } else {
+                Log.v(TAG, SplashActivity.class.getSimpleName() + "-> Load pre-existed thumbnails for videos");
+                Bitmap videoThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
+                item.setThumbnails(videoThumbnail);
             }
-            if (file.getName().endsWith(EXT_JPG_LOWER_CASE) || file.getName().endsWith(EXT_JPG_UPPER_CASE)) {
-                item.setPath(file.getAbsolutePath());
-                item.setSize(file.length());
-                item.setFormat(EXT_JPG_LOWER_CASE);
-                if (!preExistedThumbnails.exists()) {
-                    Log.v(TAG, SplashActivity.class.getSimpleName() + "-> First time generate thumbnails for images");
-                    Bitmap jpg = Thumbnails.imageThumbnails(file);
-                    item.setThumbnails(jpg);
-                    Thumbnails.saveImage(jpg, FileUtils.getFileNameNoExtension(file.getName()));
-                } else {
-                    Log.v(TAG, SplashActivity.class.getSimpleName() + "-> Load pre-existed thumbnails for images");
-                    Bitmap imageThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
-                    item.setThumbnails(imageThumbnail);
-                }
+            videoStatuses.add(item);
+        }
+    }
+
+    private static void getImageStatuses(File file) {
+        String filePath = file.getAbsolutePath();
+        String fileName = FileUtils.getFileNameNoExtension(file.getName());
+        File preExistedThumbnails = new File(Thumbnails.thumbnailDir() + "/" + fileName + ".png");
+        if (filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE)) {
+            StatusItem item = new StatusItem();
+            item.setPath(file.getAbsolutePath());
+            item.setName(file.getName());
+            item.setSize(file.length());
+            item.setFormat(EXT_JPG_LOWER_CASE);
+            if (!preExistedThumbnails.exists()) {
+                Log.v(TAG, SplashActivity.class.getSimpleName() + "-> First time generate thumbnails for images");
+                Bitmap jpg = Thumbnails.imageThumbnails(file);
+                item.setThumbnails(jpg);
+                Thumbnails.saveImage(jpg, FileUtils.getFileNameNoExtension(file.getName()));
+            } else {
+                Log.v(TAG, SplashActivity.class.getSimpleName() + "-> Load pre-existed thumbnails for images");
+                Bitmap imageThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
+                item.setThumbnails(imageThumbnail);
             }
-            allStatuses.add(item);
+            imageStatuses.add(item);
         }
     }
 
@@ -149,7 +159,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onGranted(@NonNull List<String> permissionsGranted) {
                 Log.v(TAG, getClass().getSimpleName() + "-> Permission has been granted");
-                new RunProgram(getApplicationContext()).execute();
+                new RunProgram(SplashActivity.this).execute();
             }
 
             @Override
@@ -172,16 +182,19 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (allStatuses != null) {
-            allStatuses.clear();
+        if (imageStatuses != null) {
+            imageStatuses.clear();
+        }
+        if (videoStatuses != null) {
+            videoStatuses.clear();
         }
     }
 
     static class RunProgram extends AsyncTask<Void, Void, Void> {
 
-        private final WeakReference<Context> weakContext;
+        private final WeakReference<SplashActivity> weakContext;
 
-        private RunProgram(final Context context) {
+        private RunProgram(final SplashActivity context) {
             weakContext = new WeakReference<>(context);
         }
 
@@ -212,14 +225,18 @@ public class SplashActivity extends AppCompatActivity {
             SharedPreferences pref = weakContext.get().getSharedPreferences(Constant.PREFERENCE_LAUNCHER, Context.MODE_PRIVATE);
             if (!pref.getBoolean(Constant.PREFERENCE_TRANSPARENT, false)) {
                 Intent intentMainActivity = new Intent(weakContext.get(), MainActivity.class);
-                intentMainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    intentMainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
                 weakContext.get().startActivity(intentMainActivity);
             } else {
                 Intent intentMainTabbed = new Intent(weakContext.get(), MainTabbedActivity.class);
-                intentMainTabbed.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    intentMainTabbed.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
                 weakContext.get().startActivity(intentMainTabbed);
             }
-            ((SplashActivity) weakContext.get()).finish();
+            weakContext.get().finish();
         }
     }
 }
