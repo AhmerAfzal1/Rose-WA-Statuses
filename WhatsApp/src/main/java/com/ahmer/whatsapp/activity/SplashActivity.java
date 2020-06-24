@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -136,7 +135,6 @@ public class SplashActivity extends AppCompatActivity {
         TextView app_version = findViewById(R.id.app_version);
         app_version.setText(String.format(Locale.getDefault(), "App version: %s(%d)",
                 AppUtils.getAppVersionName(), AppUtils.getAppVersionCode()));
-        Thumbnails.thumbnailDir();
         checkPermissions();
     }
 
@@ -171,12 +169,26 @@ public class SplashActivity extends AppCompatActivity {
         }).request();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (allStatuses != null) {
+            allStatuses.clear();
+        }
+    }
+
     static class RunProgram extends AsyncTask<Void, Void, Void> {
 
         private final WeakReference<Context> weakContext;
 
         private RunProgram(final Context context) {
             weakContext = new WeakReference<>(context);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Thumbnails.thumbnailDir();
         }
 
         @Override
@@ -200,15 +212,11 @@ public class SplashActivity extends AppCompatActivity {
             SharedPreferences pref = weakContext.get().getSharedPreferences(Constant.PREFERENCE_LAUNCHER, Context.MODE_PRIVATE);
             if (!pref.getBoolean(Constant.PREFERENCE_TRANSPARENT, false)) {
                 Intent intentMainActivity = new Intent(weakContext.get(), MainActivity.class);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    intentMainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                }
+                intentMainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 weakContext.get().startActivity(intentMainActivity);
             } else {
                 Intent intentMainTabbed = new Intent(weakContext.get(), MainTabbedActivity.class);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    intentMainTabbed.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                }
+                intentMainTabbed.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 weakContext.get().startActivity(intentMainTabbed);
             }
             ((SplashActivity) weakContext.get()).finish();

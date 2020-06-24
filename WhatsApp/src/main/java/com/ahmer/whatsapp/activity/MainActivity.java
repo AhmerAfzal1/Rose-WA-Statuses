@@ -304,6 +304,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intentVideo = new Intent(v.getContext(), StatusViewVideo.class);
                     intentVideo.putExtra("format", contentList.get(position).getFormat());
                     intentVideo.putExtra("path", contentList.get(position).getPath());
+                    intentVideo.putExtra("from", "MainActivity");
                     v.getContext().startActivity(intentVideo);
                 }
 
