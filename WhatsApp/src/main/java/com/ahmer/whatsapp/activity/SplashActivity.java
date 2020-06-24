@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -198,9 +199,17 @@ public class SplashActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
             SharedPreferences pref = weakContext.get().getSharedPreferences(Constant.PREFERENCE_LAUNCHER, Context.MODE_PRIVATE);
             if (!pref.getBoolean(Constant.PREFERENCE_TRANSPARENT, false)) {
-                weakContext.get().startActivity(new Intent(weakContext.get(), MainActivity.class));
+                Intent intentMainActivity = new Intent(weakContext.get(), MainActivity.class);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    intentMainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
+                weakContext.get().startActivity(intentMainActivity);
             } else {
-                weakContext.get().startActivity(new Intent(weakContext.get(), MainTabbedActivity.class));
+                Intent intentMainTabbed = new Intent(weakContext.get(), MainTabbedActivity.class);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    intentMainTabbed.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
+                weakContext.get().startActivity(intentMainTabbed);
             }
             ((SplashActivity) weakContext.get()).finish();
         }
