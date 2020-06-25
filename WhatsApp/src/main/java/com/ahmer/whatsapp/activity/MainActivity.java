@@ -82,12 +82,12 @@ public class MainActivity extends AppCompatActivity {
         ImageView info = findViewById(R.id.ivInfo);
         info.setOnClickListener(v -> new DialogAbout(this));
         ImageView settings = findViewById(R.id.ivSettings);
-        settings.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), SettingsActivity.class)));
+        settings.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
         noStatus = findViewById(R.id.tvNoStatus);
         noStatusLayout = findViewById(R.id.layoutNoStatus);
         adView = findViewById(R.id.adView);
         recyclerView = findViewById(R.id.rvStatusList);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 1);
         gridLayoutManager.isAutoMeasureEnabled();
         gridLayoutManager.setSmoothScrollbarEnabled(true);
         recyclerView.getRecycledViewPool().clear();
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
-        MobileAds.initialize(getApplicationContext(), initializationStatus -> {
+        MobileAds.initialize(MainActivity.this, initializationStatus -> {
             //Keep empty
         });
         adView.setAdListener(new AdListener() {

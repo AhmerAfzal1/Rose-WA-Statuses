@@ -80,11 +80,11 @@ public class StatusViewVideo extends AppCompatActivity {
             if (Objects.requireNonNull(format).equals(EXT_MP4_LOWER_CASE)) {
                 Uri uri = Uri.fromFile(new File(Objects.requireNonNull(path)));
                 MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                retriever.setDataSource(getApplicationContext(), uri);
+                retriever.setDataSource(StatusViewVideo.this, uri);
                 String hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO);
                 boolean isVideo = "yes".equals(hasVideo);
                 if (isVideo) {
-                    MediaController mediaController = new MediaController(getApplicationContext());
+                    MediaController mediaController = new MediaController(StatusViewVideo.this);
                     mediaController.setAnchorView(view);
                     view.setMediaController(mediaController);
                     view.setVideoURI(uri);
@@ -111,13 +111,13 @@ public class StatusViewVideo extends AppCompatActivity {
             adapter.updateList();
             ThreadUtils.runOnUiThread(() -> {
                 ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
-                new MediaScanner(getApplicationContext(), destPathJPG);
+                new MediaScanner(StatusViewVideo.this, destPathJPG);
             });
             finish();
         });
-        share.setOnClickListener(v -> Utilities.shareFile(getApplicationContext(),
+        share.setOnClickListener(v -> Utilities.shareFile(StatusViewVideo.this,
                 fragmentVideos.statusItemFile, adapter.getPosition()));
-        shareWhatsApp.setOnClickListener(v -> Utilities.shareToWhatsApp(getApplicationContext(),
+        shareWhatsApp.setOnClickListener(v -> Utilities.shareToWhatsApp(StatusViewVideo.this,
                 fragmentVideos.statusItemFile, adapter.getPosition()));
     }
 

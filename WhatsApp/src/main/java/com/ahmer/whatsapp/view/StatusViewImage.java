@@ -95,13 +95,13 @@ public class StatusViewImage extends AppCompatActivity {
             adapter.updateList();
             ThreadUtils.runOnUiThread(() -> {
                 ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
-                new MediaScanner(getApplicationContext(), destPathJPG);
+                new MediaScanner(StatusViewImage.this, destPathJPG);
             });
             finish();
         });
-        share.setOnClickListener(v -> Utilities.shareFile(getApplicationContext(),
+        share.setOnClickListener(v -> Utilities.shareFile(StatusViewImage.this,
                 fragmentImages.statusItemFile, adapter.getPosition()));
-        shareWhatsApp.setOnClickListener(v -> Utilities.shareToWhatsApp(getApplicationContext(),
+        shareWhatsApp.setOnClickListener(v -> Utilities.shareToWhatsApp(StatusViewImage.this,
                 fragmentImages.statusItemFile, adapter.getPosition()));
     }
 
