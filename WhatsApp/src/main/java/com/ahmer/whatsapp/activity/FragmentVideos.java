@@ -56,6 +56,9 @@ public class FragmentVideos extends Fragment {
         recyclerViewVideos = view.findViewById(R.id.rvVideos);
         noStatus = view.findViewById(R.id.tvNoStatus);
         noStatusLayout = view.findViewById(R.id.layoutNoStatus);
+    }
+
+    private void loadData() {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         gridLayoutManager.isAutoMeasureEnabled();
         gridLayoutManager.setSmoothScrollbarEnabled(true);
@@ -110,6 +113,12 @@ public class FragmentVideos extends Fragment {
         };
         adapter.registerAdapterDataObserver(observer);
         observer.onChanged();
+    }
+
+    @Override
+    public void onResume() {
+        loadData();
+        super.onResume();
     }
 
     @Override

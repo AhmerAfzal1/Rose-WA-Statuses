@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,6 +41,10 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.startapp.sdk.ads.banner.BannerListener;
+import com.startapp.sdk.ads.banner.Mrec;
+import com.startapp.sdk.ads.nativead.NativeAdPreferences;
+import com.startapp.sdk.adsbase.StartAppSDK;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -75,8 +80,6 @@ public class MainActivity extends AppCompatActivity {
             finish();
             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
         });
-        contentList.addAll(SplashActivity.videoStatuses);
-        Collections.sort(contentList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
         TextView title = findViewById(R.id.tvTitle);
         title.setText(R.string.app_name);
         ImageView info = findViewById(R.id.ivInfo);
@@ -85,21 +88,15 @@ public class MainActivity extends AppCompatActivity {
         settings.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
         noStatus = findViewById(R.id.tvNoStatus);
         noStatusLayout = findViewById(R.id.layoutNoStatus);
-        adView = findViewById(R.id.adView);
         recyclerView = findViewById(R.id.rvStatusList);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 1);
-        gridLayoutManager.isAutoMeasureEnabled();
-        gridLayoutManager.setSmoothScrollbarEnabled(true);
-        recyclerView.getRecycledViewPool().clear();
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        adapter = new StatusVideoAdapter();
-        recyclerView.setAdapter(adapter);
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
+        StartAppSDK.init(this, getString(R.string.startAppID), true);
+        StartAppSDK.setTestAdsEnabled(false);
+        new Mrec(this);
+        /*adView = findViewById(R.id.adView);
         MobileAds.initialize(MainActivity.this, initializationStatus -> {
             //Keep empty
         });
@@ -156,7 +153,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
+        adView.loadAd(adRequest);*/
+    }
+
+    private void loadData() {
+        contentList.addAll(SplashActivity.videoStatuses);
+        Collections.sort(contentList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 1);
+        gridLayoutManager.isAutoMeasureEnabled();
+        gridLayoutManager.setSmoothScrollbarEnabled(true);
+        recyclerView.getRecycledViewPool().clear();
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        adapter = new StatusVideoAdapter();
+        recyclerView.setAdapter(adapter);
         RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -207,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
         if (adView != null) {
             adView.resume();
         }
+        loadData();
     }
 
     @Override

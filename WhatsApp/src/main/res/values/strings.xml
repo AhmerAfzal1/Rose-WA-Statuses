@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Rose WA Statuses</string>
 
+    <string name="startAppID">205889906</string>
     <!-- Ads log strings -->
     <string name="adClosed">onAdClosed: Ad closed</string>
     <string name="adFailedToLoad">onAdFailedToLoad : Failed to load Ad, Error code is: %d</string>
