@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,7 +27,6 @@ import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.afzal.utils.utilcode.ThreadUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.ahmer.whatsapp.Constant;
-import com.ahmer.whatsapp.DialogAbout;
 import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
@@ -41,10 +40,6 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.startapp.sdk.ads.banner.BannerListener;
-import com.startapp.sdk.ads.banner.Mrec;
-import com.startapp.sdk.ads.nativead.NativeAdPreferences;
-import com.startapp.sdk.adsbase.StartAppSDK;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -66,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private final ArrayList<StatusItem> contentList = new ArrayList<>(SplashActivity.imageStatuses);
     private AdView adView;
     private FirebaseAnalytics firebaseAnalytics;
+    private FirebaseCrashlytics firebaseCrashlytics;
     private RecyclerView recyclerView = null;
     private RelativeLayout noStatusLayout = null;
     private StatusVideoAdapter adapter = null;
@@ -82,21 +78,33 @@ public class MainActivity extends AppCompatActivity {
         });
         TextView title = findViewById(R.id.tvTitle);
         title.setText(R.string.app_name);
-        ImageView info = findViewById(R.id.ivInfo);
-        info.setOnClickListener(v -> new DialogAbout(this));
+        ImageView aboutAhmer = findViewById(R.id.ivInfo);
+        aboutAhmer.setOnClickListener(v -> {
+            Intent intentAbout = new Intent(MainActivity.this, AhmerActivity.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                intentAbout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+            startActivity(intentAbout);
+        });
         ImageView settings = findViewById(R.id.ivSettings);
-        settings.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
+        settings.setOnClickListener(v -> {
+            Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                intentSettings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+            startActivity(intentSettings);
+        });
+        adView = findViewById(R.id.adView);
         noStatus = findViewById(R.id.tvNoStatus);
         noStatusLayout = findViewById(R.id.layoutNoStatus);
         recyclerView = findViewById(R.id.rvStatusList);
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
+        firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
-        StartAppSDK.init(this, getString(R.string.startAppID), true);
-        StartAppSDK.setTestAdsEnabled(false);
-        new Mrec(this);
-        /*adView = findViewById(R.id.adView);
+    }
+
+    private void loadAds() {
         MobileAds.initialize(MainActivity.this, initializationStatus -> {
             //Keep empty
         });
@@ -153,10 +161,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);*/
+        adView.loadAd(adRequest);
     }
 
     private void loadData() {
+        loadAds();
         contentList.addAll(SplashActivity.videoStatuses);
         Collections.sort(contentList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 1);

@@ -145,7 +145,6 @@ public class SplashActivity extends AppCompatActivity {
         TextView app_version = findViewById(R.id.app_version);
         app_version.setText(String.format(Locale.getDefault(), "App version: %s(%d)",
                 AppUtils.getAppVersionName(), AppUtils.getAppVersionCode()));
-        //checkPermissions();
     }
 
     private void checkPermissions() {

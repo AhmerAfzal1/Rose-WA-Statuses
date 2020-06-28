@@ -1,6 +1,7 @@
 package com.ahmer.whatsapp.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -23,6 +24,20 @@ public class MainTabbedActivity extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         ImageView settings = findViewById(R.id.ivSettings);
-        settings.setOnClickListener(v-> startActivity(new Intent(MainTabbedActivity.this, SettingsActivity.class)));
+        settings.setOnClickListener(v -> {
+            Intent intentSetting = new Intent(v.getContext(), SettingsActivity.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                intentSetting.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+            startActivity(intentSetting);
+        });
+        ImageView info = findViewById(R.id.ivInfo);
+        info.setOnClickListener(v -> {
+            Intent intentAhmer = new Intent(v.getContext(), AhmerActivity.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                intentAhmer.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+            startActivity(intentAhmer);
+        });
     }
 }

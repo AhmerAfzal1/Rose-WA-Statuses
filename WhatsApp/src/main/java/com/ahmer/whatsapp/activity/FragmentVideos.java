@@ -18,20 +18,34 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmer.afzal.utils.constants.AppPackageConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
+import com.ahmer.whatsapp.Constant;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
 import com.ahmer.whatsapp.view.StatusViewVideo;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 import static com.ahmer.whatsapp.Constant.TAG;
+import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INTERNAL_ERROR;
+import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INVALID_REQUEST;
+import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NETWORK_ERROR;
+import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
 public class FragmentVideos extends Fragment {
 
     public final ArrayList<StatusItem> statusItemFile = new ArrayList<>(SplashActivity.videoStatuses);
     public RecyclerView recyclerViewVideos = null;
     public VideosAdapter adapter = null;
+    private AdView adView;
+    private FirebaseAnalytics firebaseAnalytics;
+    private FirebaseCrashlytics firebaseCrashlytics;
     private RelativeLayout noStatusLayout = null;
     private TextView noStatus = null;
 
@@ -56,9 +70,75 @@ public class FragmentVideos extends Fragment {
         recyclerViewVideos = view.findViewById(R.id.rvVideos);
         noStatus = view.findViewById(R.id.tvNoStatus);
         noStatusLayout = view.findViewById(R.id.layoutNoStatus);
+        adView = view.findViewById(R.id.adView);
+        firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext());
+        firebaseCrashlytics = FirebaseCrashlytics.getInstance();
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
+        firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
+    }
+
+    private void loadAds() {
+        MobileAds.initialize(getContext(), initializationStatus -> {
+            //Keep empty
+        });
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                Log.v(Constant.TAG, getResources().getString(R.string.adLoaded));
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                switch (errorCode) {
+                    case ERROR_CODE_INTERNAL_ERROR: {
+                        Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INTERNAL_ERROR));
+                        firebaseCrashlytics.log(getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INTERNAL_ERROR));
+                    }
+                    break;
+                    case ERROR_CODE_INVALID_REQUEST: {
+                        Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INVALID_REQUEST));
+                        firebaseCrashlytics.log(getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INVALID_REQUEST));
+                    }
+                    break;
+                    case ERROR_CODE_NETWORK_ERROR: {
+                        Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_NETWORK_ERROR));
+                        firebaseCrashlytics.log(getResources().getString(R.string.adFailedToLoad_ERROR_CODE_NETWORK_ERROR));
+                    }
+                    break;
+                    case ERROR_CODE_NO_FILL: {
+                        Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_NO_FILL));
+                        firebaseCrashlytics.log(getResources().getString(R.string.adFailedToLoad_ERROR_CODE_NO_FILL));
+                    }
+                    break;
+                    default: {
+                        Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad) + errorCode);
+                        firebaseCrashlytics.log(getResources().getString(R.string.adFailedToLoad) + errorCode);
+                    }
+                    break;
+                }
+            }
+
+            @Override
+            public void onAdOpened() {
+                Log.v(Constant.TAG, getResources().getString(R.string.adOpened));
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                Log.v(Constant.TAG, getResources().getString(R.string.adLeftApplication));
+            }
+
+            @Override
+            public void onAdClosed() {
+                Log.v(Constant.TAG, getResources().getString(R.string.adClosed));
+            }
+        });
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
     private void loadData() {
+        loadAds();
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         gridLayoutManager.isAutoMeasureEnabled();
         gridLayoutManager.setSmoothScrollbarEnabled(true);
@@ -117,24 +197,41 @@ public class FragmentVideos extends Fragment {
 
     @Override
     public void onResume() {
-        loadData();
         super.onResume();
+        loadData();
+        firebaseAnalytics.setCurrentScreen(requireActivity(), "CurrentScreen: " + getClass().getSimpleName(), null);
+        if (adView != null) {
+            adView.resume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (adView != null) {
+            adView.pause();
+        }
     }
 
     @Override
     public void onDestroyView() {
-        recyclerViewVideos.swapAdapter(null, true);
-        statusItemFile.clear();
         super.onDestroyView();
-    }
-
-    @Override
-    public void onDestroy() {
         if (recyclerViewVideos != null) {
             recyclerViewVideos.swapAdapter(null, true);
         }
         statusItemFile.clear();
+    }
+
+    @Override
+    public void onDestroy() {
         super.onDestroy();
+        if (adView != null) {
+            adView.destroy();
+        }
+        if (recyclerViewVideos != null) {
+            recyclerViewVideos.swapAdapter(null, true);
+        }
+        statusItemFile.clear();
     }
 
     public static class VideosAdapter extends RecyclerView.Adapter<VideoViewHolder> {

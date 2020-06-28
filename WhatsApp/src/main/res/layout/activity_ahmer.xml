@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    tools:context=".activity.AhmerActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/empty_description"
+                android:padding="4dp"
+                app:srcCompat="@drawable/ic_arrow_back" />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_toEndOf="@id/ivBack"
+                android:layout_toRightOf="@id/ivBack"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/mainCardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="15dp"
+                app:cardBackgroundColor="@android:color/white"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardElevation="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        app:cardBackgroundColor="@color/colorPrimaryDark"
+                        card_view:cardCornerRadius="5dp"
+                        card_view:cardElevation="5dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:fontFamily="@font/roboto"
+                            android:gravity="center|center_horizontal|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/app_developed_by"
+                            android:textColor="@android:color/white"
+                            android:textIsSelectable="true"
+                            android:textSize="18sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="30dp"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal">
+
+                                <com.ahmer.afzal.utils.imageview.CircleImageView
+                                    android:id="@+id/imageViewAhmer"
+                                    android:layout_width="256dp"
+                                    android:layout_height="256dp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_margin="5dp"
+                                    android:src="@drawable/profile_pic"
+                                    app:civ_border_color="@color/colorAccent"
+                                    app:civ_border_width="2dp" />
+
+                                <androidx.core.widget.ContentLoadingProgressBar
+                                    android:id="@+id/progressCircleImageView"
+                                    style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:indeterminate="true"
+                                    android:visibility="visible"
+                                    tools:visibility="visible" />
+
+                            </RelativeLayout>
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TableRow>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="5dp"
+                                        android:fontFamily="@font/roboto"
+                                        android:paddingStart="5dp"
+                                        android:paddingLeft="5dp"
+                                        android:text="@string/name"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        tools:ignore="RtlSymmetry" />
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="5dp"
+                                        android:fontFamily="@font/roboto"
+                                        android:paddingStart="5dp"
+                                        android:paddingLeft="5dp"
+                                        android:text="@string/ahmer"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        tools:ignore="RtlSymmetry" />
+                                </TableRow>
+
+                                <TableRow>
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="5dp"
+                                        android:fontFamily="@font/roboto"
+                                        android:paddingStart="5dp"
+                                        android:paddingLeft="5dp"
+                                        android:text="@string/email"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        tools:ignore="RtlSymmetry" />
+
+                                    <TextView
+                                        android:id="@+id/idAhmerYahoo"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="5dp"
+                                        android:fontFamily="@font/roboto"
+                                        android:paddingStart="5dp"
+                                        android:paddingLeft="5dp"
+                                        android:text="@string/email_yahoo"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        tools:ignore="RtlSymmetry" />
+                                </TableRow>
+
+                                <TableRow>
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="5dp"
+                                        android:fontFamily="@font/roboto"
+                                        android:paddingStart="5dp"
+                                        android:paddingLeft="5dp"
+                                        android:text="@string/email"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        tools:ignore="RtlSymmetry" />
+
+                                    <TextView
+                                        android:id="@+id/idAhmerGmail"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="5dp"
+                                        android:fontFamily="@font/roboto"
+                                        android:paddingStart="5dp"
+                                        android:paddingLeft="5dp"
+                                        android:text="@string/email_gmail"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        tools:ignore="RtlSymmetry" />
+                                </TableRow>
+
+                                <TableRow>
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="5dp"
+                                        android:fontFamily="@font/roboto"
+                                        android:paddingStart="5dp"
+                                        android:paddingLeft="5dp"
+                                        android:text="@string/qq"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        tools:ignore="RtlSymmetry" />
+
+                                    <TextView
+                                        android:id="@+id/idAhmerQQ"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_marginBottom="5dp"
+                                        android:fontFamily="@font/roboto"
+                                        android:paddingStart="5dp"
+                                        android:paddingLeft="5dp"
+                                        android:text="@string/qq_id_ahmer"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        tools:ignore="RtlSymmetry" />
+                                </TableRow>
+                            </TableLayout>
+
+                            <!--
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <Button
+                                    android:id="@+id/appWebLink"
+                                    style="@style/Widget.AppCompat.Button.Colored"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:fontFamily="@font/roboto"
+                                    android:text="@string/get_app"
+                                    android:textAllCaps="false"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="14sp" />
+
+                                <Button
+                                    android:id="@+id/shareAppViaEmail"
+                                    style="@style/Widget.AppCompat.Button.Colored"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:fontFamily="@font/roboto"
+                                    android:text="@string/share_app_email"
+                                    android:textAllCaps="false"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+                            -->
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mainCardView"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="15dp"
+                app:cardBackgroundColor="@android:color/white"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardElevation="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        app:cardBackgroundColor="@color/colorPrimaryDark"
+                        card_view:cardCornerRadius="5dp"
+                        card_view:cardElevation="5dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:fontFamily="@font/roboto"
+                            android:gravity="center|center_horizontal|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/meet_on_social"
+                            android:textColor="@android:color/white"
+                            android:textIsSelectable="true"
+                            android:textSize="18sp" />
+
+
+                        <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="30dp"
+                            android:orientation="vertical">
+
+                            <TableRow android:layout_marginBottom="5dp">
+
+                                <ImageView
+                                    android:id="@+id/ivFacebook"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:contentDescription="@string/empty_description"
+                                    android:src="@drawable/ic_ahmer_facebook" />
+
+                                <TextView
+                                    android:id="@+id/tvFacebook"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="start|center"
+                                    android:paddingStart="5dp"
+                                    android:paddingEnd="5dp"
+                                    android:text="@string/ahmer_facebook_id"
+                                    android:textColor="@android:color/white" />
+                            </TableRow>
+
+                            <TableRow android:layout_marginBottom="5dp">
+
+                                <ImageView
+                                    android:id="@+id/ivTwitter"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:contentDescription="@string/empty_description"
+                                    android:src="@drawable/ic_ahmer_twitter" />
+
+                                <TextView
+                                    android:id="@+id/tvTwitter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="start|center"
+                                    android:paddingStart="5dp"
+                                    android:paddingEnd="5dp"
+                                    android:text="@string/ahmer_twitter_id"
+                                    android:textColor="@android:color/white" />
+                            </TableRow>
+
+                            <TableRow android:layout_marginBottom="5dp">
+
+                                <ImageView
+                                    android:id="@+id/ivGithub"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:contentDescription="@string/empty_description"
+                                    android:src="@drawable/ic_ahmer_github" />
+
+                                <TextView
+                                    android:id="@+id/tvGithub"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="start|center"
+                                    android:paddingStart="5dp"
+                                    android:paddingEnd="5dp"
+                                    android:text="@string/ahmer_github_id"
+                                    android:textColor="@android:color/white" />
+                            </TableRow>
+
+                            <TableRow android:layout_marginBottom="5dp">
+
+                                <ImageView
+                                    android:id="@+id/ivBlogspot"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:contentDescription="@string/empty_description"
+                                    android:src="@drawable/ic_ahmer_blogspot" />
+
+                                <TextView
+                                    android:id="@+id/tvBlogspot"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="start|center"
+                                    android:paddingStart="5dp"
+                                    android:paddingEnd="5dp"
+                                    android:text="@string/ahmer_blogspot_url"
+                                    android:textColor="@android:color/white" />
+                            </TableRow>
+                            <!--
+                            <TableRow android:layout_marginBottom="5dp">
+
+                                <ImageView
+                                    android:id="@+id/ivWhatsapp"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:contentDescription="@string/empty_description"
+                                    android:src="@drawable/ic_ahmer_whatsapp" />
+
+                                <TextView
+                                    android:id="@+id/tvWhatsapp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:paddingStart="5dp"
+                                    android:paddingEnd="5dp"
+                                    android:text="@string/meet_on_facebook"
+                                    android:textColor="@android:color/white" />
+                            </TableRow>
+                            -->
+                        </TableLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>
