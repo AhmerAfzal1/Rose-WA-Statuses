@@ -30,8 +30,7 @@
     <string name="about_dev">About Developer</string>
     <string name="ahmer">Ahmer Afzal</string>
     <string name="ahmer_blogspot_url">http://ahmerafzal1.blogspot.com/</string>
-    <!--facebook graph 'picture': type must be one of the following values: small, normal, album, large, square"-->
-    <string name="ahmer_facebook_graph_link">https://graph.facebook.com/v3.0/100025917301113/picture?type=large</string>
+    <string name="ahmer_facebook_graph_link">https://graph.facebook.com/100025917301113/picture?width=512&amp;height=512</string>
     <string name="ahmer_facebook_id">Mr.AhmerAfzal</string>
     <string name="ahmer_facebook_url">https://www.facebook.com/</string>
     <string name="ahmer_github_id">AhmerAfzal1</string>

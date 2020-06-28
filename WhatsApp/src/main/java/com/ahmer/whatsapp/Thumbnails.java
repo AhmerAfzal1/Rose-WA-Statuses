@@ -97,8 +97,6 @@ public final class Thumbnails {
         Matrix matrix = new Matrix();
         // Resize the bit map
         matrix.postScale(scaleWidth, scaleHeight);
-        //Rotate is needed here because somehow the bitmap factory is getting my image rotated
-        matrix.postRotate(-90);
         // Recreate the new bitmap
         return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
     }
@@ -115,7 +113,11 @@ public final class Thumbnails {
     }
 
     public static void saveImage(Bitmap bmp, String fileName) {
-        File file = new File(thumbnailDir(), fileName + ".png");
+        saveImage(thumbnailDir(), bmp, fileName);
+    }
+
+    public static void saveImage(File locationToSave, Bitmap bmp, String fileName) {
+        File file = new File(locationToSave, fileName + ".png");
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(file);

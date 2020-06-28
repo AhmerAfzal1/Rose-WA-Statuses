@@ -313,14 +313,6 @@ public class MainActivity extends AppCompatActivity {
                 holder.showType.setText(jpg);
             }
 
-            holder.btnDelete.setOnClickListener(v -> {
-                File file = new File(contentList.get(position).getPath());
-                FileUtils.delete(file);
-                contentList.remove(position);
-                adapter.notifyItemRemoved(position);
-                adapter.notifyItemRangeRemoved(position, getItemCount());
-            });
-
             holder.relativeLayout.setOnClickListener(v -> {
                 if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                         contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
@@ -365,7 +357,7 @@ public class MainActivity extends AppCompatActivity {
                 Utilities.shareToWhatsApp(v.getContext(), contentList, position);
             });
 
-            holder.btnDownload.setOnClickListener(v -> {
+            holder.btnDownload.setOnClickListener(v -> {/*
                 File statusDirectory = new File(PathUtils.getExternalStoragePath(), v.getContext().getResources().getString(R.string.app_name));
 
                 if (!statusDirectory.exists()) {
@@ -376,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + "-> This directory has already been created");
-                }
+                }*/
 
                 if (source.getAbsolutePath().endsWith(EXT_MP4_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_MP4_UPPER_CASE)) {
                     File destPathMP4 = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_MP4_LOWER_CASE);
@@ -430,7 +422,6 @@ public class MainActivity extends AppCompatActivity {
         private class ViewHolder extends RecyclerView.ViewHolder {
 
             final FloatingActionButton btnPlay;
-            final ImageView btnDelete;
             final ImageView btnDownload;
             final ImageView btnShare;
             final ImageView btnShareWhatsApp;
@@ -442,7 +433,6 @@ public class MainActivity extends AppCompatActivity {
 
             private ViewHolder(View v) {
                 super(v);
-                btnDelete = v.findViewById(R.id.ivDelete);
                 btnDownload = v.findViewById(R.id.ivDownload);
                 btnPlay = v.findViewById(R.id.buttonPlay);
                 btnShare = v.findViewById(R.id.ivShare);

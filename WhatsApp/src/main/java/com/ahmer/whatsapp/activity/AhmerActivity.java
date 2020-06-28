@@ -20,6 +20,7 @@ import com.ahmer.afzal.utils.Utilities;
 import com.ahmer.afzal.utils.constants.AppPackageConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.NetworkUtils;
+import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.whatsapp.Constant;
 import com.ahmer.whatsapp.EmailIntent;
 import com.ahmer.whatsapp.R;
@@ -36,6 +37,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.ahmer.whatsapp.Constant.TAG;
+
 public class AhmerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
     private FirebaseAnalytics firebaseAnalytics;
@@ -46,6 +49,17 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
     private TextView tvFacebook;
     private TextView tvGithub;
     private TextView tvTwitter;
+
+    public static File dirAhmer() {
+        File dir = new File(PathUtils.getExternalAppDataPath(), Constant.FOLDER_AHMER);
+        if (!dir.exists()) {
+            boolean mkdir = dir.mkdir();
+            if (!mkdir) {
+                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> New folder for " + dir + " is not created.");
+            }
+        }
+        return dir;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,7 +105,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
         tvBlogSpot = findViewById(R.id.tvBlogspot);
         tvBlogSpot.setOnClickListener(this);
         tvBlogSpot.setOnLongClickListener(this);
-        File preExistedPic = new File(Thumbnails.thumbnailDir() + "/" + "AhmerFBPic.png");
+        File preExistedPic = new File(dirAhmer() + "/" + Constant.FILE_NAME_AHMER + ".png");
         ContentLoadingProgressBar progressBar = findViewById(R.id.progressCircleImageView);
         ImageView loadPic = findViewById(R.id.imageViewAhmer);
         if (!preExistedPic.exists()) {
@@ -126,7 +140,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
                 String idFB = getString(R.string.ahmer_facebook_url) + getString(R.string.ahmer_facebook_id);
                 if (NetworkUtils.isConnected()) {
                     if (AppUtils.isAppInstalled(AppPackageConstants.PKG_FACEBOOK)) {
-                        Intent intentFB = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/" + idFB));
+                        Intent intentFB = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/100025917301113"));
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                             intentFB.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         }
@@ -296,7 +310,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
 
         protected void onPostExecute(Bitmap result) {
             imageView.get().setImageBitmap(result);
-            Thumbnails.saveImage(result, "AhmerFBPic");
+            Thumbnails.saveImage(dirAhmer(), result, Constant.FILE_NAME_AHMER);
             progressBar.get().setVisibility(View.GONE);
         }
     }
