@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView aboutAhmer = findViewById(R.id.ivInfo);
         aboutAhmer.setOnClickListener(v -> {
             Intent intentAbout = new Intent(MainActivity.this, AhmerActivity.class);
+            intentAbout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 intentAbout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView settings = findViewById(R.id.ivSettings);
         settings.setOnClickListener(v -> {
             Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
+            intentSettings.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 intentSettings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
@@ -405,7 +407,7 @@ public class MainActivity extends AppCompatActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.status_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.status_item_activity, parent, false);
             return new ViewHolder(view);
         }
 

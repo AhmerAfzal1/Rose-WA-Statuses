@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.ahmer.afzal.utils.constants.PermissionConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
@@ -36,24 +37,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static com.ahmer.whatsapp.Constant.BUSINESS_WHATSAPP_STATUSES_LOCATION;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_UPPER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_MP4_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_MP4_UPPER_CASE;
-import static com.ahmer.whatsapp.Constant.FM_WHATSAPP_STATUSES_LOCATION;
 import static com.ahmer.whatsapp.Constant.TAG;
-import static com.ahmer.whatsapp.Constant.WHATSAPP_STATUSES_LOCATION;
-import static com.ahmer.whatsapp.Constant.YO_WHATSAPP_STATUSES_LOCATION;
+import static com.ahmer.whatsapp.Constant.WHATSAPP_BUSINESS_LOCATION;
+import static com.ahmer.whatsapp.Constant.WHATSAPP_FM_LOCATION;
+import static com.ahmer.whatsapp.Constant.WHATSAPP_LOCATION;
+import static com.ahmer.whatsapp.Constant.WHATSAPP_YO_LOCATION;
 
 public class SplashActivity extends AppCompatActivity {
 
     public static final ArrayList<StatusItem> videoStatuses = new ArrayList<>();
     public static final ArrayList<StatusItem> imageStatuses = new ArrayList<>();
-    public static final File dirBusinessWhatsApp = new File(PathUtils.getExternalStoragePath() + BUSINESS_WHATSAPP_STATUSES_LOCATION);
-    public static final File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + FM_WHATSAPP_STATUSES_LOCATION);
-    public static final File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_STATUSES_LOCATION);
-    public static final File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + YO_WHATSAPP_STATUSES_LOCATION);
+    public static final File dirBusinessWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_BUSINESS_LOCATION);
+    public static final File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_FM_LOCATION);
+    public static final File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_LOCATION);
+    public static final File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_YO_LOCATION);
 
     public static void getData() {
         /*
@@ -145,6 +146,13 @@ public class SplashActivity extends AppCompatActivity {
         TextView app_version = findViewById(R.id.app_version);
         app_version.setText(String.format(Locale.getDefault(), "App version: %s(%d)",
                 AppUtils.getAppVersionName(), AppUtils.getAppVersionCode()));
+        SharedPreferences prefDark = getSharedPreferences(Constant.PREFERENCE_DARK_MODE, Context.MODE_PRIVATE);
+        boolean isChecked = prefDark.getBoolean(Constant.PREFERENCE_DARK_MODE_KEY, false);
+        if (isChecked) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
     }
 
     private void checkPermissions() {
@@ -228,14 +236,16 @@ public class SplashActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             SharedPreferences pref = weakContext.get().getSharedPreferences(Constant.PREFERENCE_LAUNCHER, Context.MODE_PRIVATE);
-            if (!pref.getBoolean(Constant.PREFERENCE_TRANSPARENT, false)) {
+            if (!pref.getBoolean(Constant.PREFERENCE_LAUNCHER_KEY, false)) {
                 Intent intentMainActivity = new Intent(weakContext.get(), MainActivity.class);
+                intentMainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     intentMainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 }
                 weakContext.get().startActivity(intentMainActivity);
             } else {
                 Intent intentMainTabbed = new Intent(weakContext.get(), MainTabbedActivity.class);
+                intentMainTabbed.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     intentMainTabbed.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 }

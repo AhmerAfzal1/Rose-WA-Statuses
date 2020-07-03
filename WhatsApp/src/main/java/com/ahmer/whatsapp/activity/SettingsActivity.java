@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
@@ -28,7 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings_activity);
+        setContentView(R.layout.activity_settings);
         getSupportFragmentManager().beginTransaction().replace(R.id.settings, new SettingsFragment()).commit();
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -52,12 +53,28 @@ public class SettingsActivity extends AppCompatActivity {
             setPreferencesFromResource(R.xml.settings_preferences, rootKey);
             SharedPreferences prefLauncher = this.requireActivity().getSharedPreferences(Constant.PREFERENCE_LAUNCHER, Context.MODE_PRIVATE);
             SwitchPreferenceCompat buttonLauncher = findPreference(getString(R.string.button_change_view));
-            Objects.requireNonNull(buttonLauncher).setChecked(prefLauncher.getBoolean(Constant.PREFERENCE_TRANSPARENT, false));
+            Objects.requireNonNull(buttonLauncher).setChecked(prefLauncher.getBoolean(Constant.PREFERENCE_LAUNCHER_KEY, false));
             buttonLauncher.setOnPreferenceChangeListener((preference, newValue) -> {
                 SharedPreferences.Editor editorSplash = prefLauncher.edit();
-                editorSplash.putBoolean(Constant.PREFERENCE_TRANSPARENT, (Boolean) newValue);
+                editorSplash.putBoolean(Constant.PREFERENCE_LAUNCHER_KEY, (Boolean) newValue);
                 editorSplash.apply();
                 AppUtils.relaunchApp();
+                return true;
+            });
+            SharedPreferences prefDarkMode = requireActivity().getSharedPreferences(Constant.PREFERENCE_DARK_MODE, Context.MODE_PRIVATE);
+            SwitchPreferenceCompat darkMode = findPreference(getString(R.string.button_dark_mode));
+            Objects.requireNonNull(darkMode).setChecked(prefDarkMode.getBoolean(Constant.PREFERENCE_DARK_MODE_KEY, false));
+            darkMode.setOnPreferenceChangeListener((preference, newValue) -> {
+                boolean isChecked = (Boolean) newValue;
+                if (isChecked) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                }
+                SharedPreferences.Editor editorDarkMode = prefDarkMode.edit();
+                editorDarkMode.putBoolean(Constant.PREFERENCE_DARK_MODE_KEY, isChecked);
+                editorDarkMode.apply();
+                //AppUtils.relaunchApp();
                 return true;
             });
             buttonCaches = findPreference(getString(R.string.button_clear_caches));

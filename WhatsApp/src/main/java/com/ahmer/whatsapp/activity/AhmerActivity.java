@@ -129,6 +129,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
             case R.id.idAhmerGmail:
             case R.id.idAhmerYahoo:
                 Intent intentGmail = new Intent(v.getContext(), EmailIntent.class);
+                intentGmail.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     intentGmail.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 }
@@ -141,6 +142,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
                 if (NetworkUtils.isConnected()) {
                     if (AppUtils.isAppInstalled(AppPackageConstants.PKG_FACEBOOK)) {
                         Intent intentFB = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/100025917301113"));
+                        intentFB.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                             intentFB.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         }
@@ -163,6 +165,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
                     if (AppUtils.isAppInstalled(AppPackageConstants.PKG_TWITTER)) {
                         try {
                             Intent intentTwitter = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=" + getString(R.string.ahmer_twitter_id)));
+                            intentTwitter.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                                 intentTwitter.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             }
@@ -173,6 +176,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
                             firebaseAnalytics.logEvent("Ahmer_Twitter_Open", twitter);
                         } catch (Exception e) {
                             Intent intentTwitter1 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/#!/" + getString(R.string.ahmer_twitter_id)));
+                            intentTwitter1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                                 intentTwitter1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             }

@@ -63,8 +63,9 @@ public class EmailIntent extends Activity {
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.send_email_to_author));
         emailIntent.putExtra(Intent.EXTRA_TEXT, sb);
         try {
-            if (emailIntent.resolveActivity(getPackageManager()) != null)
+            if (emailIntent.resolveActivity(getPackageManager()) != null) {
                 startActivity(Intent.createChooser(emailIntent, getResources().getString(R.string.send_email_to_author)));
+            }
             return;
         } catch (ActivityNotFoundException e) {
             e.printStackTrace();

@@ -7,7 +7,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary">
+        android:background="@color/primaryColor">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -20,7 +20,7 @@
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/empty_description"
                 android:padding="4dp"
-                app:srcCompat="@drawable/ic_arrow_back" />
+                app:srcCompat="@drawable/ic_toolbar_arrow_back" />
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -33,7 +33,7 @@
                 android:layout_toRightOf="@id/ivBack"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@android:color/white"
+                android:textColor="@color/colorWhite"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </RelativeLayout>

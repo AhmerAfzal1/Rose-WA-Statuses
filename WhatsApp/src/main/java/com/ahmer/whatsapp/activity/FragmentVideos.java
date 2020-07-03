@@ -216,15 +216,6 @@ public class FragmentVideos extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (recyclerViewVideos != null) {
-            recyclerViewVideos.swapAdapter(null, true);
-        }
-        statusItemFile.clear();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
         if (adView != null) {
             adView.destroy();
         }

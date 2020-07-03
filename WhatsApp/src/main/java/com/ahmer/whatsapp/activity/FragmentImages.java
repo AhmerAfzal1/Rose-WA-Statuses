@@ -216,15 +216,6 @@ public class FragmentImages extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (recyclerViewImages != null) {
-            recyclerViewImages.swapAdapter(null, true);
-        }
-        statusItemFile.clear();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
         if (adView != null) {
             adView.destroy();
         }

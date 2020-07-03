@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
     android:layout_margin="5dp"
-    android:background="@drawable/background_whatsapp"
+    android:background="@drawable/bg_status_item_border"
     android:orientation="vertical"
     android:padding="5dp">
 
@@ -28,8 +28,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            app:backgroundTint="@color/colorPrimary"
-            app:srcCompat="@drawable/ic_play" />
+            app:backgroundTint="@color/colorAccent"
+            app:srcCompat="@drawable/ic_status_item_play" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/status_view"
-        android:background="@drawable/background"
+        android:background="@drawable/bg_status_item"
         android:orientation="horizontal"
         android:paddingStart="5dp"
         android:paddingTop="5dp"
@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@android:string/ok"
-                android:textColor="@android:color/white"
+                android:textColor="@color/colorWhite"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
 
@@ -72,7 +72,7 @@
                 android:layout_marginLeft="3dp"
                 android:layout_marginRight="3dp"
                 android:text="@string/period"
-                android:textColor="@android:color/white"
+                android:textColor="@color/colorWhite"
                 android:textSize="6sp"
                 tools:ignore="SmallSp" />
 
@@ -83,7 +83,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
                 android:text="@android:string/ok"
-                android:textColor="@android:color/white"
+                android:textColor="@color/colorWhite"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
         </LinearLayout>
@@ -103,10 +103,10 @@
                 android:layout_height="35dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/circle"
+                android:background="@drawable/bg_status_item_circle"
                 android:contentDescription="@string/empty_description"
                 android:padding="4dp"
-                app:srcCompat="@drawable/ic_file_download" />
+                app:srcCompat="@drawable/ic_view_file_download" />
 
             <ImageView
                 android:id="@+id/ivWhatsapp"
@@ -114,7 +114,7 @@
                 android:layout_height="35dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/circle"
+                android:background="@drawable/bg_status_item_circle"
                 android:contentDescription="@string/empty_description"
                 android:padding="5dp"
                 android:src="@drawable/ic_whatsapp" />
@@ -125,10 +125,10 @@
                 android:layout_height="35dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/circle"
+                android:background="@drawable/bg_status_item_circle"
                 android:contentDescription="@string/empty_description"
                 android:padding="4dp"
-                app:srcCompat="@drawable/ic_share" />
+                app:srcCompat="@drawable/ic_status_item_share" />
         </LinearLayout>
     </RelativeLayout>
 

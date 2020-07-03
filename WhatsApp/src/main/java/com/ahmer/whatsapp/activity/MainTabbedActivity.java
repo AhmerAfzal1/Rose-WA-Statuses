@@ -26,6 +26,7 @@ public class MainTabbedActivity extends AppCompatActivity {
         ImageView settings = findViewById(R.id.ivSettings);
         settings.setOnClickListener(v -> {
             Intent intentSetting = new Intent(v.getContext(), SettingsActivity.class);
+            intentSetting.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 intentSetting.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
@@ -34,6 +35,7 @@ public class MainTabbedActivity extends AppCompatActivity {
         ImageView info = findViewById(R.id.ivInfo);
         info.setOnClickListener(v -> {
             Intent intentAhmer = new Intent(v.getContext(), AhmerActivity.class);
+            intentAhmer.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 intentAhmer.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryColor">#282828</color>
+    <color name="primaryDarkColor">#000000</color>
+    <color name="primaryLightColor">#2E2E2E</color>
+    <color name="primaryTextColor">#000000</color>
+    <color name="secondaryColor">#C38FFF</color>
+    <color name="secondaryDarkColor">#9060CB</color>
+    <color name="secondaryLightColor">#F7C0FF</color>
+    <color name="secondaryTextColor">#FFFFFF</color>
+    <color name="colorAccent">#C38FFF</color>
+
+    <color name="colorBgBorderStatusItem">#C38FFF</color>
+    <color name="colorBgStatusItemEnd">#B2000000</color>
+    <color name="colorBgStatusItemStart">#70000000</color>
+    <color name="colorCardView">#1D1D1D</color>
+    <color name="colorCardViewText">#FFFFFF</color>
+    <color name="colorSemiBlack">#B2000000</color>
+    <color name="colorSettingsIcons">#FFFFFF</color>
+    <color name="colorTabText">#E0E0E0</color>
+    <color name="colorTransBg">#70000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+</resources>

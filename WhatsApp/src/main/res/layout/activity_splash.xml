@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@drawable/background"
+    android:background="@drawable/bg_splash"
     tools:context=".activity.SplashActivity">
 
     <RelativeLayout
@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/empty_description"
             android:src="@drawable/ic_whatsapp" />
@@ -33,8 +33,8 @@
             android:gravity="center"
             android:lineSpacingExtra="5dp"
             android:text="@string/splash_title"
-            android:textColor="@android:color/white"
-            android:textSize="26sp"
+            android:textColor="@color/colorWhite"
+            android:textSize="30sp"
             android:textStyle="bold" />
 
         <RelativeLayout
@@ -51,7 +51,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
-                app:SpinKit_Color="@android:color/white" />
+                app:SpinKit_Color="@color/colorWhite" />
         </RelativeLayout>
     </RelativeLayout>
 
@@ -65,6 +65,6 @@
         android:layout_marginBottom="15dp"
         android:fontFamily="@font/roboto"
         android:text="@string/empty_description"
-        android:textColor="@android:color/white"
+        android:textColor="@color/colorWhite"
         android:textSize="12sp" />
 </FrameLayout>

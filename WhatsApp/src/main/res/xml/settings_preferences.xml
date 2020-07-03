@@ -4,19 +4,30 @@
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:fontFamily="@font/roboto"
+        android:icon="@drawable/ic_settings_tabbed"
         android:key="@string/button_change_view"
-        android:title="@string/msg_change_view"
-        app:iconSpaceReserved="false" />
+        android:title="@string/title_change_view"
+        app:iconSpaceReserved="true" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:fontFamily="@font/roboto"
+        android:icon="@drawable/ic_settings_moon"
+        android:key="@string/button_dark_mode"
+        android:title="@string/title_dark_mode"
+        app:iconSpaceReserved="true" />
 
     <Preference
         android:fontFamily="@font/roboto"
+        android:icon="@drawable/ic_settings_broom"
         android:key="@string/button_clear_caches"
         android:title="@string/title_cache"
-        app:iconSpaceReserved="false" />
+        app:iconSpaceReserved="true" />
 
     <Preference
         android:fontFamily="@font/roboto"
+        android:icon="@drawable/ic_settings_version"
         android:key="@string/button_about"
         android:title="@string/title_version"
-        app:iconSpaceReserved="false" />
+        app:iconSpaceReserved="true" />
 </PreferenceScreen>
