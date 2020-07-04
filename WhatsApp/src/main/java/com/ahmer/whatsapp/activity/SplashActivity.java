@@ -59,8 +59,6 @@ public class SplashActivity extends AppCompatActivity {
     public static void getData() {
         /*
         File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
-        //File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/FMWhatsApp");
-        Log.v(TAG, SplashActivity.class.getSimpleName() + moviesFolder.getAbsolutePath());
         if (moviesFolder.exists()) {
             getStatuses(moviesFolder.listFiles());
         }
@@ -189,18 +187,13 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        checkPermissions();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
         if (imageStatuses != null) {
             imageStatuses.clear();
         }
         if (videoStatuses != null) {
             videoStatuses.clear();
         }
+        checkPermissions();
     }
 
     static class RunProgram extends AsyncTask<Void, Void, Void> {
@@ -225,7 +218,8 @@ public class SplashActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                     ThrowableUtils.getFullStackTrace(e);
-                    Log.v(TAG, getClass().getSimpleName() + "-> Error during loading data: " + e.getMessage());
+                    Log.v(TAG, getClass().getSimpleName() + "-> Exception: Error during loading data: " + e.getMessage());
+                    ThrowableUtils.getFullStackTrace(e);
                     FirebaseCrashlytics.getInstance().recordException(e);
                 }
             });

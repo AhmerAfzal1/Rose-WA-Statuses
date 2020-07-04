@@ -4,11 +4,11 @@ import android.graphics.Bitmap;
 
 public class StatusItem {
 
-    private Bitmap mThumbnails;
-    private long mSize;
-    private String mFormat;
-    private String mName;
-    private String mPath;
+    private Bitmap mThumbnails = null;
+    private long mSize = 0;
+    private String mFormat = null;
+    private String mName = null;
+    private String mPath = null;
 
     public String getFormat() {
         return mFormat;

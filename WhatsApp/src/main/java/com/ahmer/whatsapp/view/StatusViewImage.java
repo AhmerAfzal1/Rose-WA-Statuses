@@ -32,11 +32,11 @@ import static com.ahmer.whatsapp.Constant.TAG;
 public class StatusViewImage extends AppCompatActivity {
 
     private boolean isFabOpened = false;
-    private FloatingActionButton fabMain;
-    private LinearLayout fileDownloadLayout;
-    private LinearLayout shareLayout;
-    private LinearLayout shareWhatsAppLayout;
-    private View bgLayout;
+    private FloatingActionButton fabMain = null;
+    private LinearLayout fileDownloadLayout = null;
+    private LinearLayout shareLayout = null;
+    private LinearLayout shareWhatsAppLayout = null;
+    private View bgLayout = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +57,7 @@ public class StatusViewImage extends AppCompatActivity {
         String format = getIntent().getStringExtra("format");
         String path = getIntent().getStringExtra("path");
         String fileFrom = getIntent().getStringExtra("from");
+        int position = getIntent().getIntExtra("pos", 0);
         if (Objects.requireNonNull(fileFrom).equals("MainActivity")) {
             fabMain.setVisibility(View.GONE);
             bgLayout.setVisibility(View.GONE);
@@ -83,26 +84,30 @@ public class StatusViewImage extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
             ThrowableUtils.getFullStackTrace(e);
-            Log.v(TAG, getClass().getSimpleName() + "-> " + e.getMessage());
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.v(TAG, getClass().getSimpleName() + "-> Exception: " + e.getMessage());
         }
-        FragmentImages fragmentImages = new FragmentImages();
-        FragmentImages.ImagesAdapter adapter = new FragmentImages.ImagesAdapter(fragmentImages.statusItemFile,
-                fragmentImages.recyclerViewImages, fragmentImages.adapter);
+        Log.v(TAG, getClass().getSimpleName() + "-> ImagesAdapter position: " + position);
         fileDownload.setOnClickListener(v -> {
-            String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(path);
-            File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_JPG_LOWER_CASE);
-            FileUtils.move(new File(Objects.requireNonNull(path)), destPathJPG);
-            adapter.updateList();
-            ThreadUtils.runOnUiThread(() -> {
-                ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
-                new MediaScanner(StatusViewImage.this, destPathJPG);
-            });
-            finish();
+            try {
+                String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(path);
+                File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_JPG_LOWER_CASE);
+                FileUtils.move(new File(Objects.requireNonNull(path)), destPathJPG);
+                ThreadUtils.runOnUiThread(() -> {
+                    ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
+                    new MediaScanner(v.getContext(), destPathJPG);
+                });
+                FragmentImages.updateList(position);
+                finish();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.v(TAG, getClass().getSimpleName() + "-> Exception: " + e);
+                ThrowableUtils.getFullStackTrace(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
+            }
         });
-        share.setOnClickListener(v -> Utilities.shareFile(StatusViewImage.this,
-                fragmentImages.statusItemFile, adapter.getPosition()));
-        shareWhatsApp.setOnClickListener(v -> Utilities.shareToWhatsApp(StatusViewImage.this,
-                fragmentImages.statusItemFile, adapter.getPosition()));
+        share.setOnClickListener(v -> Utilities.shareFile(v.getContext(), FragmentImages.statusItemFile, position));
+        shareWhatsApp.setOnClickListener(v -> Utilities.shareToWhatsApp(v.getContext(), FragmentImages.statusItemFile, position));
     }
 
     private void showFAB() {

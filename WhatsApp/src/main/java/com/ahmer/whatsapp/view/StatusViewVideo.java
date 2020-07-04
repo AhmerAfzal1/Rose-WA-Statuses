@@ -27,19 +27,18 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import java.io.File;
 import java.util.Objects;
 
-import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_MP4_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.TAG;
 
 public class StatusViewVideo extends AppCompatActivity {
 
     private boolean isFabOpened = false;
-    private FloatingActionButton fabMain;
-    private LinearLayout fileDownloadLayout;
-    private LinearLayout shareLayout;
-    private LinearLayout shareWhatsAppLayout;
-    private VideoView view;
-    private View bgLayout;
+    private FloatingActionButton fabMain = null;
+    private LinearLayout fileDownloadLayout = null;
+    private LinearLayout shareLayout = null;
+    private LinearLayout shareWhatsAppLayout = null;
+    private VideoView view = null;
+    private View bgLayout = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +59,7 @@ public class StatusViewVideo extends AppCompatActivity {
         String format = getIntent().getStringExtra("format");
         String path = getIntent().getStringExtra("path");
         String fileFrom = getIntent().getStringExtra("from");
+        int position = getIntent().getIntExtra("pos", 0);
         if (Objects.requireNonNull(fileFrom).equals("MainActivity")) {
             fabMain.setVisibility(View.GONE);
             bgLayout.setVisibility(View.GONE);
@@ -95,30 +95,33 @@ public class StatusViewVideo extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
             ThrowableUtils.getFullStackTrace(e);
-            Log.v(TAG, getClass().getSimpleName() + "-> " + e.getMessage());
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.v(TAG, getClass().getSimpleName() + "-> Exception: " + e.getMessage());
         }
         view.setOnCompletionListener(mp -> {
             view.stopPlayback();
             StatusViewVideo.this.finish();
         });
-        FragmentVideos fragmentVideos = new FragmentVideos();
-        FragmentVideos.VideosAdapter adapter = new FragmentVideos.VideosAdapter(fragmentVideos.statusItemFile,
-                fragmentVideos.recyclerViewVideos, fragmentVideos.adapter);
         fileDownload.setOnClickListener(v -> {
-            String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(path);
-            File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_JPG_LOWER_CASE);
-            FileUtils.move(new File(Objects.requireNonNull(path)), destPathJPG);
-            adapter.updateList();
-            ThreadUtils.runOnUiThread(() -> {
-                ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
-                new MediaScanner(StatusViewVideo.this, destPathJPG);
-            });
-            finish();
+            try {
+                String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(path);
+                File destPathMP4 = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_MP4_LOWER_CASE);
+                FileUtils.move(new File(Objects.requireNonNull(path)), destPathMP4);
+                ThreadUtils.runOnUiThread(() -> {
+                    ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathMP4.getPath());
+                    new MediaScanner(v.getContext(), destPathMP4);
+                });
+                FragmentVideos.updateList(position);
+                finish();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.v(TAG, getClass().getSimpleName() + "-> Exception: " + e.getMessage());
+                ThrowableUtils.getFullStackTrace(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
+            }
         });
-        share.setOnClickListener(v -> Utilities.shareFile(StatusViewVideo.this,
-                fragmentVideos.statusItemFile, adapter.getPosition()));
-        shareWhatsApp.setOnClickListener(v -> Utilities.shareToWhatsApp(StatusViewVideo.this,
-                fragmentVideos.statusItemFile, adapter.getPosition()));
+        share.setOnClickListener(v -> Utilities.shareFile(v.getContext(), FragmentVideos.statusItemFile, position));
+        shareWhatsApp.setOnClickListener(v -> Utilities.shareToWhatsApp(v.getContext(), FragmentVideos.statusItemFile, position));
     }
 
     private void showFAB() {

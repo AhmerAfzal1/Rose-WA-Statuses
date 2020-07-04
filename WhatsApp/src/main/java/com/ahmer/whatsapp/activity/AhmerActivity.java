@@ -21,6 +21,8 @@ import com.ahmer.afzal.utils.constants.AppPackageConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.NetworkUtils;
 import com.ahmer.afzal.utils.utilcode.PathUtils;
+import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
+import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.ahmer.whatsapp.Constant;
 import com.ahmer.whatsapp.EmailIntent;
 import com.ahmer.whatsapp.R;
@@ -41,21 +43,21 @@ import static com.ahmer.whatsapp.Constant.TAG;
 
 public class AhmerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
-    private FirebaseAnalytics firebaseAnalytics;
-    private TextView emailGmail;
-    private TextView emailYahoo;
-    private TextView qq;
-    private TextView tvBlogSpot;
-    private TextView tvFacebook;
-    private TextView tvGithub;
-    private TextView tvTwitter;
+    private FirebaseAnalytics firebaseAnalytics = null;
+    private TextView emailGmail = null;
+    private TextView emailYahoo = null;
+    private TextView qq = null;
+    private TextView tvBlogSpot = null;
+    private TextView tvFacebook = null;
+    private TextView tvGithub = null;
+    private TextView tvTwitter = null;
 
     public static File dirAhmer() {
         File dir = new File(PathUtils.getExternalAppDataPath(), Constant.FOLDER_AHMER);
         if (!dir.exists()) {
             boolean mkdir = dir.mkdir();
             if (!mkdir) {
-                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> New folder for " + dir + " is not created.");
+                Log.v(TAG, AhmerActivity.class.getSimpleName() + "-> " + Constant.FOLDER_AHMER + "directory is not created.");
             }
         }
         return dir;
@@ -109,8 +111,19 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
         ContentLoadingProgressBar progressBar = findViewById(R.id.progressCircleImageView);
         ImageView loadPic = findViewById(R.id.imageViewAhmer);
         if (!preExistedPic.exists()) {
-            DownloadImageTask download = new DownloadImageTask(loadPic, progressBar);
-            download.execute(getString(R.string.ahmer_facebook_graph_link));
+            if (NetworkUtils.isConnected()) {
+                try {
+                    DownloadImageTask download = new DownloadImageTask(loadPic, progressBar);
+                    download.execute(getString(R.string.ahmer_facebook_graph_link));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showLong(e.getMessage());
+                    ThrowableUtils.getFullStackTrace(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
+                }
+            } else {
+                Utilities.showNoInternetSnack(AhmerActivity.this);
+            }
         } else {
             progressBar.setVisibility(View.GONE);
             Bitmap imageThumbnail = BitmapFactory.decodeFile(preExistedPic.getAbsolutePath());
@@ -181,6 +194,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
                                 intentTwitter1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             }
                             startActivity(intentTwitter1);
+                            ThrowableUtils.getFullStackTrace(e);
                             FirebaseCrashlytics.getInstance().recordException(e);
                         }
                     } else {
@@ -282,26 +296,28 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
         }
 
         protected Bitmap doInBackground(String... urls) {
+            Response response = null;
+            Bitmap bitmap = null;
             final OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(urls[0])
                     .build();
-
-            Response response = null;
-            Bitmap bitmap = null;
             try {
                 response = client.newCall(request).execute();
             } catch (IOException e) {
                 e.printStackTrace();
+                ThrowableUtils.getFullStackTrace(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
             }
             if (Objects.requireNonNull(response).isSuccessful()) {
                 try {
                     bitmap = BitmapFactory.decodeStream(Objects.requireNonNull(response.body()).byteStream());
                 } catch (Exception e) {
-                    Log.v(Constant.TAG, "Error" + e.getMessage());
+                    Log.v(TAG, getClass().getSimpleName() + "-> Exception: " + e.getMessage());
                     e.printStackTrace();
+                    ThrowableUtils.getFullStackTrace(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                 }
-
             }
             return bitmap;
         }

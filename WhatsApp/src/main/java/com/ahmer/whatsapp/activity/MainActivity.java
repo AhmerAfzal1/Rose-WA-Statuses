@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -59,9 +60,10 @@ import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 public class MainActivity extends AppCompatActivity {
 
     private final ArrayList<StatusItem> contentList = new ArrayList<>(SplashActivity.imageStatuses);
-    private AdView adView;
-    private FirebaseAnalytics firebaseAnalytics;
-    private FirebaseCrashlytics firebaseCrashlytics;
+    private AdView adView = null;
+    private FirebaseAnalytics firebaseAnalytics = null;
+    private FirebaseCrashlytics firebaseCrashlytics = null;
+    private LinearLayout adViewLayout = null;
     private RecyclerView recyclerView = null;
     private RelativeLayout noStatusLayout = null;
     private StatusVideoAdapter adapter = null;
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intentSettings);
         });
         adView = findViewById(R.id.adView);
+        adViewLayout = findViewById(R.id.adViewLayout);
         noStatus = findViewById(R.id.tvNoStatus);
         noStatusLayout = findViewById(R.id.layoutNoStatus);
         recyclerView = findViewById(R.id.rvStatusList);
@@ -104,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
+        contentList.addAll(SplashActivity.videoStatuses);
     }
 
     private void loadAds() {
@@ -113,11 +117,13 @@ public class MainActivity extends AppCompatActivity {
         adView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
+                adViewLayout.setVisibility(View.VISIBLE);
                 Log.v(Constant.TAG, getResources().getString(R.string.adLoaded));
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
+                adViewLayout.setVisibility(View.GONE);
                 switch (errorCode) {
                     case ERROR_CODE_INTERNAL_ERROR: {
                         Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INTERNAL_ERROR));
@@ -168,7 +174,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadData() {
         loadAds();
-        contentList.addAll(SplashActivity.videoStatuses);
         Collections.sort(contentList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 1);
         gridLayoutManager.isAutoMeasureEnabled();
@@ -185,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
                 super.onChanged();
                 if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_BUSINESS_WHATSAPP)
                         || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp) || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
-                    Log.v(TAG, MainActivity.class.getSimpleName() + "-> No kind of WhatsApp installed");
                     noStatusLayout.setVisibility(View.VISIBLE);
                     noStatus.setText(R.string.no_whatsapp_installed);
                 } else {
@@ -225,11 +229,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        loadData();
         firebaseAnalytics.setCurrentScreen(this, "CurrentScreen: " + getClass().getSimpleName(), null);
         if (adView != null) {
             adView.resume();
         }
-        loadData();
     }
 
     @Override
@@ -359,7 +363,8 @@ public class MainActivity extends AppCompatActivity {
                 Utilities.shareToWhatsApp(v.getContext(), contentList, position);
             });
 
-            holder.btnDownload.setOnClickListener(v -> {/*
+            holder.btnDownload.setOnClickListener(v -> {
+                /*
                 File statusDirectory = new File(PathUtils.getExternalStoragePath(), v.getContext().getResources().getString(R.string.app_name));
 
                 if (!statusDirectory.exists()) {

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,9 +31,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
-import static com.ahmer.whatsapp.Constant.TAG;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INTERNAL_ERROR;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INVALID_REQUEST;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NETWORK_ERROR;
@@ -40,17 +39,26 @@ import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
 public class FragmentImages extends Fragment {
 
-    public final ArrayList<StatusItem> statusItemFile = new ArrayList<>(SplashActivity.imageStatuses);
-    public ImagesAdapter adapter = null;
-    public RecyclerView recyclerViewImages = null;
-    private AdView adView;
-    private FirebaseAnalytics firebaseAnalytics;
-    private FirebaseCrashlytics firebaseCrashlytics;
+    public static final ArrayList<StatusItem> statusItemFile = new ArrayList<>(SplashActivity.imageStatuses);
+    private static ImagesAdapter adapter = null;
+    private static RecyclerView recyclerViewImages = null;
+    private AdView adView = null;
+    private FirebaseAnalytics firebaseAnalytics = null;
+    private FirebaseCrashlytics firebaseCrashlytics = null;
+    private LinearLayout adViewLayout = null;
     private RelativeLayout noStatusLayout = null;
     private TextView noStatus = null;
 
     public FragmentImages() {
         // Required empty public constructor
+    }
+
+    public static void updateList(int position) {
+        statusItemFile.remove(position);
+        adapter.notifyItemRemoved(position);
+        adapter.notifyItemRangeRemoved(position, adapter.getItemCount());
+        recyclerViewImages.scrollToPosition(position);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -71,10 +79,65 @@ public class FragmentImages extends Fragment {
         noStatus = view.findViewById(R.id.tvNoStatus);
         noStatusLayout = view.findViewById(R.id.layoutNoStatus);
         adView = view.findViewById(R.id.adView);
+        adViewLayout = view.findViewById(R.id.adViewLayout);
         firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext());
         firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        gridLayoutManager.isAutoMeasureEnabled();
+        gridLayoutManager.setSmoothScrollbarEnabled(true);
+        recyclerViewImages.getRecycledViewPool().clear();
+        recyclerViewImages.setHasFixedSize(true);
+        recyclerViewImages.setNestedScrollingEnabled(false);
+        recyclerViewImages.setLayoutManager(gridLayoutManager);
+        adapter = new ImagesAdapter(statusItemFile);
+        recyclerViewImages.setAdapter(adapter);
+        RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_BUSINESS_WHATSAPP)
+                        || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp) || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
+                    noStatusLayout.setVisibility(View.VISIBLE);
+                    noStatus.setText(R.string.no_whatsapp_installed);
+                } else {
+                    if (adapter.getItemCount() == 0) {
+                        noStatusLayout.setVisibility(View.VISIBLE);
+                        noStatus.setText(R.string.no_having_status);
+                    } else {
+                        noStatusLayout.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                super.onItemRangeChanged(positionStart, itemCount);
+                onChanged();
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                onChanged();
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+                onChanged();
+            }
+
+            @Override
+            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+                super.onItemRangeMoved(fromPosition, toPosition, itemCount);
+                onChanged();
+            }
+        };
+        adapter.registerAdapterDataObserver(observer);
+        observer.onChanged();
+        loadAds();
     }
 
     private void loadAds() {
@@ -84,11 +147,13 @@ public class FragmentImages extends Fragment {
         adView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
+                adViewLayout.setVisibility(View.VISIBLE);
                 Log.v(Constant.TAG, getResources().getString(R.string.adLoaded));
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
+                adViewLayout.setVisibility(View.GONE);
                 switch (errorCode) {
                     case ERROR_CODE_INTERNAL_ERROR: {
                         Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INTERNAL_ERROR));
@@ -137,72 +202,15 @@ public class FragmentImages extends Fragment {
         adView.loadAd(adRequest);
     }
 
-    private void loadData() {
-        loadAds();
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
-        gridLayoutManager.isAutoMeasureEnabled();
-        gridLayoutManager.setSmoothScrollbarEnabled(true);
-        recyclerViewImages.getRecycledViewPool().clear();
-        recyclerViewImages.setHasFixedSize(true);
-        recyclerViewImages.setNestedScrollingEnabled(false);
-        recyclerViewImages.setLayoutManager(gridLayoutManager);
-        adapter = new ImagesAdapter(statusItemFile, recyclerViewImages, adapter);
-        recyclerViewImages.setAdapter(adapter);
-        RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_BUSINESS_WHATSAPP)
-                        || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp) || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
-                    Log.v(TAG, MainActivity.class.getSimpleName() + "-> No kind of WhatsApp installed");
-                    noStatusLayout.setVisibility(View.VISIBLE);
-                    noStatus.setText(R.string.no_whatsapp_installed);
-                } else {
-                    if (adapter.getItemCount() == 0) {
-                        noStatusLayout.setVisibility(View.VISIBLE);
-                        noStatus.setText(R.string.no_having_status);
-                    } else {
-                        noStatusLayout.setVisibility(View.GONE);
-                    }
-                }
-            }
-
-            @Override
-            public void onItemRangeChanged(int positionStart, int itemCount) {
-                super.onItemRangeChanged(positionStart, itemCount);
-                onChanged();
-            }
-
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                onChanged();
-            }
-
-            @Override
-            public void onItemRangeRemoved(int positionStart, int itemCount) {
-                super.onItemRangeRemoved(positionStart, itemCount);
-                onChanged();
-            }
-
-            @Override
-            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-                super.onItemRangeMoved(fromPosition, toPosition, itemCount);
-                onChanged();
-            }
-        };
-        adapter.registerAdapterDataObserver(observer);
-        observer.onChanged();
-    }
-
     @Override
     public void onResume() {
         super.onResume();
-        loadData();
+        statusItemFile.clear();
         firebaseAnalytics.setCurrentScreen(requireActivity(), "CurrentScreen: " + getClass().getSimpleName(), null);
         if (adView != null) {
             adView.resume();
         }
+        statusItemFile.addAll(SplashActivity.imageStatuses);
     }
 
     @Override
@@ -214,29 +222,20 @@ public class FragmentImages extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDestroy() {
+        super.onDestroy();
         if (adView != null) {
             adView.destroy();
-        }
-        if (recyclerViewImages != null) {
-            recyclerViewImages.swapAdapter(null, true);
         }
         statusItemFile.clear();
     }
 
     public static class ImagesAdapter extends RecyclerView.Adapter<ImageViewHolder> {
 
-        final HashSet<ImageViewHolder> holders;
         private final ArrayList<StatusItem> statusItem;
-        private final RecyclerView recyclerView;
-        private final ImagesAdapter adapter;
 
-        public ImagesAdapter(ArrayList<StatusItem> list, RecyclerView rv, ImagesAdapter adapter) {
-            this.holders = new HashSet<>();
+        public ImagesAdapter(ArrayList<StatusItem> list) {
             this.statusItem = list;
-            this.recyclerView = rv;
-            this.adapter = adapter;
         }
 
         @NonNull
@@ -254,6 +253,7 @@ public class FragmentImages extends Fragment {
                 intent.putExtra("path", statusItem.get(position).getPath());
                 intent.putExtra("format", statusItem.get(position).getFormat());
                 intent.putExtra("from", "Fragment");
+                intent.putExtra("pos", position);
                 v.getContext().startActivity(intent);
             });
         }
@@ -271,26 +271,6 @@ public class FragmentImages extends Fragment {
         @Override
         public int getItemCount() {
             return statusItem.size();
-        }
-
-        public void updateList() {
-            int position = 0;
-            for (ImageViewHolder holder : holders) {
-                position = holder.getBindingAdapterPosition();
-            }
-            statusItem.remove(position);
-            adapter.notifyItemRemoved(position);
-            adapter.notifyItemRangeRemoved(position, getItemCount());
-            recyclerView.scrollToPosition(position);
-            adapter.notifyDataSetChanged();
-        }
-
-        public int getPosition() {
-            int position = 0;
-            for (ImageViewHolder holder : holders) {
-                position = holder.getBindingAdapterPosition();
-            }
-            return position;
         }
     }
 

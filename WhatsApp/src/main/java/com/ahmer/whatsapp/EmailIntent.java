@@ -11,11 +11,14 @@ import android.util.Log;
 
 import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.DeviceUtils;
+import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.List;
+
+import static com.ahmer.whatsapp.Constant.TAG;
 
 public class EmailIntent extends Activity {
 
@@ -35,15 +38,16 @@ public class EmailIntent extends Activity {
         firebaseAnalytics.logEvent("Email_App_Open", bundle);
         try {
             PackageInfo version_number = getPackageManager().getPackageInfo(getPackageName(), 0);
-            Log.v(Constant.TAG, "App Version number is: " + version_number);
+            Log.v(TAG, getClass().getSimpleName() + "-> App Version number is: " + version_number);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            ThrowableUtils.getFullStackTrace(e);
             FirebaseCrashlytics.getInstance().recordException(e);
         }
-        String sb = "\n\n\n" + getResources().getString(R.string.auto_generate_msg) + "\n\nApp Version = " + AppUtils.getAppVersionName() + "\nManufacturer = "
-                + DeviceUtils.getModel() + "\nBrand = " + DeviceUtils.getManufacturer() + "\nProduct = " + DeviceUtils.getProduct() + "\nArchitecture = "
-                + DeviceUtils.getArchitectureOS() + "\nHardware = " + DeviceUtils.getHardware() + "\nID = " + DeviceUtils.getId() + "\nOS Version = "
-                + DeviceUtils.getSDKVersionName() + "\nOS API Level = " + DeviceUtils.getSDKVersionCode();
+        String sb = "\n\n\n" + getResources().getString(R.string.auto_generate_msg) + "\n\nApp Version: " + AppUtils.getAppVersionName() + "\nManufacturer: "
+                + DeviceUtils.getModel() + "\nBrand: " + DeviceUtils.getManufacturer() + "\nProduct: " + DeviceUtils.getProduct() + "\nArchitecture: "
+                + DeviceUtils.getArchitectureOS() + "\nHardware: " + DeviceUtils.getHardware() + "\nID: " + DeviceUtils.getId() + "\nOS Version: "
+                + DeviceUtils.getSDKVersionName() + "\nOS API Level: " + DeviceUtils.getSDKVersionCode();
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("message/rfc822");
         final PackageManager pm = this.getPackageManager();
@@ -69,6 +73,7 @@ public class EmailIntent extends Activity {
             return;
         } catch (ActivityNotFoundException e) {
             e.printStackTrace();
+            ThrowableUtils.getFullStackTrace(e);
             FirebaseCrashlytics.getInstance().recordException(e);
         }
         ToastUtils.showLong(getResources().getString(R.string.no_email_client));

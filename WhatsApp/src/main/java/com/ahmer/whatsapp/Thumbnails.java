@@ -18,7 +18,6 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.Objects;
 
 import static com.ahmer.whatsapp.Constant.IMAGE_HEIGHT;
 import static com.ahmer.whatsapp.Constant.IMAGE_WIDTH;
@@ -106,7 +105,7 @@ public final class Thumbnails {
         if (!thumbnailDir.exists()) {
             boolean mkdir = thumbnailDir.mkdir();
             if (!mkdir) {
-                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> New folder for " + thumbnailDir + " is not created.");
+                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> " + Constant.FOLDER_THUMBNAIL + "directory is not created.");
             }
         }
         return thumbnailDir;
@@ -124,7 +123,8 @@ public final class Thumbnails {
             bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
             Log.v(TAG, Thumbnails.class.getSimpleName() + "-> Thumbnail saved on: " + file);
         } catch (Exception e) {
-            Log.v(TAG, Objects.requireNonNull(e.getMessage()));
+            Log.v(TAG, Thumbnails.class.getSimpleName() + "-> Exception: " + e.getMessage());
+            ThrowableUtils.getFullStackTrace(e);
             FirebaseCrashlytics.getInstance().recordException(e);
         } finally {
             try {
@@ -132,6 +132,7 @@ public final class Thumbnails {
                     out.close();
             } catch (Exception e) {
                 Log.v(TAG, Thumbnails.class.getSimpleName() + "-> Image not saved due to: " + e.getMessage(), e);
+                ThrowableUtils.getFullStackTrace(e);
                 FirebaseCrashlytics.getInstance().recordException(e);
             }
         }
