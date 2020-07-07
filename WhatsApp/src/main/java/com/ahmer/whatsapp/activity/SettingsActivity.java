@@ -50,7 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            setPreferencesFromResource(R.xml.settings_preferences, rootKey);
+            setPreferencesFromResource(R.xml.settings_pref, rootKey);
             SharedPreferences prefLauncher = this.requireActivity().getSharedPreferences(Constant.PREFERENCE_LAUNCHER, Context.MODE_PRIVATE);
             SwitchPreferenceCompat buttonLauncher = findPreference(getString(R.string.button_change_view));
             Objects.requireNonNull(buttonLauncher).setChecked(prefLauncher.getBoolean(Constant.PREFERENCE_LAUNCHER_KEY, false));
@@ -87,7 +87,7 @@ public class SettingsActivity extends AppCompatActivity {
             });
             Preference versionApp = findPreference(getString(R.string.button_about));
             Objects.requireNonNull(versionApp).setSummary(String.format(Locale.getDefault(),
-                    "App Version: %s(%d)", AppUtils.getAppVersionName(), AppUtils.getAppVersionCode()));
+                    "App Version: %s (%d)", AppUtils.getAppVersionName(), AppUtils.getAppVersionCode()));
             initializeCache();
         }
 

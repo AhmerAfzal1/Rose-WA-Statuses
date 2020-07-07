@@ -39,7 +39,7 @@ import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
 public class FragmentVideos extends Fragment {
 
-    public static final ArrayList<StatusItem> statusItemFile = new ArrayList<>(SplashActivity.videoStatuses);
+    public static ArrayList<StatusItem> statusItemFile = null;
     private static RecyclerView recyclerViewVideos = null;
     private static VideosAdapter adapter = null;
     private AdView adView = null;
@@ -58,6 +58,7 @@ public class FragmentVideos extends Fragment {
         adapter.notifyItemRemoved(position);
         adapter.notifyItemRangeRemoved(position, adapter.getItemCount());
         recyclerViewVideos.scrollToPosition(position);
+        SplashActivity.videoStatuses.remove(position);
         adapter.notifyDataSetChanged();
     }
 
@@ -75,6 +76,7 @@ public class FragmentVideos extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        statusItemFile = new ArrayList<>(SplashActivity.videoStatuses);
         recyclerViewVideos = view.findViewById(R.id.rvVideos);
         noStatus = view.findViewById(R.id.tvNoStatus);
         noStatusLayout = view.findViewById(R.id.layoutNoStatus);
@@ -205,12 +207,10 @@ public class FragmentVideos extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        statusItemFile.clear();
         firebaseAnalytics.setCurrentScreen(requireActivity(), "CurrentScreen: " + getClass().getSimpleName(), null);
         if (adView != null) {
             adView.resume();
         }
-        statusItemFile.addAll(SplashActivity.videoStatuses);
     }
 
     @Override

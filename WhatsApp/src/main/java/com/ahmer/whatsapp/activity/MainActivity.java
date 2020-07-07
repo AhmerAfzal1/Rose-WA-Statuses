@@ -45,7 +45,6 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_UPPER_CASE;
@@ -59,7 +58,7 @@ import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final ArrayList<StatusItem> contentList = new ArrayList<>(SplashActivity.imageStatuses);
+    private final ArrayList<StatusItem> contentList = new ArrayList<>();
     private AdView adView = null;
     private FirebaseAnalytics firebaseAnalytics = null;
     private FirebaseCrashlytics firebaseCrashlytics = null;
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
-        contentList.addAll(SplashActivity.videoStatuses);
+        contentList.addAll(SplashActivity.bothStatuses);
     }
 
     private void loadAds() {
@@ -174,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadData() {
         loadAds();
-        Collections.sort(contentList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+        //Collections.sort(contentList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 1);
         gridLayoutManager.isAutoMeasureEnabled();
         gridLayoutManager.setSmoothScrollbarEnabled(true);
@@ -388,6 +387,7 @@ public class MainActivity extends AppCompatActivity {
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeRemoved(position, getItemCount());
                     recyclerView.scrollToPosition(position);
+                    SplashActivity.bothStatuses.remove(position);
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + "-> MP4: No data was discovered and saved");
                 }
@@ -403,6 +403,7 @@ public class MainActivity extends AppCompatActivity {
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeRemoved(position, getItemCount());
                     recyclerView.scrollToPosition(position);
+                    SplashActivity.bothStatuses.remove(position);
                 } else {
                     Log.v(TAG, getClass().getSimpleName() + "-> JPG: No data was discovered and saved");
                 }

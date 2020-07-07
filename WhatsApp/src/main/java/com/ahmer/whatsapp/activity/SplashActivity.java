@@ -51,6 +51,7 @@ public class SplashActivity extends AppCompatActivity {
 
     public static final ArrayList<StatusItem> videoStatuses = new ArrayList<>();
     public static final ArrayList<StatusItem> imageStatuses = new ArrayList<>();
+    public static final ArrayList<StatusItem> bothStatuses = new ArrayList<>();
     public static final File dirBusinessWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_BUSINESS_LOCATION);
     public static final File dirFMWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_FM_LOCATION);
     public static final File dirWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_LOCATION);
@@ -107,6 +108,7 @@ public class SplashActivity extends AppCompatActivity {
                 item.setThumbnails(videoThumbnail);
             }
             videoStatuses.add(item);
+            bothStatuses.add(item);
         }
     }
 
@@ -131,6 +133,7 @@ public class SplashActivity extends AppCompatActivity {
                 item.setThumbnails(imageThumbnail);
             }
             imageStatuses.add(item);
+            bothStatuses.add(item);
         }
     }
 
@@ -142,7 +145,7 @@ public class SplashActivity extends AppCompatActivity {
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
         TextView app_version = findViewById(R.id.app_version);
-        app_version.setText(String.format(Locale.getDefault(), "App version: %s(%d)",
+        app_version.setText(String.format(Locale.getDefault(), "App version: %s (%d)",
                 AppUtils.getAppVersionName(), AppUtils.getAppVersionCode()));
         SharedPreferences prefDark = getSharedPreferences(Constant.PREFERENCE_DARK_MODE, Context.MODE_PRIVATE);
         boolean isChecked = prefDark.getBoolean(Constant.PREFERENCE_DARK_MODE_KEY, false);
