@@ -54,7 +54,6 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
             android:gravity="start|center">
 
             <TextView
@@ -81,7 +80,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
                 android:text="@android:string/ok"
                 android:textColor="@color/colorWhite"
                 android:textSize="10sp"
@@ -92,9 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
             android:gravity="end">
 
             <ImageView

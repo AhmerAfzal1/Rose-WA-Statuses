@@ -30,7 +30,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_toEndOf="@id/ivBack"
-                android:layout_toRightOf="@id/ivBack"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"

@@ -23,11 +23,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="25dp"
-        android:layout_marginRight="25dp"
         android:layout_marginBottom="25dp"
         android:clipToPadding="false"
         android:gravity="center_vertical"
@@ -39,7 +37,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/fab_view_bg_label"
             android:text="@string/save"
-            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textAppearance="@android:style/TextAppearance.Material.Small"
             android:textColor="@color/colorWhite" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -47,7 +45,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             app:fabSize="mini"
             app:srcCompat="@drawable/ic_view_file_download" />
     </LinearLayout>
@@ -57,11 +54,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="25dp"
-        android:layout_marginRight="25dp"
         android:layout_marginBottom="25dp"
         android:clipToPadding="false"
         android:gravity="center_vertical"
@@ -73,7 +68,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/fab_view_bg_label"
             android:text="@string/share_to_whatsapp"
-            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textAppearance="@android:style/TextAppearance.Material.Small"
             android:textColor="@color/colorWhite" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -81,7 +76,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:src="@drawable/ic_status_item_share_whatsapp"
             app:fabSize="mini" />
     </LinearLayout>
@@ -91,11 +85,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="25dp"
-        android:layout_marginRight="25dp"
         android:layout_marginBottom="25dp"
         android:clipToPadding="false"
         android:gravity="center_vertical"
@@ -107,7 +99,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/fab_view_bg_label"
             android:text="@string/share"
-            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textAppearance="@android:style/TextAppearance.Material.Small"
             android:textColor="@color/colorWhite" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -115,7 +107,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:tint="@color/colorWhite"
             app:fabSize="mini"
             app:srcCompat="@drawable/ic_status_item_share" />
@@ -125,11 +116,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
         android:clipToPadding="false"
         android:gravity="center_vertical"

@@ -41,8 +41,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/fab_view_bg_label"
             android:text="@string/save"
-            android:textColor="@color/colorWhite"
-            android:textSize="14sp" />
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textColor="@color/colorWhite" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabDownloadFile"
@@ -75,8 +75,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/fab_view_bg_label"
             android:text="@string/share_to_whatsapp"
-            android:textColor="@color/colorWhite"
-            android:textSize="14sp" />
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textColor="@color/colorWhite" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabShareWhatsApp"
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/ic_whatsapp"
+            android:src="@drawable/ic_status_item_share_whatsapp"
             app:fabSize="mini" />
     </LinearLayout>
 
@@ -109,8 +109,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/fab_view_bg_label"
             android:text="@string/share"
-            android:textColor="@color/colorWhite"
-            android:textSize="14sp" />
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textColor="@color/colorWhite" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabShare"
@@ -135,7 +135,8 @@
         android:layout_marginBottom="@dimen/fab_margin"
         android:clipToPadding="false"
         android:gravity="center_vertical"
-        android:padding="12dp">
+        android:padding="12dp"
+        android:visibility="visible">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabMain"

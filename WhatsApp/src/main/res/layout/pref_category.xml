@@ -20,7 +20,7 @@
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text="@string/splash_title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@android:style/TextAppearance.Medium"
         android:textColor="@color/colorAccent" />
 
     <TextView
@@ -30,7 +30,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginTop="@dimen/layout_pref_summary_top_margin"
         android:maxLines="4"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textAppearance="@android:style/TextAppearance.Small"
         android:textColor="@color/secondaryTextColor" />
 
 </LinearLayout>

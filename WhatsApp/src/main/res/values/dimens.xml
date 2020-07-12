@@ -7,7 +7,7 @@
     <dimen name="standard_145">145dp</dimen>
 
     <dimen name="layout_pref_image_size">36dp</dimen>
-    <dimen name="layout_pref_margin">12dp</dimen>
-    <dimen name="layout_pref_padding">20dp</dimen>
+    <dimen name="layout_pref_margin">10dp</dimen>
+    <dimen name="layout_pref_padding">15dp</dimen>
     <dimen name="layout_pref_summary_top_margin">2dp</dimen>
 </resources>

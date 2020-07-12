@@ -20,12 +20,12 @@
             android:gravity="top|center"
             android:padding="10dp"
             android:text="@string/no_having_status"
-            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textAppearance="@android:style/TextAppearance.Material.Small"
             android:textColor="@color/secondaryTextColor" />
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvImages"
+        android:id="@+id/rvVideos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/adViewLayout"

@@ -20,8 +20,8 @@
             android:gravity="top|center"
             android:padding="10dp"
             android:text="@string/no_having_status"
-            android:textColor="@color/secondaryTextColor"
-            android:textSize="12sp" />
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textColor="@color/secondaryTextColor" />
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
