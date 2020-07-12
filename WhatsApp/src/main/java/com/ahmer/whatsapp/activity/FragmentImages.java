@@ -216,6 +216,9 @@ public class FragmentImages extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        if (statusItemFile != null) {
+            statusItemFile.clear();
+        }
         if (adView != null) {
             adView.pause();
         }

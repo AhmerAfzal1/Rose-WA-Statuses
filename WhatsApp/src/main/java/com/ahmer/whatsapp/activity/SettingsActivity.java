@@ -1,11 +1,14 @@
 package com.ahmer.whatsapp.activity;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -13,6 +16,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.ahmer.afzal.utils.SharedPreferencesUtil;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.CleanUtils;
 import com.ahmer.afzal.utils.utilcode.Utils;
@@ -49,36 +53,37 @@ public class SettingsActivity extends AppCompatActivity {
         private Preference buttonCaches;
 
         @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            setDivider(new ColorDrawable(Color.TRANSPARENT));
+            setDividerHeight(0);
+        }
+
+        @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.settings_pref, rootKey);
-            SharedPreferences prefLauncher = this.requireActivity().getSharedPreferences(Constant.PREFERENCE_LAUNCHER, Context.MODE_PRIVATE);
+            SharedPreferencesUtil prefLauncher = new SharedPreferencesUtil(requireContext(), Constant.PREFERENCE_LAUNCHER);
             SwitchPreferenceCompat buttonLauncher = findPreference(getString(R.string.button_change_view));
-            Objects.requireNonNull(buttonLauncher).setChecked(prefLauncher.getBoolean(Constant.PREFERENCE_LAUNCHER_KEY, false));
-            buttonLauncher.setOnPreferenceChangeListener((preference, newValue) -> {
-                SharedPreferences.Editor editorSplash = prefLauncher.edit();
-                editorSplash.putBoolean(Constant.PREFERENCE_LAUNCHER_KEY, (Boolean) newValue);
-                editorSplash.apply();
+            Objects.requireNonNull(buttonLauncher).setOnPreferenceChangeListener((preference, newValue) -> {
+                prefLauncher.saveSharedPreferences(Constant.PREFERENCE_LAUNCHER_KEY, (Boolean) newValue);
                 AppUtils.relaunchApp();
                 return true;
             });
-            SharedPreferences prefDarkMode = requireActivity().getSharedPreferences(Constant.PREFERENCE_DARK_MODE, Context.MODE_PRIVATE);
-            SwitchPreferenceCompat darkMode = findPreference(getString(R.string.button_dark_mode));
-            if (Objects.requireNonNull(darkMode).isChecked()) {
-                darkMode.setTitle(R.string.title_light_mode);
+            SharedPreferencesUtil prefTheme = new SharedPreferencesUtil(requireContext(), Constant.PREFERENCE_THEME);
+            SwitchPreferenceCompat buttonTheme = findPreference(getString(R.string.button_dark_mode));
+            if (Objects.requireNonNull(buttonTheme).isChecked()) {
+                buttonTheme.setTitle(R.string.title_light_mode);
             } else {
-                darkMode.setTitle(R.string.title_dark_mode);
+                buttonTheme.setTitle(R.string.title_dark_mode);
             }
-            Objects.requireNonNull(darkMode).setChecked(prefDarkMode.getBoolean(Constant.PREFERENCE_DARK_MODE_KEY, false));
-            darkMode.setOnPreferenceChangeListener((preference, newValue) -> {
+            buttonTheme.setOnPreferenceChangeListener((preference, newValue) -> {
                 boolean isChecked = (Boolean) newValue;
                 if (isChecked) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
-                SharedPreferences.Editor editorDarkMode = prefDarkMode.edit();
-                editorDarkMode.putBoolean(Constant.PREFERENCE_DARK_MODE_KEY, isChecked);
-                editorDarkMode.apply();
+                prefTheme.saveSharedPreferences(Constant.PREFERENCE_THEME_KEY, isChecked);
                 return true;
             });
             buttonCaches = findPreference(getString(R.string.button_clear_caches));

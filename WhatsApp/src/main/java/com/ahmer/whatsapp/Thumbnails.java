@@ -31,26 +31,26 @@ public final class Thumbnails {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 CancellationSignal signal = new CancellationSignal();
                 bitmap = ThumbnailUtils.createVideoThumbnail(file, new Size(IMAGE_WIDTH, IMAGE_HEIGHT), signal);
-                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> API 29 MP4 Thumbs: " + file.getName());
+                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> API 29 MP4 Thumbs: " + file.getName());
                 signal.throwIfCanceled();
             } else {
                 bitmap = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
-                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> API 28 MP4 Thumbs: " + file.getName());
+                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> API 28 MP4 Thumbs: " + file.getName());
             }
         } catch (OperationCanceledException o) {
             o.printStackTrace();
             ThrowableUtils.getFullStackTrace(o);
-            Log.v(TAG, Thumbnails.class.getSimpleName() + "-> OperationCanceledException during generating video thumbnails: " + o.getMessage());
+            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> OperationCanceledException during generating video thumbnails: " + o.getMessage());
             FirebaseCrashlytics.getInstance().recordException(o);
         } catch (FileNotFoundException f) {
             f.printStackTrace();
             ThrowableUtils.getFullStackTrace(f);
-            Log.v(TAG, Thumbnails.class.getSimpleName() + "-> File not found: " + f.getMessage());
+            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> File not found: " + f.getMessage());
             FirebaseCrashlytics.getInstance().recordException(f);
         } catch (Exception e) {
             e.printStackTrace();
             ThrowableUtils.getFullStackTrace(e);
-            Log.v(TAG, Thumbnails.class.getSimpleName() + "-> Error during generating video thumbnails: " + e.getMessage());
+            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> Error during generating video thumbnails: " + e.getMessage());
             FirebaseCrashlytics.getInstance().recordException(e);
         }
         return bitmap;
@@ -62,27 +62,27 @@ public final class Thumbnails {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 CancellationSignal signal = new CancellationSignal();
                 bitmap = ThumbnailUtils.createImageThumbnail(file, new Size(IMAGE_WIDTH, IMAGE_HEIGHT), signal);
-                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> API 29 JPG Thumbs: " + file.getName());
+                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> API 29 JPG Thumbs: " + file.getName());
                 signal.throwIfCanceled();
             } else {
                 bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 bitmap = getBitmap(bitmap, IMAGE_WIDTH, IMAGE_HEIGHT);
-                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> API 28 JPG Thumbs: " + file.getName());
+                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> API 28 JPG Thumbs: " + file.getName());
             }
         } catch (OperationCanceledException o) {
             o.printStackTrace();
             ThrowableUtils.getFullStackTrace(o);
-            Log.v(TAG, Thumbnails.class.getSimpleName() + "-> OperationCanceledException during generating image thumbnails: " + o.getMessage());
+            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> OperationCanceledException during generating image thumbnails: " + o.getMessage());
             FirebaseCrashlytics.getInstance().recordException(o);
         } catch (FileNotFoundException f) {
             f.printStackTrace();
             ThrowableUtils.getFullStackTrace(f);
-            Log.v(TAG, Thumbnails.class.getSimpleName() + "-> File not found: " + f.getMessage());
+            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> File not found: " + f.getMessage());
             FirebaseCrashlytics.getInstance().recordException(f);
         } catch (Exception e) {
             e.printStackTrace();
             ThrowableUtils.getFullStackTrace(e);
-            Log.v(TAG, Thumbnails.class.getSimpleName() + "-> Error during generating image thumbnails: " + e.getMessage());
+            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> Error during generating image thumbnails: " + e.getMessage());
             FirebaseCrashlytics.getInstance().recordException(e);
         }
         return bitmap;
@@ -103,10 +103,13 @@ public final class Thumbnails {
     public static File thumbnailDir() {
         File thumbnailDir = new File(PathUtils.getInternalAppCachePath(), Constant.FOLDER_THUMBNAIL);
         if (!thumbnailDir.exists()) {
-            boolean mkdir = thumbnailDir.mkdir();
-            if (!mkdir) {
-                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> " + Constant.FOLDER_THUMBNAIL + "directory is not created.");
+            if (thumbnailDir.mkdir()) {
+                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> The directory has been created: " + thumbnailDir);
+            } else {
+                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> Could not create the directory for some unknown reason");
             }
+        } else {
+            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> This directory has already been created");
         }
         return thumbnailDir;
     }
@@ -121,9 +124,9 @@ public final class Thumbnails {
         try {
             out = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
-            Log.v(TAG, Thumbnails.class.getSimpleName() + "-> Thumbnail saved on: " + file);
+            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> Thumbnail saved on: " + file);
         } catch (Exception e) {
-            Log.v(TAG, Thumbnails.class.getSimpleName() + "-> Exception: " + e.getMessage());
+            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> Exception: " + e.getMessage());
             ThrowableUtils.getFullStackTrace(e);
             FirebaseCrashlytics.getInstance().recordException(e);
         } finally {
@@ -131,7 +134,7 @@ public final class Thumbnails {
                 if (out != null)
                     out.close();
             } catch (Exception e) {
-                Log.v(TAG, Thumbnails.class.getSimpleName() + "-> Image not saved due to: " + e.getMessage(), e);
+                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> Image not saved due to: " + e.getMessage(), e);
                 ThrowableUtils.getFullStackTrace(e);
                 FirebaseCrashlytics.getInstance().recordException(e);
             }

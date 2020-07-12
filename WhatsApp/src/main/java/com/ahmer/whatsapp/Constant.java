@@ -11,10 +11,10 @@ public class Constant {
     public static final String FILE_NAME_AHMER = "AhmerFBPic";
     public static final String FOLDER_AHMER = "Ahmer";
     public static final String FOLDER_THUMBNAIL = "Thumbnails";
-    public static final String PREFERENCE_DARK_MODE = "DarkMode";
-    public static final String PREFERENCE_DARK_MODE_KEY = "DarkModeKey";
     public static final String PREFERENCE_LAUNCHER = "Launcher";
     public static final String PREFERENCE_LAUNCHER_KEY = "LauncherKey";
+    public static final String PREFERENCE_THEME = "Theme";
+    public static final String PREFERENCE_THEME_KEY = "ThemeKey";
     public static final String WHATSAPP_BUSINESS_LOCATION = "/WhatsApp Business/Media/.Statuses";
     public static final String WHATSAPP_FM_LOCATION = "/FMWhatsApp/Media/.Statuses";
     public static final String WHATSAPP_LOCATION = "/WhatsApp/Media/.Statuses";

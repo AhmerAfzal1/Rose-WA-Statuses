@@ -84,8 +84,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
-            app:fabSize="mini"
-            app:srcCompat="@drawable/ic_whatsapp" />
+            android:src="@drawable/ic_whatsapp"
+            app:fabSize="mini" />
     </LinearLayout>
 
     <LinearLayout

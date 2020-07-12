@@ -74,7 +74,7 @@ public class StatusViewVideo extends AppCompatActivity {
                 }
             });
         } else {
-            Log.v(TAG, getClass().getSimpleName() + "-> There is no found file");
+            Log.v(TAG, getClass().getSimpleName() + " -> There is no found file");
         }
         try {
             if (Objects.requireNonNull(format).equals(EXT_MP4_LOWER_CASE)) {
@@ -96,7 +96,7 @@ public class StatusViewVideo extends AppCompatActivity {
             e.printStackTrace();
             ThrowableUtils.getFullStackTrace(e);
             FirebaseCrashlytics.getInstance().recordException(e);
-            Log.v(TAG, getClass().getSimpleName() + "-> Exception: " + e.getMessage());
+            Log.v(TAG, getClass().getSimpleName() + " -> Exception: " + e.getMessage());
         }
         view.setOnCompletionListener(mp -> {
             view.stopPlayback();
@@ -115,7 +115,7 @@ public class StatusViewVideo extends AppCompatActivity {
                 finish();
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.v(TAG, getClass().getSimpleName() + "-> Exception: " + e.getMessage());
+                Log.v(TAG, getClass().getSimpleName() + " -> Exception: " + e.getMessage());
                 ThrowableUtils.getFullStackTrace(e);
                 FirebaseCrashlytics.getInstance().recordException(e);
             }

@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.ahmer.afzal.utils.SharedPreferencesUtil;
 import com.ahmer.afzal.utils.constants.PermissionConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.FileUtils;
@@ -98,12 +99,12 @@ public class SplashActivity extends AppCompatActivity {
             item.setSize(file.length());
             item.setFormat(EXT_MP4_LOWER_CASE);
             if (!preExistedThumbnails.exists()) {
-                Log.v(TAG, SplashActivity.class.getSimpleName() + "-> First time generate thumbnails for videos");
+                Log.v(TAG, SplashActivity.class.getSimpleName() + " -> First time generate thumbnails for videos");
                 Bitmap video = Thumbnails.videoThumbnails(file);
                 item.setThumbnails(video);
                 Thumbnails.saveImage(video, FileUtils.getFileNameNoExtension(file.getName()));
             } else {
-                Log.v(TAG, SplashActivity.class.getSimpleName() + "-> Load pre-existed thumbnails for videos");
+                Log.v(TAG, SplashActivity.class.getSimpleName() + " -> Load pre-existed thumbnails for videos");
                 Bitmap videoThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
                 item.setThumbnails(videoThumbnail);
             }
@@ -123,12 +124,12 @@ public class SplashActivity extends AppCompatActivity {
             item.setSize(file.length());
             item.setFormat(EXT_JPG_LOWER_CASE);
             if (!preExistedThumbnails.exists()) {
-                Log.v(TAG, SplashActivity.class.getSimpleName() + "-> First time generate thumbnails for images");
+                Log.v(TAG, SplashActivity.class.getSimpleName() + " -> First time generate thumbnails for images");
                 Bitmap jpg = Thumbnails.imageThumbnails(file);
                 item.setThumbnails(jpg);
                 Thumbnails.saveImage(jpg, FileUtils.getFileNameNoExtension(file.getName()));
             } else {
-                Log.v(TAG, SplashActivity.class.getSimpleName() + "-> Load pre-existed thumbnails for images");
+                Log.v(TAG, SplashActivity.class.getSimpleName() + " -> Load pre-existed thumbnails for images");
                 Bitmap imageThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
                 item.setThumbnails(imageThumbnail);
             }
@@ -147,8 +148,8 @@ public class SplashActivity extends AppCompatActivity {
         TextView app_version = findViewById(R.id.app_version);
         app_version.setText(String.format(Locale.getDefault(), "App version: %s (%d)",
                 AppUtils.getAppVersionName(), AppUtils.getAppVersionCode()));
-        SharedPreferences prefDark = getSharedPreferences(Constant.PREFERENCE_DARK_MODE, Context.MODE_PRIVATE);
-        boolean isChecked = prefDark.getBoolean(Constant.PREFERENCE_DARK_MODE_KEY, false);
+        SharedPreferencesUtil themePref = new SharedPreferencesUtil(getApplicationContext(), Constant.PREFERENCE_THEME);
+        boolean isChecked = themePref.loadBooleanSharedPreference(Constant.PREFERENCE_THEME_KEY);
         if (isChecked) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
@@ -161,18 +162,18 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void rationale(UtilsTransActivity activity, ShouldRequest shouldRequest) {
                 shouldRequest.again(true);
-                Log.v(TAG, getClass().getSimpleName() + "-> Again permission checking");
+                Log.v(TAG, getClass().getSimpleName() + " -> Again permission checking");
             }
         }).callback(new PermissionUtils.FullCallback() {
             @Override
             public void onGranted(@NonNull List<String> permissionsGranted) {
-                Log.v(TAG, getClass().getSimpleName() + "-> Permission has been granted");
+                Log.v(TAG, getClass().getSimpleName() + " -> Permission has been granted");
                 new RunProgram(SplashActivity.this).execute();
             }
 
             @Override
             public void onDenied(@NonNull List<String> permissionsDeniedForever, @NonNull List<String> permissionsDenied) {
-                Log.v(TAG, getClass().getSimpleName() + "-> Permission has not been granted");
+                Log.v(TAG, getClass().getSimpleName() + " -> Permission has not been granted");
                 if (!permissionsDenied.isEmpty() || !permissionsDeniedForever.isEmpty()) {
                     finish();
                 }
@@ -180,7 +181,7 @@ public class SplashActivity extends AppCompatActivity {
         }).theme(new PermissionUtils.ThemeCallback() {
             @Override
             public void onActivityCreate(Activity activity) {
-                Log.v(TAG, getClass().getSimpleName() + "-> Permission ThemeCallback runs");
+                Log.v(TAG, getClass().getSimpleName() + " -> Permission ThemeCallback runs");
                 //Must add this for run app properly
                 ScreenUtils.setFullScreen(activity);
             }
@@ -221,7 +222,7 @@ public class SplashActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                     ThrowableUtils.getFullStackTrace(e);
-                    Log.v(TAG, getClass().getSimpleName() + "-> Exception: Error during loading data: " + e.getMessage());
+                    Log.v(TAG, getClass().getSimpleName() + " -> Exception: Error during loading data: " + e.getMessage());
                     ThrowableUtils.getFullStackTrace(e);
                     FirebaseCrashlytics.getInstance().recordException(e);
                 }
@@ -232,8 +233,8 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            SharedPreferences pref = weakContext.get().getSharedPreferences(Constant.PREFERENCE_LAUNCHER, Context.MODE_PRIVATE);
-            if (!pref.getBoolean(Constant.PREFERENCE_LAUNCHER_KEY, false)) {
+            SharedPreferencesUtil launcherPref = new SharedPreferencesUtil(weakContext.get(), Constant.PREFERENCE_LAUNCHER);
+            if (!launcherPref.loadBooleanSharedPreference(Constant.PREFERENCE_LAUNCHER_KEY)) {
                 Intent intentMainActivity = new Intent(weakContext.get(), MainActivity.class);
                 intentMainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

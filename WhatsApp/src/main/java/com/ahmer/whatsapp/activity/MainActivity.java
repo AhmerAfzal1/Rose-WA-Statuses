@@ -363,19 +363,6 @@ public class MainActivity extends AppCompatActivity {
             });
 
             holder.btnDownload.setOnClickListener(v -> {
-                /*
-                File statusDirectory = new File(PathUtils.getExternalStoragePath(), v.getContext().getResources().getString(R.string.app_name));
-
-                if (!statusDirectory.exists()) {
-                    if (statusDirectory.mkdirs()) {
-                        Log.v(TAG, getClass().getSimpleName() + "-> The directory has been created: " + statusDirectory);
-                    } else {
-                        Log.v(TAG, getClass().getSimpleName() + "-> Could not create the directory for some unknown reason");
-                    }
-                } else {
-                    Log.v(TAG, getClass().getSimpleName() + "-> This directory has already been created");
-                }*/
-
                 if (source.getAbsolutePath().endsWith(EXT_MP4_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_MP4_UPPER_CASE)) {
                     File destPathMP4 = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_MP4_LOWER_CASE);
                     Bundle bundleDownloadMP4 = new Bundle();
@@ -389,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
                     recyclerView.scrollToPosition(position);
                     SplashActivity.bothStatuses.remove(position);
                 } else {
-                    Log.v(TAG, getClass().getSimpleName() + "-> MP4: No data was discovered and saved");
+                    Log.v(TAG, getClass().getSimpleName() + " -> MP4: No data was discovered and saved");
                 }
 
                 if (source.getAbsolutePath().endsWith(EXT_JPG_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_JPG_UPPER_CASE)) {
@@ -405,7 +392,7 @@ public class MainActivity extends AppCompatActivity {
                     recyclerView.scrollToPosition(position);
                     SplashActivity.bothStatuses.remove(position);
                 } else {
-                    Log.v(TAG, getClass().getSimpleName() + "-> JPG: No data was discovered and saved");
+                    Log.v(TAG, getClass().getSimpleName() + " -> JPG: No data was discovered and saved");
                 }
             });
         }

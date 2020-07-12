@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -55,10 +56,13 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
     public static File dirAhmer() {
         File dir = new File(PathUtils.getExternalAppDataPath(), Constant.FOLDER_AHMER);
         if (!dir.exists()) {
-            boolean mkdir = dir.mkdir();
-            if (!mkdir) {
-                Log.v(TAG, AhmerActivity.class.getSimpleName() + "-> " + Constant.FOLDER_AHMER + "directory is not created.");
+            if (dir.mkdir()) {
+                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> The directory has been created: " + dir);
+            } else {
+                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> Could not create the directory for some unknown reason");
             }
+        } else {
+            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> This directory has already been created");
         }
         return dir;
     }
@@ -123,6 +127,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
                 }
             } else {
                 Utilities.showNoInternetSnack(AhmerActivity.this);
+                new Handler().postDelayed(() -> progressBar.setVisibility(View.GONE), 5000);
             }
         } else {
             progressBar.setVisibility(View.GONE);
@@ -313,7 +318,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
                 try {
                     bitmap = BitmapFactory.decodeStream(Objects.requireNonNull(response.body()).byteStream());
                 } catch (Exception e) {
-                    Log.v(TAG, getClass().getSimpleName() + "-> Exception: " + e.getMessage());
+                    Log.v(TAG, getClass().getSimpleName() + " -> Exception: " + e.getMessage());
                     e.printStackTrace();
                     ThrowableUtils.getFullStackTrace(e);
                     FirebaseCrashlytics.getInstance().recordException(e);

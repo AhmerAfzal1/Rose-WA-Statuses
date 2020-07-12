@@ -72,7 +72,7 @@ public class StatusViewImage extends AppCompatActivity {
                 }
             });
         } else {
-            Log.v(TAG, getClass().getSimpleName() + "-> There is no found file");
+            Log.v(TAG, getClass().getSimpleName() + " -> There is no found file");
         }
         try {
             if (Objects.requireNonNull(format).equals(EXT_JPG_LOWER_CASE)) {
@@ -85,9 +85,9 @@ public class StatusViewImage extends AppCompatActivity {
             e.printStackTrace();
             ThrowableUtils.getFullStackTrace(e);
             FirebaseCrashlytics.getInstance().recordException(e);
-            Log.v(TAG, getClass().getSimpleName() + "-> Exception: " + e.getMessage());
+            Log.v(TAG, getClass().getSimpleName() + " -> Exception: " + e.getMessage());
         }
-        Log.v(TAG, getClass().getSimpleName() + "-> ImagesAdapter position: " + position);
+        Log.v(TAG, getClass().getSimpleName() + " -> ImagesAdapter position: " + position);
         fileDownload.setOnClickListener(v -> {
             try {
                 String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(path);
@@ -101,7 +101,7 @@ public class StatusViewImage extends AppCompatActivity {
                 finish();
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.v(TAG, getClass().getSimpleName() + "-> Exception: " + e);
+                Log.v(TAG, getClass().getSimpleName() + " -> Exception: " + e);
                 ThrowableUtils.getFullStackTrace(e);
                 FirebaseCrashlytics.getInstance().recordException(e);
             }

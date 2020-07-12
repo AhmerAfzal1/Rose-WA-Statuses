@@ -38,7 +38,7 @@ public class EmailIntent extends Activity {
         firebaseAnalytics.logEvent("Email_App_Open", bundle);
         try {
             PackageInfo version_number = getPackageManager().getPackageInfo(getPackageName(), 0);
-            Log.v(TAG, getClass().getSimpleName() + "-> App Version number is: " + version_number);
+            Log.v(TAG, getClass().getSimpleName() + " -> App Version number is: " + version_number);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             ThrowableUtils.getFullStackTrace(e);
