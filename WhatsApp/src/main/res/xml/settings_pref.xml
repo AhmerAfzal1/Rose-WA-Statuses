@@ -1,32 +1,45 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:layout="@layout/pref_category"
+        android:title="@string/settings_category_layout_view" />
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:fontFamily="@font/roboto"
+        android:icon="@drawable/ic_settings_tabbed"
         android:key="@string/button_change_view"
         android:layout="@layout/pref_switch"
         android:title="@string/title_change_view" />
+
+    <PreferenceCategory
+        android:layout="@layout/pref_category"
+        android:title="@string/settings_category_theme" />
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:fontFamily="@font/roboto"
         android:icon="@drawable/ic_settings_moon"
         android:key="@string/button_dark_mode"
-        android:title="@string/title_dark_mode"
-        app:iconSpaceReserved="true" />
+        android:layout="@layout/pref_switch"
+        android:title="@string/title_dark_mode" />
+
+    <PreferenceCategory
+        android:layout="@layout/pref_category"
+        android:title="@string/settings_category_general" />
 
     <Preference
         android:fontFamily="@font/roboto"
         android:icon="@drawable/ic_settings_broom"
         android:key="@string/button_clear_caches"
-        android:title="@string/title_cache"
-        app:iconSpaceReserved="true" />
+        android:layout="@layout/pref_pref"
+        android:title="@string/title_cache" />
 
     <Preference
         android:fontFamily="@font/roboto"
         android:icon="@drawable/ic_settings_version"
         android:key="@string/button_about"
-        android:title="@string/title_version"
-        app:iconSpaceReserved="true" />
+        android:layout="@layout/pref_pref"
+        android:title="@string/title_version" />
+
 </PreferenceScreen>

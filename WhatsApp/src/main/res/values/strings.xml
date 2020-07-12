@@ -22,9 +22,13 @@
     <string name="button_change_view">buttonChangeView</string>
     <string name="button_clear_caches">buttonClearCaches</string>
     <string name="button_dark_mode">buttonDarkMode</string>
+    <string name="settings_category_general">General</string>
+    <string name="settings_category_layout_view">App Layout View</string>
+    <string name="settings_category_theme">Theme</string>
     <string name="title_cache">Clear Caches</string>
     <string name="title_change_view">Change Layout View</string>
-    <string name="title_dark_mode">Dark Mode Theme</string>
+    <string name="title_dark_mode">Dark Theme</string>
+    <string name="title_light_mode">Light Theme</string>
     <string name="title_settings">Settings</string>
     <string name="title_version">App Version</string>
 

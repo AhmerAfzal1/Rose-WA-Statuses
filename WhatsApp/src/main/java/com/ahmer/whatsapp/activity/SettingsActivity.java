@@ -63,6 +63,11 @@ public class SettingsActivity extends AppCompatActivity {
             });
             SharedPreferences prefDarkMode = requireActivity().getSharedPreferences(Constant.PREFERENCE_DARK_MODE, Context.MODE_PRIVATE);
             SwitchPreferenceCompat darkMode = findPreference(getString(R.string.button_dark_mode));
+            if (Objects.requireNonNull(darkMode).isChecked()) {
+                darkMode.setTitle(R.string.title_light_mode);
+            } else {
+                darkMode.setTitle(R.string.title_dark_mode);
+            }
             Objects.requireNonNull(darkMode).setChecked(prefDarkMode.getBoolean(Constant.PREFERENCE_DARK_MODE_KEY, false));
             darkMode.setOnPreferenceChangeListener((preference, newValue) -> {
                 boolean isChecked = (Boolean) newValue;
@@ -74,7 +79,6 @@ public class SettingsActivity extends AppCompatActivity {
                 SharedPreferences.Editor editorDarkMode = prefDarkMode.edit();
                 editorDarkMode.putBoolean(Constant.PREFERENCE_DARK_MODE_KEY, isChecked);
                 editorDarkMode.apply();
-                //AppUtils.relaunchApp();
                 return true;
             });
             buttonCaches = findPreference(getString(R.string.button_clear_caches));

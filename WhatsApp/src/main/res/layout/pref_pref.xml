@@ -48,17 +48,4 @@
             android:textColor="@color/secondaryTextColor" />
 
     </LinearLayout>
-
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/switchWidget"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@null"
-        android:clickable="false"
-        android:focusable="false"
-        android:paddingStart="@dimen/layout_pref_margin"
-        android:paddingLeft="@dimen/layout_pref_margin"
-        android:paddingEnd="@dimen/layout_pref_margin"
-        android:paddingRight="@dimen/layout_pref_margin" />
-
 </LinearLayout>

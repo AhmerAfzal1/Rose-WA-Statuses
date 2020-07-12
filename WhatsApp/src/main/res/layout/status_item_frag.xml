@@ -27,6 +27,6 @@
             android:layout_gravity="center"
             android:contentDescription="@string/empty_description"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher" />
+            android:src="@mipmap/ic_launcher" />
     </androidx.cardview.widget.CardView>
 </RelativeLayout>
