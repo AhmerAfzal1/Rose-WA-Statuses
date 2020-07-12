@@ -216,9 +216,6 @@ public class FragmentVideos extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (statusItemFile != null) {
-            statusItemFile.clear();
-        }
         if (adView != null) {
             adView.pause();
         }
@@ -231,6 +228,7 @@ public class FragmentVideos extends Fragment {
             adView.destroy();
         }
         statusItemFile.clear();
+        SplashActivity.videoStatuses.clear();
     }
 
     public static class VideosAdapter extends RecyclerView.Adapter<VideoViewHolder> {

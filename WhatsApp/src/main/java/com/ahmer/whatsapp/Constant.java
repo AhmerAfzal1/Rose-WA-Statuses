@@ -4,6 +4,7 @@ public class Constant {
     public static final String TAG = "WhatsApp";
     public static final int IMAGE_HEIGHT = 384;
     public static final int IMAGE_WIDTH = 512;
+    public static final String SAVE_TO_WITH_FILE_NAME = "/Rose Statuses/Status_";
     public static final String EXT_JPG_LOWER_CASE = ".jpg";
     public static final String EXT_JPG_UPPER_CASE = ".JPG";
     public static final String EXT_MP4_LOWER_CASE = ".mp4";

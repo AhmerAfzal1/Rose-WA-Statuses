@@ -90,8 +90,7 @@ public class StatusViewImage extends AppCompatActivity {
         Log.v(TAG, getClass().getSimpleName() + " -> ImagesAdapter position: " + position);
         fileDownload.setOnClickListener(v -> {
             try {
-                String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(path);
-                File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_JPG_LOWER_CASE);
+                File destPathJPG = new File(PathUtils.getExternalStoragePath() + Utilities.saveToWithFileName(path) + EXT_JPG_LOWER_CASE);
                 FileUtils.move(new File(Objects.requireNonNull(path)), destPathJPG);
                 ThreadUtils.runOnUiThread(() -> {
                     ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathJPG.getPath());

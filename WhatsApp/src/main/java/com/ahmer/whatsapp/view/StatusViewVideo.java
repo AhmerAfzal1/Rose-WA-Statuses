@@ -104,8 +104,7 @@ public class StatusViewVideo extends AppCompatActivity {
         });
         fileDownload.setOnClickListener(v -> {
             try {
-                String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(path);
-                File destPathMP4 = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_MP4_LOWER_CASE);
+                File destPathMP4 = new File(PathUtils.getExternalStoragePath() + Utilities.saveToWithFileName(path) + EXT_MP4_LOWER_CASE);
                 FileUtils.move(new File(Objects.requireNonNull(path)), destPathMP4);
                 ThreadUtils.runOnUiThread(() -> {
                     ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathMP4.getPath());

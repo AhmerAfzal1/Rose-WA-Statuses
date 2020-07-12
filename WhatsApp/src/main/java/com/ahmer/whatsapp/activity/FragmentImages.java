@@ -216,9 +216,6 @@ public class FragmentImages extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (statusItemFile != null) {
-            statusItemFile.clear();
-        }
         if (adView != null) {
             adView.pause();
         }
@@ -231,6 +228,7 @@ public class FragmentImages extends Fragment {
             adView.destroy();
         }
         statusItemFile.clear();
+        SplashActivity.imageStatuses.clear();
     }
 
     public static class ImagesAdapter extends RecyclerView.Adapter<ImageViewHolder> {

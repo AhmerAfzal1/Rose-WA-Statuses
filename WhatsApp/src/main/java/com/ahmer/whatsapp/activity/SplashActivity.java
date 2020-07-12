@@ -1,9 +1,7 @@
 package com.ahmer.whatsapp.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -155,6 +153,7 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+        checkPermissions();
     }
 
     private void checkPermissions() {
@@ -189,15 +188,17 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         if (imageStatuses != null) {
             imageStatuses.clear();
         }
         if (videoStatuses != null) {
             videoStatuses.clear();
         }
-        checkPermissions();
+        if (bothStatuses != null) {
+            bothStatuses.clear();
+        }
     }
 
     static class RunProgram extends AsyncTask<Void, Void, Void> {

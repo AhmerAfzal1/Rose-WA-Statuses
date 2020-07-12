@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.ahmer.afzal.utils.utilcode.FileUtils;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -31,5 +33,9 @@ public class Utilities {
         final String[] units = new String[]{"Bytes", "KB", "MB", "GB", "TB"};
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
         return new DecimalFormat("#,##0.##").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    public static String saveToWithFileName(String path) {
+        return Constant.SAVE_TO_WITH_FILE_NAME + FileUtils.getFileNameNoExtension(path);
     }
 }

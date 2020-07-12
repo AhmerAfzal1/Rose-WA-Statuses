@@ -45,6 +45,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_UPPER_CASE;
@@ -107,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
         contentList.addAll(SplashActivity.bothStatuses);
+        Collections.sort(contentList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+        loadData();
     }
 
     private void loadAds() {
@@ -173,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadData() {
         loadAds();
-        //Collections.sort(contentList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 1);
         gridLayoutManager.isAutoMeasureEnabled();
         gridLayoutManager.setSmoothScrollbarEnabled(true);
@@ -218,20 +220,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onResume() {
+        super.onResume();
+        firebaseAnalytics.setCurrentScreen(this, "CurrentScreen: " + getClass().getSimpleName(), null);
         if (adView != null) {
-            adView.pause();
+            adView.resume();
         }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        loadData();
-        firebaseAnalytics.setCurrentScreen(this, "CurrentScreen: " + getClass().getSimpleName(), null);
+    public void onPause() {
+        super.onPause();
         if (adView != null) {
-            adView.resume();
+            adView.pause();
         }
     }
 
@@ -244,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
         if (contentList != null) {
             contentList.clear();
         }
+        SplashActivity.bothStatuses.clear();
     }
 
     static class MoveFiles extends AsyncTask<File, Integer, Boolean> {
@@ -300,7 +302,6 @@ public class MainActivity extends AppCompatActivity {
             holder.progressBar.setVisibility(View.GONE);
             holder.showSize.setText(Utilities.getFileSize(contentList.get(position).getSize()));
             File source = new File(contentList.get(position).getPath());
-            String directoryAndFileName = "/Rose Statuses/Status_" + FileUtils.getFileNameNoExtension(source.getAbsolutePath());
 
             if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
                     contentList.get(position).getFormat().endsWith(EXT_MP4_UPPER_CASE)) {
@@ -364,7 +365,8 @@ public class MainActivity extends AppCompatActivity {
 
             holder.btnDownload.setOnClickListener(v -> {
                 if (source.getAbsolutePath().endsWith(EXT_MP4_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_MP4_UPPER_CASE)) {
-                    File destPathMP4 = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_MP4_LOWER_CASE);
+                    File destPathMP4 = new File(PathUtils.getExternalStoragePath() +
+                            Utilities.saveToWithFileName(source.getAbsolutePath()) + EXT_MP4_LOWER_CASE);
                     Bundle bundleDownloadMP4 = new Bundle();
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadMP4");
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download MP4 Status");
@@ -380,7 +382,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (source.getAbsolutePath().endsWith(EXT_JPG_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_JPG_UPPER_CASE)) {
-                    File destPathJPG = new File(PathUtils.getExternalStoragePath() + directoryAndFileName + EXT_JPG_LOWER_CASE);
+                    File destPathJPG = new File(PathUtils.getExternalStoragePath() +
+                            Utilities.saveToWithFileName(source.getAbsolutePath()) + EXT_JPG_LOWER_CASE);
                     Bundle bundleDownloadJPG = new Bundle();
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadJPG");
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download JPG Status");
