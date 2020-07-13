@@ -20,7 +20,7 @@
             android:layout_height="128dp"
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/empty_description"
-            android:src="@drawable/ic_whatsapp" />
+            app:srcCompat="@drawable/ic_splash_whatsapp" />
 
         <TextView
             android:id="@+id/text"

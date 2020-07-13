@@ -36,8 +36,8 @@
                 android:layout_toEndOf="@id/ivBack"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/colorWhite"
                 android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+                android:textColor="@color/colorWhite"
                 android:textStyle="bold" />
 
         </RelativeLayout>
@@ -103,9 +103,9 @@
                             android:layout_height="256dp"
                             android:layout_gravity="center_horizontal"
                             android:layout_margin="5dp"
-                            android:src="@drawable/profile_pic"
                             app:civ_border_color="@color/colorAccent"
-                            app:civ_border_width="2dp" />
+                            app:civ_border_width="2dp"
+                            app:srcCompat="@drawable/ic_ahmer_avatar" />
 
                         <androidx.core.widget.ContentLoadingProgressBar
                             android:id="@+id/progressCircleImageView"
@@ -273,7 +273,7 @@
                             android:layout_height="36dp"
                             android:layout_marginStart="5dp"
                             android:contentDescription="@string/empty_description"
-                            android:src="@drawable/ic_ahmer_facebook" />
+                            app:srcCompat="@drawable/ic_ahmer_facebook" />
 
                         <TextView
                             android:id="@+id/tvFacebook"
@@ -295,7 +295,7 @@
                             android:layout_height="36dp"
                             android:layout_marginStart="5dp"
                             android:contentDescription="@string/empty_description"
-                            android:src="@drawable/ic_ahmer_twitter" />
+                            app:srcCompat="@drawable/ic_ahmer_twitter" />
 
                         <TextView
                             android:id="@+id/tvTwitter"
@@ -317,7 +317,7 @@
                             android:layout_height="36dp"
                             android:layout_marginStart="5dp"
                             android:contentDescription="@string/empty_description"
-                            android:src="@drawable/ic_ahmer_github" />
+                            app:srcCompat="@drawable/ic_ahmer_github" />
 
                         <TextView
                             android:id="@+id/tvGithub"
@@ -339,7 +339,7 @@
                             android:layout_height="36dp"
                             android:layout_marginStart="5dp"
                             android:contentDescription="@string/empty_description"
-                            android:src="@drawable/ic_ahmer_blogspot" />
+                            app:srcCompat="@drawable/ic_ahmer_blogspot" />
 
                         <TextView
                             android:id="@+id/tvBlogspot"

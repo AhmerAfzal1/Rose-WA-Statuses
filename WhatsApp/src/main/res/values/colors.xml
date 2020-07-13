@@ -17,6 +17,7 @@
     <color name="colorCardViewText">#000000</color>
     <color name="colorSemiBlack">#B2000000</color>
     <color name="colorSettingsIcons">#000000</color>
+    <color name="colorSettingsBlogSpot">#FFFFFF</color>
     <color name="colorTabText">#E0E0E0</color>
     <color name="colorTransBg">#70000000</color>
     <color name="colorWhite">#FFFFFF</color>

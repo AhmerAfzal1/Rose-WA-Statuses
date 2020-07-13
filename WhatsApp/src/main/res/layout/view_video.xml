@@ -82,8 +82,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/ic_status_item_share_whatsapp"
-            app:fabSize="mini" />
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_view_share_to_whatsapp" />
     </LinearLayout>
 
     <LinearLayout
