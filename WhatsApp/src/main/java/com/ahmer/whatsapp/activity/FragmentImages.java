@@ -228,7 +228,6 @@ public class FragmentImages extends Fragment {
             adView.destroy();
         }
         statusItemFile.clear();
-        SplashActivity.imageStatuses.clear();
     }
 
     public static class ImagesAdapter extends RecyclerView.Adapter<ImageViewHolder> {

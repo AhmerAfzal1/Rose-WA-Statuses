@@ -228,7 +228,6 @@ public class FragmentVideos extends Fragment {
             adView.destroy();
         }
         statusItemFile.clear();
-        SplashActivity.videoStatuses.clear();
     }
 
     public static class VideosAdapter extends RecyclerView.Adapter<VideoViewHolder> {

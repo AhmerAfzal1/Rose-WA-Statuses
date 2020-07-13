@@ -245,7 +245,6 @@ public class MainActivity extends AppCompatActivity {
         if (contentList != null) {
             contentList.clear();
         }
-        SplashActivity.bothStatuses.clear();
     }
 
     static class MoveFiles extends AsyncTask<File, Integer, Boolean> {

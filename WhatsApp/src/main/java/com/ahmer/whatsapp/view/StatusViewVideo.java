@@ -37,6 +37,7 @@ public class StatusViewVideo extends AppCompatActivity {
     private LinearLayout fileDownloadLayout = null;
     private LinearLayout shareLayout = null;
     private LinearLayout shareWhatsAppLayout = null;
+    private MediaController mediaController = null;
     private VideoView view = null;
     private View bgLayout = null;
 
@@ -84,7 +85,7 @@ public class StatusViewVideo extends AppCompatActivity {
                 String hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO);
                 boolean isVideo = "yes".equals(hasVideo);
                 if (isVideo) {
-                    MediaController mediaController = new MediaController(StatusViewVideo.this);
+                    mediaController = new MediaController(StatusViewVideo.this);
                     mediaController.setAnchorView(view);
                     view.setMediaController(mediaController);
                     view.setVideoURI(uri);
@@ -98,9 +99,17 @@ public class StatusViewVideo extends AppCompatActivity {
             FirebaseCrashlytics.getInstance().recordException(e);
             Log.v(TAG, getClass().getSimpleName() + " -> Exception: " + e.getMessage());
         }
+        if (view.isPlaying()) {
+            mediaController.hide();
+        }
         view.setOnCompletionListener(mp -> {
             view.stopPlayback();
             StatusViewVideo.this.finish();
+        });
+        view.setOnTouchListener((v, event) -> {
+            v.performClick();
+            mediaController.show();
+            return v.onTouchEvent(event);
         });
         fileDownload.setOnClickListener(v -> {
             try {
@@ -124,6 +133,7 @@ public class StatusViewVideo extends AppCompatActivity {
     }
 
     private void showFAB() {
+        view.pause();
         isFabOpened = true;
         fileDownloadLayout.setVisibility(View.VISIBLE);
         shareWhatsAppLayout.setVisibility(View.VISIBLE);
@@ -138,6 +148,7 @@ public class StatusViewVideo extends AppCompatActivity {
     }
 
     private void closeFAB() {
+        view.start();
         isFabOpened = false;
         bgLayout.setVisibility(View.GONE);
         fabMain.animate().rotation(0);
