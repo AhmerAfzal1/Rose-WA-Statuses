@@ -112,8 +112,8 @@
                 android:layout_marginRight="5dp"
                 android:background="@drawable/bg_status_item_circle"
                 android:contentDescription="@string/empty_description"
-                android:padding="5dp"
-                android:src="@drawable/ic_status_item_share_whatsapp" />
+                android:padding="6dp"
+                app:srcCompat="@drawable/ic_view_share_to_whatsapp" />
 
             <ImageView
                 android:id="@+id/ivShare"
