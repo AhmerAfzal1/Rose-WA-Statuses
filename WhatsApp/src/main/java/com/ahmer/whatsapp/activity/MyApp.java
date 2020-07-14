@@ -16,7 +16,7 @@ public class MyApp extends MultiDexApplication implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onAppForegrounded() {
-        //
+        // Keep empty
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)

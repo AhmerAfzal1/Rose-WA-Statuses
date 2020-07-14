@@ -19,11 +19,11 @@
 
             <ImageView
                 android:id="@+id/ivBack"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="@dimen/toolbar_image_view"
+                android:layout_height="@dimen/toolbar_image_view"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/empty_description"
-                android:padding="4dp"
+                android:padding="@dimen/toolbar_image_view_padding"
                 app:srcCompat="@drawable/ic_toolbar_arrow_back" />
 
             <TextView
@@ -31,8 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="@dimen/toolbar_title_margin"
+                android:layout_marginRight="@dimen/toolbar_title_margin"
                 android:layout_toEndOf="@id/ivBack"
                 android:layout_toRightOf="@id/ivBack"
                 android:ellipsize="end"
@@ -48,12 +48,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginStart="@dimen/ahmer_scroll_view_margin"
+        android:layout_marginLeft="@dimen/ahmer_scroll_view_margin"
+        android:layout_marginTop="@dimen/ahmer_scroll_view_margin"
+        android:layout_marginEnd="@dimen/ahmer_scroll_view_margin"
+        android:layout_marginRight="@dimen/ahmer_scroll_view_margin"
+        android:layout_marginBottom="@dimen/ahmer_scroll_view_margin">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -65,22 +65,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/colorCardView"
-                app:cardCornerRadius="5dp"
-                app:cardElevation="5dp"
-                app:cardMaxElevation="5dp"
+                app:cardCornerRadius="@dimen/card_view_elevation"
+                app:cardElevation="@dimen/card_view_elevation"
+                app:cardMaxElevation="@dimen/card_view_elevation"
                 app:cardPreventCornerOverlap="true"
                 app:cardUseCompatPadding="true">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/margin_or_padding_05dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:fontFamily="@font/roboto"
                     android:gravity="center|center_horizontal|center_vertical"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="5dp"
                     android:text="@string/app_developed_by"
                     android:textAppearance="@android:style/TextAppearance.Medium"
                     android:textColor="@color/colorCardViewText"
@@ -90,7 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="@dimen/ahmer_layout_margin"
                     android:orientation="vertical">
 
                     <RelativeLayout
@@ -100,12 +98,12 @@
 
                         <com.ahmer.afzal.utils.imageview.CircleImageView
                             android:id="@+id/imageViewAhmer"
-                            android:layout_width="256dp"
-                            android:layout_height="256dp"
+                            android:layout_width="@dimen/ahmer_profile_image_view"
+                            android:layout_height="@dimen/ahmer_profile_image_view"
                             android:layout_gravity="center_horizontal"
-                            android:layout_margin="5dp"
+                            android:layout_marginBottom="@dimen/margin_or_padding_05dp"
                             app:civ_border_color="@color/colorAccent"
-                            app:civ_border_width="2dp"
+                            app:civ_border_width="@dimen/ahmer_profile_circle"
                             app:srcCompat="@drawable/ic_ahmer_avatar" />
 
                         <androidx.core.widget.ContentLoadingProgressBar
@@ -130,10 +128,10 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="5dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="5dp"
-                                android:paddingLeft="5dp"
+                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingLeft="@dimen/margin_or_padding_05dp"
                                 android:text="@string/name"
                                 android:textAppearance="@android:style/TextAppearance.Small"
                                 android:textColor="@color/colorCardViewText"
@@ -142,10 +140,10 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="5dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="5dp"
-                                android:paddingLeft="5dp"
+                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingLeft="@dimen/margin_or_padding_05dp"
                                 android:text="@string/ahmer"
                                 android:textAppearance="@android:style/TextAppearance.Small"
                                 android:textColor="@color/colorCardViewText"
@@ -157,10 +155,10 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="5dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="5dp"
-                                android:paddingLeft="5dp"
+                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingLeft="@dimen/margin_or_padding_05dp"
                                 android:text="@string/email"
                                 android:textAppearance="@android:style/TextAppearance.Small"
                                 android:textColor="@color/colorCardViewText"
@@ -170,10 +168,10 @@
                                 android:id="@+id/idAhmerYahoo"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="5dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="5dp"
-                                android:paddingLeft="5dp"
+                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingLeft="@dimen/margin_or_padding_05dp"
                                 android:text="@string/email_yahoo"
                                 android:textAppearance="@android:style/TextAppearance.Small"
                                 android:textColor="@color/colorCardViewText"
@@ -185,10 +183,10 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="5dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="5dp"
-                                android:paddingLeft="5dp"
+                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingLeft="@dimen/margin_or_padding_05dp"
                                 android:text="@string/email"
                                 android:textAppearance="@android:style/TextAppearance.Small"
                                 android:textColor="@color/colorCardViewText"
@@ -198,10 +196,10 @@
                                 android:id="@+id/idAhmerGmail"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="5dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="5dp"
-                                android:paddingLeft="5dp"
+                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingLeft="@dimen/margin_or_padding_05dp"
                                 android:text="@string/email_gmail"
                                 android:textAppearance="@android:style/TextAppearance.Small"
                                 android:textColor="@color/colorCardViewText"
@@ -213,10 +211,10 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="5dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="5dp"
-                                android:paddingLeft="5dp"
+                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingLeft="@dimen/margin_or_padding_05dp"
                                 android:text="@string/qq"
                                 android:textAppearance="@android:style/TextAppearance.Small"
                                 android:textColor="@color/colorCardViewText"
@@ -226,11 +224,11 @@
                                 android:id="@+id/idAhmerQQ"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginBottom="5dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
+                                android:layout_marginBottom="@dimen/margin_or_padding_05dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="5dp"
-                                android:paddingLeft="5dp"
+                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingLeft="@dimen/margin_or_padding_05dp"
                                 android:text="@string/qq_id_ahmer"
                                 android:textAppearance="@android:style/TextAppearance.Small"
                                 android:textColor="@color/colorCardViewText"
@@ -244,11 +242,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/mainCardView"
-                android:layout_marginTop="10dp"
                 app:cardBackgroundColor="@color/colorCardView"
-                app:cardCornerRadius="5dp"
-                app:cardElevation="5dp"
-                app:cardMaxElevation="5dp"
+                app:cardCornerRadius="@dimen/card_view_elevation"
+                app:cardElevation="@dimen/card_view_elevation"
+                app:cardMaxElevation="@dimen/card_view_elevation"
                 app:cardPreventCornerOverlap="true"
                 app:cardUseCompatPadding="true">
 
@@ -256,13 +253,13 @@
                     android:id="@+id/meet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/margin_or_padding_05dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:fontFamily="@font/roboto"
                     android:gravity="center|center_horizontal|center_vertical"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="5dp"
+                    android:paddingStart="@dimen/margin_or_padding_05dp"
+                    android:paddingEnd="@dimen/margin_or_padding_05dp"
                     android:text="@string/meet_on_social"
                     android:textAppearance="@android:style/TextAppearance.Medium"
                     android:textColor="@color/colorCardViewText"
@@ -271,17 +268,17 @@
                 <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="35dp"
+                    android:layout_marginTop="@dimen/ahmer_layout_margin"
                     android:orientation="vertical">
 
-                    <TableRow android:layout_marginBottom="5dp">
+                    <TableRow android:layout_marginBottom="@dimen/ahmer_table_row_margin">
 
                         <ImageView
                             android:id="@+id/ivFacebook"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginLeft="5dp"
+                            android:layout_width="@dimen/ahmer_social_image_view"
+                            android:layout_height="@dimen/ahmer_social_image_view"
+                            android:layout_marginStart="@dimen/margin_or_padding_05dp"
+                            android:layout_marginLeft="@dimen/margin_or_padding_05dp"
                             android:contentDescription="@string/empty_description"
                             app:srcCompat="@drawable/ic_ahmer_facebook" />
 
@@ -290,21 +287,21 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start|center"
-                            android:paddingStart="5dp"
-                            android:paddingEnd="5dp"
+                            android:paddingStart="@dimen/margin_or_padding_05dp"
+                            android:paddingEnd="@dimen/margin_or_padding_05dp"
                             android:text="@string/ahmer_facebook_id"
                             android:textAppearance="@android:style/TextAppearance.Small"
                             android:textColor="@color/colorCardViewText" />
                     </TableRow>
 
-                    <TableRow android:layout_marginBottom="5dp">
+                    <TableRow android:layout_marginBottom="@dimen/ahmer_table_row_margin">
 
                         <ImageView
                             android:id="@+id/ivTwitter"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginLeft="5dp"
+                            android:layout_width="@dimen/ahmer_social_image_view"
+                            android:layout_height="@dimen/ahmer_social_image_view"
+                            android:layout_marginStart="@dimen/margin_or_padding_05dp"
+                            android:layout_marginLeft="@dimen/margin_or_padding_05dp"
                             android:contentDescription="@string/empty_description"
                             app:srcCompat="@drawable/ic_ahmer_twitter" />
 
@@ -313,21 +310,21 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start|center"
-                            android:paddingStart="5dp"
-                            android:paddingEnd="5dp"
+                            android:paddingStart="@dimen/margin_or_padding_05dp"
+                            android:paddingEnd="@dimen/margin_or_padding_05dp"
                             android:text="@string/ahmer_twitter_id"
                             android:textAppearance="@android:style/TextAppearance.Small"
                             android:textColor="@color/colorCardViewText" />
                     </TableRow>
 
-                    <TableRow android:layout_marginBottom="5dp">
+                    <TableRow android:layout_marginBottom="@dimen/ahmer_table_row_margin">
 
                         <ImageView
                             android:id="@+id/ivGithub"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginLeft="5dp"
+                            android:layout_width="@dimen/ahmer_social_image_view"
+                            android:layout_height="@dimen/ahmer_social_image_view"
+                            android:layout_marginStart="@dimen/margin_or_padding_05dp"
+                            android:layout_marginLeft="@dimen/margin_or_padding_05dp"
                             android:contentDescription="@string/empty_description"
                             app:srcCompat="@drawable/ic_ahmer_github" />
 
@@ -336,21 +333,21 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start|center"
-                            android:paddingStart="5dp"
-                            android:paddingEnd="5dp"
+                            android:paddingStart="@dimen/margin_or_padding_05dp"
+                            android:paddingEnd="@dimen/margin_or_padding_05dp"
                             android:text="@string/ahmer_github_id"
                             android:textAppearance="@android:style/TextAppearance.Small"
                             android:textColor="@color/colorCardViewText" />
                     </TableRow>
 
-                    <TableRow android:layout_marginBottom="5dp">
+                    <TableRow android:layout_marginBottom="@dimen/ahmer_table_row_margin">
 
                         <ImageView
                             android:id="@+id/ivBlogspot"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginLeft="5dp"
+                            android:layout_width="@dimen/ahmer_social_image_view"
+                            android:layout_height="@dimen/ahmer_social_image_view"
+                            android:layout_marginStart="@dimen/margin_or_padding_05dp"
+                            android:layout_marginLeft="@dimen/margin_or_padding_05dp"
                             android:contentDescription="@string/empty_description"
                             app:srcCompat="@drawable/ic_ahmer_blogspot" />
 
@@ -359,8 +356,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start|center"
-                            android:paddingStart="5dp"
-                            android:paddingEnd="5dp"
+                            android:paddingStart="@dimen/margin_or_padding_05dp"
+                            android:paddingEnd="@dimen/margin_or_padding_05dp"
                             android:text="@string/ahmer_blogspot_url"
                             android:textAppearance="@android:style/TextAppearance.Small"
                             android:textColor="@color/colorCardViewText" />

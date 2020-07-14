@@ -15,11 +15,11 @@
 
             <ImageView
                 android:id="@+id/ivBack"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="@dimen/toolbar_image_view"
+                android:layout_height="@dimen/toolbar_image_view"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/empty_description"
-                android:padding="4dp"
+                android:padding="@dimen/toolbar_image_view_padding"
                 app:srcCompat="@drawable/ic_toolbar_arrow_back" />
 
             <TextView
@@ -27,8 +27,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="@dimen/toolbar_title_margin"
+                android:layout_marginRight="@dimen/toolbar_title_margin"
                 android:layout_toEndOf="@id/ivBack"
                 android:ellipsize="end"
                 android:maxLines="1"

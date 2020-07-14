@@ -30,22 +30,22 @@
                 android:layout_height="match_parent"
                 android:gravity="end|center"
                 android:paddingStart="0dp"
-                android:paddingEnd="5dp">
+                android:paddingEnd="@dimen/margin_or_padding_05dp">
 
                 <ImageView
                     android:id="@+id/ivSettings"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
+                    android:layout_width="@dimen/toolbar_image_view"
+                    android:layout_height="@dimen/toolbar_image_view"
                     android:contentDescription="@string/empty_description"
+                    android:padding="@dimen/toolbar_image_view_padding"
                     app:srcCompat="@drawable/ic_activity_settings" />
 
                 <ImageView
                     android:id="@+id/ivInfo"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/toolbar_image_view"
+                    android:layout_height="@dimen/toolbar_image_view"
                     android:contentDescription="@string/empty_description"
+                    android:padding="@dimen/toolbar_image_view_padding"
                     app:srcCompat="@drawable/ic_activity_info" />
             </LinearLayout>
         </LinearLayout>

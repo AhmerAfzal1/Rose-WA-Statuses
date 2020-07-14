@@ -8,15 +8,15 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@android:id/icon"
-        android:layout_width="@dimen/layout_pref_image_size"
-        android:layout_height="@dimen/layout_pref_image_size"
+        android:layout_width="@dimen/pref_image_view"
+        android:layout_height="@dimen/pref_image_view"
         android:layout_gravity="center"
-        android:layout_marginStart="@dimen/layout_pref_margin"
-        android:layout_marginLeft="@dimen/layout_pref_margin"
-        android:layout_marginTop="@dimen/layout_pref_margin"
-        android:layout_marginEnd="@dimen/layout_pref_margin"
-        android:layout_marginRight="@dimen/layout_pref_margin"
-        android:layout_marginBottom="@dimen/layout_pref_margin" />
+        android:layout_marginStart="@dimen/pref_margin"
+        android:layout_marginLeft="@dimen/pref_margin"
+        android:layout_marginTop="@dimen/pref_margin"
+        android:layout_marginEnd="@dimen/pref_margin"
+        android:layout_marginRight="@dimen/pref_margin"
+        android:layout_marginBottom="@dimen/pref_margin" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -24,10 +24,10 @@
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingStart="@dimen/layout_pref_margin"
-        android:paddingLeft="@dimen/layout_pref_margin"
-        android:paddingEnd="@dimen/layout_pref_margin"
-        android:paddingRight="@dimen/layout_pref_margin">
+        android:paddingStart="@dimen/pref_margin"
+        android:paddingLeft="@dimen/pref_margin"
+        android:paddingEnd="@dimen/pref_margin"
+        android:paddingRight="@dimen/pref_margin">
 
         <TextView
             android:id="@android:id/title"
@@ -42,7 +42,7 @@
             android:id="@android:id/summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/layout_pref_summary_top_margin"
+            android:layout_marginTop="@dimen/pref_summary_top_margin"
             android:maxLines="4"
             android:textAppearance="@android:style/TextAppearance.Material.Small"
             android:textColor="?android:textColorSecondary" />
@@ -56,9 +56,9 @@
         android:background="@null"
         android:clickable="false"
         android:focusable="false"
-        android:paddingStart="@dimen/layout_pref_margin"
-        android:paddingLeft="@dimen/layout_pref_margin"
-        android:paddingEnd="@dimen/layout_pref_margin"
-        android:paddingRight="@dimen/layout_pref_margin" />
+        android:paddingStart="@dimen/pref_margin"
+        android:paddingLeft="@dimen/pref_margin"
+        android:paddingEnd="@dimen/pref_margin"
+        android:paddingRight="@dimen/pref_margin" />
 
 </LinearLayout>

@@ -14,6 +14,7 @@
     <color name="colorBgStatusItemEnd">#B2000000</color>
     <color name="colorBgStatusItemStart">#70000000</color>
     <color name="colorCardView">#1D1D1D</color>
+    <color name="colorCardViewStatusItemFrag">#F5F5F5</color>
     <color name="colorCardViewText">#FFFFFF</color>
     <color name="colorSemiBlack">#B2000000</color>
     <color name="colorSettingsIcons">#FFFFFF</color>

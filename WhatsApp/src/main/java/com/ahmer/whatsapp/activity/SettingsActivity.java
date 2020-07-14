@@ -73,8 +73,12 @@ public class SettingsActivity extends AppCompatActivity {
             SwitchPreferenceCompat buttonTheme = findPreference(getString(R.string.button_dark_mode));
             if (Objects.requireNonNull(buttonTheme).isChecked()) {
                 buttonTheme.setTitle(R.string.title_light_mode);
+                buttonTheme.setIcon(R.drawable.ic_settings_sun);
+                buttonTheme.setSummary(R.string.summary_light_mode);
             } else {
                 buttonTheme.setTitle(R.string.title_dark_mode);
+                buttonTheme.setIcon(R.drawable.ic_settings_moon);
+                buttonTheme.setSummary(R.string.summary_dark_mode);
             }
             buttonTheme.setOnPreferenceChangeListener((preference, newValue) -> {
                 boolean isChecked = (Boolean) newValue;

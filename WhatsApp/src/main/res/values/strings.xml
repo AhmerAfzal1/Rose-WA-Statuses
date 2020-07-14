@@ -25,6 +25,8 @@
     <string name="settings_category_general">General</string>
     <string name="settings_category_layout_view">App Layout View</string>
     <string name="settings_category_theme">Theme</string>
+    <string name="summary_dark_mode">Change to dark mode</string>
+    <string name="summary_light_mode">Change to light mode</string>
     <string name="title_cache">Clear Caches</string>
     <string name="title_change_view">Change Layout View</string>
     <string name="title_dark_mode">Dark Theme</string>
@@ -62,7 +64,7 @@
 
     <!-- Miscellaneous strings -->
     <string name="empty_description">Empty content description</string>
-    <string name="no_having_status">There is currently no WhatsApp status for download</string>
+    <string name="no_having_status">There is currently no content for download</string>
     <string name="no_whatsapp_installed">WhatsApp not installed</string>
     <string name="period">●</string>
     <string name="save">Save</string>

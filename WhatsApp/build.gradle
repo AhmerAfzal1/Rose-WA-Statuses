@@ -3,8 +3,8 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 30
+    buildToolsVersion '30.0.1'
     buildFeatures {
         dataBinding true
     }
@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId "com.ahmer.whatsapp"
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion 30
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
     }
@@ -20,6 +20,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

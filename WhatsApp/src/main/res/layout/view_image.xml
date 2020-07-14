@@ -28,12 +28,12 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="@dimen/view_layout_margin"
+        android:layout_marginRight="@dimen/view_layout_margin"
+        android:layout_marginBottom="@dimen/view_layout_margin"
         android:clipToPadding="false"
         android:gravity="center_vertical"
-        android:padding="12dp"
+        android:padding="@dimen/view_layout_padding"
         android:visibility="gone">
 
         <TextView
@@ -48,8 +48,8 @@
             android:id="@+id/fabDownloadFile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="@dimen/view_floating_action_margin"
+            android:layout_marginLeft="@dimen/view_floating_action_margin"
             app:fabSize="mini"
             app:srcCompat="@drawable/ic_view_file_download" />
     </LinearLayout>
@@ -62,12 +62,12 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="@dimen/view_layout_margin"
+        android:layout_marginRight="@dimen/view_layout_margin"
+        android:layout_marginBottom="@dimen/view_layout_margin"
         android:clipToPadding="false"
         android:gravity="center_vertical"
-        android:padding="12dp"
+        android:padding="@dimen/view_layout_padding"
         android:visibility="gone">
 
         <TextView
@@ -82,8 +82,8 @@
             android:id="@+id/fabShareWhatsApp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="@dimen/view_floating_action_margin"
+            android:layout_marginLeft="@dimen/view_floating_action_margin"
             app:fabSize="mini"
             app:srcCompat="@drawable/ic_view_share_to_whatsapp" />
     </LinearLayout>
@@ -96,12 +96,12 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="@dimen/view_layout_margin"
+        android:layout_marginRight="@dimen/view_layout_margin"
+        android:layout_marginBottom="@dimen/view_layout_margin"
         android:clipToPadding="false"
         android:gravity="center_vertical"
-        android:padding="12dp"
+        android:padding="@dimen/view_layout_padding"
         android:visibility="gone">
 
         <TextView
@@ -116,8 +116,8 @@
             android:id="@+id/fabShare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="@dimen/view_floating_action_margin"
+            android:layout_marginLeft="@dimen/view_floating_action_margin"
             android:tint="@color/colorWhite"
             app:fabSize="mini"
             app:srcCompat="@drawable/ic_status_item_share" />
@@ -135,7 +135,7 @@
         android:layout_marginBottom="@dimen/fab_margin"
         android:clipToPadding="false"
         android:gravity="center_vertical"
-        android:padding="12dp"
+        android:padding="@dimen/view_layout_padding"
         android:visibility="visible">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

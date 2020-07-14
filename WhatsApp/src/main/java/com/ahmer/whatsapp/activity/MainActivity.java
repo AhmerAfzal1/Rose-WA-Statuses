@@ -433,7 +433,7 @@ public class MainActivity extends AppCompatActivity {
                 btnDownload = v.findViewById(R.id.ivDownload);
                 btnPlay = v.findViewById(R.id.buttonPlay);
                 btnShare = v.findViewById(R.id.ivShare);
-                btnShareWhatsApp = v.findViewById(R.id.ivWhatsapp);
+                btnShareWhatsApp = v.findViewById(R.id.ivWhatsApp);
                 ivThumbnails = v.findViewById(R.id.ivImage);
                 progressBar = v.findViewById(R.id.progressBar);
                 relativeLayout = v.findViewById(R.id.layoutStatus);

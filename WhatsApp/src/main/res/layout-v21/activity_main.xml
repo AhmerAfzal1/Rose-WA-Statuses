@@ -20,11 +20,11 @@
 
             <ImageView
                 android:id="@+id/ivBack"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="@dimen/toolbar_image_view"
+                android:layout_height="@dimen/toolbar_image_view"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/empty_description"
-                android:padding="4dp"
+                android:padding="@dimen/toolbar_image_view_padding"
                 app:srcCompat="@drawable/ic_toolbar_arrow_back" />
 
             <TextView
@@ -32,8 +32,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="@dimen/toolbar_title_margin"
+                android:layout_marginRight="@dimen/toolbar_title_margin"
+                android:layout_toStartOf="@+id/layoutIcons"
                 android:layout_toEndOf="@id/ivBack"
                 android:ellipsize="end"
                 android:maxLines="1"
@@ -42,28 +43,29 @@
                 android:textStyle="bold" />
 
             <LinearLayout
+                android:id="@+id/layoutIcons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:orientation="horizontal"
                 android:paddingStart="0dp"
-                android:paddingEnd="5dp">
+                android:paddingEnd="@dimen/margin_or_padding_05dp">
 
                 <ImageView
                     android:id="@+id/ivSettings"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
+                    android:layout_width="@dimen/toolbar_image_view"
+                    android:layout_height="@dimen/toolbar_image_view"
                     android:contentDescription="@string/empty_description"
+                    android:padding="@dimen/toolbar_image_view_padding"
                     app:srcCompat="@drawable/ic_activity_settings" />
 
                 <ImageView
                     android:id="@+id/ivInfo"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/toolbar_image_view"
+                    android:layout_height="@dimen/toolbar_image_view"
                     android:contentDescription="@string/empty_description"
+                    android:padding="@dimen/toolbar_image_view_padding"
                     app:srcCompat="@drawable/ic_activity_info" />
             </LinearLayout>
         </RelativeLayout>
@@ -83,10 +85,10 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="top|center"
-            android:padding="10dp"
+            android:padding="@dimen/margin_or_padding_10dp"
             android:text="@string/no_having_status"
-            android:textColor="@color/secondaryTextColor"
-            android:textSize="12sp" />
+            android:textAppearance="@android:style/TextAppearance.Material.Small"
+            android:textColor="@color/secondaryTextColor" />
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -95,12 +97,12 @@
         android:layout_height="match_parent"
         android:layout_above="@id/adViewLayout"
         android:layout_below="@id/layoutNoStatus"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginStart="@dimen/margin_or_padding_10dp"
+        android:layout_marginLeft="@dimen/margin_or_padding_10dp"
+        android:layout_marginTop="@dimen/margin_or_padding_05dp"
+        android:layout_marginEnd="@dimen/margin_or_padding_10dp"
+        android:layout_marginRight="@dimen/margin_or_padding_10dp"
+        android:layout_marginBottom="@dimen/margin_or_padding_05dp"
         android:gravity="top"
         android:scrollbars="vertical" />
 
@@ -110,8 +112,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginTop="@dimen/margin_or_padding_05dp"
+        android:layout_marginBottom="@dimen/margin_or_padding_05dp"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">

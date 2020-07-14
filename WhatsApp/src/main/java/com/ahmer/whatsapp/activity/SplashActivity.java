@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +15,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.ahmer.afzal.utils.SharedPreferencesUtil;
 import com.ahmer.afzal.utils.constants.PermissionConstants;
-import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.FileUtils;
 import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.afzal.utils.utilcode.PermissionUtils;
@@ -34,7 +32,6 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_UPPER_CASE;
@@ -143,9 +140,6 @@ public class SplashActivity extends AppCompatActivity {
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
-        TextView app_version = findViewById(R.id.app_version);
-        app_version.setText(String.format(Locale.getDefault(), "App version: %s (%d)",
-                AppUtils.getAppVersionName(), AppUtils.getAppVersionCode()));
         SharedPreferencesUtil themePref = new SharedPreferencesUtil(getApplicationContext(), Constant.PREFERENCE_THEME);
         boolean isChecked = themePref.loadBooleanSharedPreference(Constant.PREFERENCE_THEME_KEY);
         if (isChecked) {
