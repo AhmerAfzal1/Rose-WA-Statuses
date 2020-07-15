@@ -117,7 +117,7 @@
                 android:background="@drawable/bg_status_item_circle"
                 android:contentDescription="@string/empty_description"
                 android:padding="@dimen/status_item_circle_padding"
-                app:srcCompat="@drawable/ic_view_share_to_whatsapp" />
+                app:srcCompat="@drawable/ic_status_item_whatsapp" />
 
             <ImageView
                 android:id="@+id/ivShare"

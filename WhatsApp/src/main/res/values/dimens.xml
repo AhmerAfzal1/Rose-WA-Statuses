@@ -45,7 +45,7 @@
 
     <!-- For Status Item Fragment layout -->
     <dimen name="status_item_layout_fragment">130dp</dimen>
-    <dimen name="status_item_image_view_margin">2dp</dimen>
+    <dimen name="status_item_image_view_margin">3dp</dimen>
 
     <!-- For View Image/Video layout -->
     <dimen name="view_floating_action_margin">10dp</dimen>

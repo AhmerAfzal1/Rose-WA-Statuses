@@ -4,8 +4,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +21,7 @@ import com.ahmer.afzal.utils.utilcode.Utils;
 import com.ahmer.whatsapp.Constant;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.Utilities;
+import com.ahmer.whatsapp.databinding.ActivitySettingsBinding;
 
 import java.io.File;
 import java.util.Locale;
@@ -33,19 +32,18 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        ActivitySettingsBinding binding = ActivitySettingsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         getSupportFragmentManager().beginTransaction().replace(R.id.settings, new SettingsFragment()).commit();
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        ImageView back = findViewById(R.id.ivBack);
-        back.setOnClickListener(v -> {
+        binding.ivBack.setOnClickListener(v -> {
             finish();
             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
         });
-        TextView title = findViewById(R.id.tvTitle);
-        title.setText(R.string.title_settings);
+        binding.tvTitle.setText(R.string.title_settings);
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {

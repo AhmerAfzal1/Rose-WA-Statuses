@@ -28,6 +28,7 @@ import com.ahmer.whatsapp.Constant;
 import com.ahmer.whatsapp.EmailIntent;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.Thumbnails;
+import com.ahmer.whatsapp.databinding.ActivityAhmerBinding;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
@@ -70,7 +71,8 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ahmer);
+        ActivityAhmerBinding binding = ActivityAhmerBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
@@ -79,41 +81,41 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, getClass().getSimpleName());
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Ahmer Activity Opened");
         firebaseAnalytics.logEvent("Ahmer_Activity_Open", bundle);
-        ImageView backIV = findViewById(R.id.ivBack);
+        ImageView backIV = binding.ivBack;
         backIV.setOnClickListener(this);
-        TextView aboutDeveloper = findViewById(R.id.tvTitle);
+        TextView aboutDeveloper = binding.tvTitle;
         aboutDeveloper.setText(getString(R.string.about_dev));
-        emailYahoo = findViewById(R.id.idAhmerYahoo);
+        emailYahoo = binding.idAhmerYahoo;
         emailYahoo.setOnClickListener(this);
         emailYahoo.setOnLongClickListener(this);
-        emailGmail = findViewById(R.id.idAhmerGmail);
+        emailGmail = binding.idAhmerGmail;
         emailGmail.setOnClickListener(this);
         emailGmail.setOnLongClickListener(this);
-        qq = findViewById(R.id.idAhmerQQ);
+        qq = binding.idAhmerQQ;
         qq.setOnLongClickListener(this);
-        ImageView ivFacebook = findViewById(R.id.ivFacebook);
+        ImageView ivFacebook = binding.ivFacebook;
         ivFacebook.setOnClickListener(this);
-        tvFacebook = findViewById(R.id.tvFacebook);
+        tvFacebook = binding.tvFacebook;
         tvFacebook.setOnClickListener(this);
         tvFacebook.setOnLongClickListener(this);
-        ImageView ivTwitter = findViewById(R.id.ivTwitter);
+        ImageView ivTwitter = binding.ivTwitter;
         ivTwitter.setOnClickListener(this);
-        tvTwitter = findViewById(R.id.tvTwitter);
+        tvTwitter = binding.tvTwitter;
         tvTwitter.setOnClickListener(this);
         tvTwitter.setOnLongClickListener(this);
-        ImageView ivGithub = findViewById(R.id.ivGithub);
+        ImageView ivGithub = binding.ivGithub;
         ivGithub.setOnClickListener(this);
-        tvGithub = findViewById(R.id.tvGithub);
+        tvGithub = binding.tvGithub;
         tvGithub.setOnClickListener(this);
         tvGithub.setOnLongClickListener(this);
-        ImageView ivBlogSpot = findViewById(R.id.ivBlogspot);
+        ImageView ivBlogSpot = binding.ivBlogspot;
         ivBlogSpot.setOnClickListener(this);
-        tvBlogSpot = findViewById(R.id.tvBlogspot);
+        tvBlogSpot = binding.tvBlogspot;
         tvBlogSpot.setOnClickListener(this);
         tvBlogSpot.setOnLongClickListener(this);
         File preExistedPic = new File(dirAhmer() + "/" + Constant.FILE_NAME_AHMER + ".png");
-        ContentLoadingProgressBar progressBar = findViewById(R.id.progressCircleImageView);
-        ImageView loadPic = findViewById(R.id.imageViewAhmer);
+        ContentLoadingProgressBar progressBar = binding.progressCircleImageView;
+        ImageView loadPic = binding.imageViewAhmer;
         if (!preExistedPic.exists()) {
             if (NetworkUtils.isConnected()) {
                 try {

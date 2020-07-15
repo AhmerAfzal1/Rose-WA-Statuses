@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -21,7 +20,7 @@ import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.Utilities;
 import com.ahmer.whatsapp.activity.FragmentVideos;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.ahmer.whatsapp.databinding.ViewVideoBinding;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
@@ -33,41 +32,30 @@ import static com.ahmer.whatsapp.Constant.TAG;
 public class StatusViewVideo extends AppCompatActivity {
 
     private boolean isFabOpened = false;
-    private FloatingActionButton fabMain = null;
-    private LinearLayout fileDownloadLayout = null;
-    private LinearLayout shareLayout = null;
-    private LinearLayout shareWhatsAppLayout = null;
+    private ViewVideoBinding binding;
     private MediaController mediaController = null;
     private VideoView view = null;
-    private View bgLayout = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_video);
+        binding = ViewVideoBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
-        bgLayout = findViewById(R.id.fabBgLayout);
-        fileDownloadLayout = findViewById(R.id.fabLayoutDownloadFile);
-        shareWhatsAppLayout = findViewById(R.id.fabLayoutShareWhatsApp);
-        shareLayout = findViewById(R.id.fabLayoutShare);
-        fabMain = findViewById(R.id.fabMain);
-        FloatingActionButton fileDownload = findViewById(R.id.fabDownloadFile);
-        FloatingActionButton shareWhatsApp = findViewById(R.id.fabShareWhatsApp);
-        FloatingActionButton share = findViewById(R.id.fabShare);
-        view = findViewById(R.id.videoView);
+        view = binding.videoView;
         String format = getIntent().getStringExtra("format");
         String path = getIntent().getStringExtra("path");
         String fileFrom = getIntent().getStringExtra("from");
         int position = getIntent().getIntExtra("pos", 0);
         if (Objects.requireNonNull(fileFrom).equals("MainActivity")) {
-            fabMain.setVisibility(View.GONE);
-            bgLayout.setVisibility(View.GONE);
+            binding.fabMain.setVisibility(View.GONE);
+            binding.fabBgLayout.setVisibility(View.GONE);
         } else if (Objects.requireNonNull(fileFrom).equals("Fragment")) {
-            bgLayout.setVisibility(View.GONE);
-            fabMain.setVisibility(View.VISIBLE);
-            fabMain.setOnClickListener(v -> {
+            binding.fabBgLayout.setVisibility(View.GONE);
+            binding.fabMain.setVisibility(View.VISIBLE);
+            binding.fabMain.setOnClickListener(v -> {
                 if (!isFabOpened) {
                     showFAB();
                 } else {
@@ -111,7 +99,7 @@ public class StatusViewVideo extends AppCompatActivity {
             mediaController.show();
             return v.onTouchEvent(event);
         });
-        fileDownload.setOnClickListener(v -> {
+        binding.fabDownloadFile.setOnClickListener(v -> {
             try {
                 File destPathMP4 = new File(PathUtils.getExternalStoragePath() + Utilities.saveToWithFileName(path) + EXT_MP4_LOWER_CASE);
                 FileUtils.move(new File(Objects.requireNonNull(path)), destPathMP4);
@@ -128,34 +116,34 @@ public class StatusViewVideo extends AppCompatActivity {
                 FirebaseCrashlytics.getInstance().recordException(e);
             }
         });
-        share.setOnClickListener(v -> Utilities.shareFile(v.getContext(), FragmentVideos.statusItemFile, position));
-        shareWhatsApp.setOnClickListener(v -> Utilities.shareToWhatsApp(v.getContext(), FragmentVideos.statusItemFile, position));
+        binding.fabShare.setOnClickListener(v -> Utilities.shareFile(v.getContext(), FragmentVideos.statusItemFile, position));
+        binding.fabShareWhatsApp.setOnClickListener(v -> Utilities.shareToWhatsApp(v.getContext(), FragmentVideos.statusItemFile, position));
     }
 
     private void showFAB() {
         view.pause();
         isFabOpened = true;
-        fileDownloadLayout.setVisibility(View.VISIBLE);
-        shareWhatsAppLayout.setVisibility(View.VISIBLE);
-        shareLayout.setVisibility(View.VISIBLE);
-        bgLayout.setVisibility(View.VISIBLE);
+        binding.fabLayoutDownloadFile.setVisibility(View.VISIBLE);
+        binding.fabLayoutShareWhatsApp.setVisibility(View.VISIBLE);
+        binding.fabLayoutShare.setVisibility(View.VISIBLE);
+        binding.fabBgLayout.setVisibility(View.VISIBLE);
 
-        fabMain.animate().rotationBy(180);
+        binding.fabMain.animate().rotationBy(180);
 
-        fileDownloadLayout.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
-        shareWhatsAppLayout.animate().translationY(-getResources().getDimension(R.dimen.standard_100));
-        shareLayout.animate().translationY(-getResources().getDimension(R.dimen.standard_145));
+        binding.fabLayoutDownloadFile.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        binding.fabLayoutShareWhatsApp.animate().translationY(-getResources().getDimension(R.dimen.standard_100));
+        binding.fabLayoutShare.animate().translationY(-getResources().getDimension(R.dimen.standard_145));
     }
 
     private void closeFAB() {
         view.start();
         isFabOpened = false;
-        bgLayout.setVisibility(View.GONE);
-        fabMain.animate().rotation(0);
-        fileDownloadLayout.animate().translationY(0);
-        shareWhatsAppLayout.animate().translationY(0);
-        shareLayout.animate().translationY(0);
-        shareLayout.animate().translationY(0).setListener(new Animator.AnimatorListener() {
+        binding.fabBgLayout.setVisibility(View.GONE);
+        binding.fabMain.animate().rotation(0);
+        binding.fabLayoutDownloadFile.animate().translationY(0);
+        binding.fabLayoutShareWhatsApp.animate().translationY(0);
+        binding.fabLayoutShare.animate().translationY(0);
+        binding.fabLayoutShare.animate().translationY(0).setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
 
@@ -164,9 +152,9 @@ public class StatusViewVideo extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animator animator) {
                 if (!isFabOpened) {
-                    fileDownloadLayout.setVisibility(View.GONE);
-                    shareWhatsAppLayout.setVisibility(View.GONE);
-                    shareLayout.setVisibility(View.GONE);
+                    binding.fabLayoutDownloadFile.setVisibility(View.GONE);
+                    binding.fabLayoutShareWhatsApp.setVisibility(View.GONE);
+                    binding.fabLayoutShare.setVisibility(View.GONE);
                 }
             }
 

@@ -7,9 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +19,8 @@ import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.whatsapp.Constant;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
+import com.ahmer.whatsapp.databinding.FragmentVideosBinding;
+import com.ahmer.whatsapp.databinding.StatusItemFragBinding;
 import com.ahmer.whatsapp.view.StatusViewVideo;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -45,9 +44,7 @@ public class FragmentVideos extends Fragment {
     private AdView adView = null;
     private FirebaseAnalytics firebaseAnalytics = null;
     private FirebaseCrashlytics firebaseCrashlytics = null;
-    private LinearLayout adViewLayout = null;
-    private RelativeLayout noStatusLayout = null;
-    private TextView noStatus = null;
+    private FragmentVideosBinding binding;
 
     public FragmentVideos() {
         // Required empty public constructor
@@ -70,18 +67,17 @@ public class FragmentVideos extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_videos, container, false);
+        View view = inflater.inflate(R.layout.fragment_videos, container, false);
+        binding = FragmentVideosBinding.bind(view);
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         statusItemFile = new ArrayList<>(SplashActivity.videoStatuses);
-        recyclerViewVideos = view.findViewById(R.id.rvVideos);
-        noStatus = view.findViewById(R.id.tvNoStatus);
-        noStatusLayout = view.findViewById(R.id.layoutNoStatus);
-        adView = view.findViewById(R.id.adView);
-        adViewLayout = view.findViewById(R.id.adViewLayout);
+        recyclerViewVideos = binding.rvVideos;
+        adView = binding.adView;
         firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext());
         firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
@@ -101,14 +97,14 @@ public class FragmentVideos extends Fragment {
                 super.onChanged();
                 if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_BUSINESS_WHATSAPP)
                         || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp) || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
-                    noStatusLayout.setVisibility(View.VISIBLE);
-                    noStatus.setText(R.string.no_whatsapp_installed);
+                    binding.layoutNoStatus.setVisibility(View.VISIBLE);
+                    binding.tvNoStatus.setText(R.string.no_whatsapp_installed);
                 } else {
                     if (adapter.getItemCount() == 0) {
-                        noStatusLayout.setVisibility(View.VISIBLE);
-                        noStatus.setText(R.string.no_having_status);
+                        binding.layoutNoStatus.setVisibility(View.VISIBLE);
+                        binding.tvNoStatus.setText(R.string.no_having_status);
                     } else {
-                        noStatusLayout.setVisibility(View.GONE);
+                        binding.layoutNoStatus.setVisibility(View.GONE);
                     }
                 }
             }
@@ -149,13 +145,13 @@ public class FragmentVideos extends Fragment {
         adView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                adViewLayout.setVisibility(View.VISIBLE);
+                binding.adViewLayout.setVisibility(View.VISIBLE);
                 Log.v(Constant.TAG, getResources().getString(R.string.adLoaded));
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                adViewLayout.setVisibility(View.GONE);
+                binding.adViewLayout.setVisibility(View.GONE);
                 switch (errorCode) {
                     case ERROR_CODE_INTERNAL_ERROR: {
                         Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INTERNAL_ERROR));
@@ -241,8 +237,9 @@ public class FragmentVideos extends Fragment {
         @NonNull
         @Override
         public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.status_item_frag, parent, false);
-            return new FragmentVideos.VideoViewHolder(view);
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            StatusItemFragBinding binding = StatusItemFragBinding.inflate(inflater, parent, false);
+            return new FragmentVideos.VideoViewHolder(binding);
         }
 
         @Override
@@ -278,9 +275,9 @@ public class FragmentVideos extends Fragment {
 
         final ImageView imageView;
 
-        public VideoViewHolder(@NonNull View itemView) {
-            super(itemView);
-            imageView = itemView.findViewById(R.id.ivImagesView);
+        public VideoViewHolder(@NonNull StatusItemFragBinding fragBinding) {
+            super(fragBinding.getRoot());
+            imageView = fragBinding.ivImagesView;
         }
     }
 }

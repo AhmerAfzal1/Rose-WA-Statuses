@@ -11,16 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ahmer.afzal.utils.SharedPreferencesUtil;
 import com.ahmer.afzal.utils.constants.AppPackageConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.FileUtils;
@@ -32,6 +33,8 @@ import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
 import com.ahmer.whatsapp.Utilities;
+import com.ahmer.whatsapp.databinding.ActivityMainBinding;
+import com.ahmer.whatsapp.databinding.StatusItemActivityBinding;
 import com.ahmer.whatsapp.view.StatusViewImage;
 import com.ahmer.whatsapp.view.StatusViewVideo;
 import com.google.android.gms.ads.AdListener;
@@ -63,25 +66,21 @@ public class MainActivity extends AppCompatActivity {
     private AdView adView = null;
     private FirebaseAnalytics firebaseAnalytics = null;
     private FirebaseCrashlytics firebaseCrashlytics = null;
-    private LinearLayout adViewLayout = null;
     private RecyclerView recyclerView = null;
-    private RelativeLayout noStatusLayout = null;
     private StatusVideoAdapter adapter = null;
-    private TextView noStatus = null;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ImageView toolbar = findViewById(R.id.ivBack);
-        toolbar.setOnClickListener(v -> {
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        binding.toolbar.setOnClickListener(v -> {
             finish();
             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
         });
-        TextView title = findViewById(R.id.tvTitle);
-        title.setText(R.string.app_name);
-        ImageView aboutAhmer = findViewById(R.id.ivInfo);
-        aboutAhmer.setOnClickListener(v -> {
+        binding.tvTitle.setText(R.string.app_name);
+        binding.ivInfo.setOnClickListener(v -> {
             Intent intentAbout = new Intent(MainActivity.this, AhmerActivity.class);
             intentAbout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -89,8 +88,7 @@ public class MainActivity extends AppCompatActivity {
             }
             startActivity(intentAbout);
         });
-        ImageView settings = findViewById(R.id.ivSettings);
-        settings.setOnClickListener(v -> {
+        binding.ivSettings.setOnClickListener(v -> {
             Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
             intentSettings.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -98,11 +96,8 @@ public class MainActivity extends AppCompatActivity {
             }
             startActivity(intentSettings);
         });
-        adView = findViewById(R.id.adView);
-        adViewLayout = findViewById(R.id.adViewLayout);
-        noStatus = findViewById(R.id.tvNoStatus);
-        noStatusLayout = findViewById(R.id.layoutNoStatus);
-        recyclerView = findViewById(R.id.rvStatusList);
+        adView = binding.adView;
+        recyclerView = binding.rvStatusList;
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
@@ -119,13 +114,13 @@ public class MainActivity extends AppCompatActivity {
         adView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                adViewLayout.setVisibility(View.VISIBLE);
+                binding.adViewLayout.setVisibility(View.VISIBLE);
                 Log.v(Constant.TAG, getResources().getString(R.string.adLoaded));
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                adViewLayout.setVisibility(View.GONE);
+                binding.adViewLayout.setVisibility(View.GONE);
                 switch (errorCode) {
                     case ERROR_CODE_INTERNAL_ERROR: {
                         Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INTERNAL_ERROR));
@@ -191,14 +186,14 @@ public class MainActivity extends AppCompatActivity {
                 super.onChanged();
                 if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_BUSINESS_WHATSAPP)
                         || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp) || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
-                    noStatusLayout.setVisibility(View.VISIBLE);
-                    noStatus.setText(R.string.no_whatsapp_installed);
+                    binding.layoutNoStatus.setVisibility(View.VISIBLE);
+                    binding.tvNoStatus.setText(R.string.no_whatsapp_installed);
                 } else {
                     if (adapter.getItemCount() == 0) {
-                        noStatusLayout.setVisibility(View.VISIBLE);
-                        noStatus.setText(R.string.no_having_status);
+                        binding.layoutNoStatus.setVisibility(View.VISIBLE);
+                        binding.tvNoStatus.setText(R.string.no_having_status);
                     } else {
-                        noStatusLayout.setVisibility(View.GONE);
+                        binding.layoutNoStatus.setVisibility(View.GONE);
                     }
                 }
             }
@@ -402,8 +397,9 @@ public class MainActivity extends AppCompatActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.status_item_activity, parent, false);
-            return new ViewHolder(view);
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            StatusItemActivityBinding binding = StatusItemActivityBinding.inflate(inflater, parent, false);
+            return new ViewHolder(binding);
         }
 
         @Override
@@ -428,17 +424,17 @@ public class MainActivity extends AppCompatActivity {
             final TextView showSize;
             final TextView showType;
 
-            private ViewHolder(View v) {
-                super(v);
-                btnDownload = v.findViewById(R.id.ivDownload);
-                btnPlay = v.findViewById(R.id.buttonPlay);
-                btnShare = v.findViewById(R.id.ivShare);
-                btnShareWhatsApp = v.findViewById(R.id.ivWhatsApp);
-                ivThumbnails = v.findViewById(R.id.ivImage);
-                progressBar = v.findViewById(R.id.progressBar);
-                relativeLayout = v.findViewById(R.id.layoutStatus);
-                showSize = v.findViewById(R.id.tvSize);
-                showType = v.findViewById(R.id.tvType);
+            private ViewHolder(StatusItemActivityBinding binding) {
+                super(binding.getRoot());
+                btnDownload = binding.ivDownload;
+                btnPlay = binding.buttonPlay;
+                btnShare = binding.ivShare;
+                btnShareWhatsApp = binding.ivWhatsApp;
+                ivThumbnails = binding.ivImage;
+                progressBar = binding.progressBar;
+                relativeLayout = binding.layoutStatus;
+                showSize = binding.tvSize;
+                showType = binding.tvType;
             }
         }
     }

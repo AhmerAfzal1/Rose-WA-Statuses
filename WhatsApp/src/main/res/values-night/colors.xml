@@ -11,8 +11,8 @@
     <color name="colorAccent">#C38FFF</color>
 
     <color name="colorBgBorderStatusItem">#C38FFF</color>
-    <color name="colorBgStatusItemEnd">#B2000000</color>
-    <color name="colorBgStatusItemStart">#70000000</color>
+    <color name="colorBgStatusItemEnd">#212121</color>
+    <color name="colorBgStatusItemStart">#424242</color>
     <color name="colorCardView">#1D1D1D</color>
     <color name="colorCardViewStatusItemFrag">#F5F5F5</color>
     <color name="colorCardViewText">#FFFFFF</color>
