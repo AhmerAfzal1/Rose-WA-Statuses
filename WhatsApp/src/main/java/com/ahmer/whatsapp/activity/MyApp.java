@@ -14,6 +14,7 @@ public class MyApp extends MultiDexApplication implements LifecycleObserver {
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
     }
 
+    @SuppressWarnings("EmptyMethod")
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onAppForegrounded() {
         // Keep empty

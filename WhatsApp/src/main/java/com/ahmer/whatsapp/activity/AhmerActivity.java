@@ -4,18 +4,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.widget.ContentLoadingProgressBar;
 
 import com.ahmer.afzal.utils.Utilities;
 import com.ahmer.afzal.utils.constants.AppPackageConstants;
@@ -23,7 +19,6 @@ import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.NetworkUtils;
 import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
-import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.ahmer.whatsapp.Constant;
 import com.ahmer.whatsapp.EmailIntent;
 import com.ahmer.whatsapp.R;
@@ -34,9 +29,13 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.Objects;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.observers.DisposableObserver;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -46,13 +45,7 @@ import static com.ahmer.whatsapp.Constant.TAG;
 public class AhmerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
     private FirebaseAnalytics firebaseAnalytics = null;
-    private TextView emailGmail = null;
-    private TextView emailYahoo = null;
-    private TextView qq = null;
-    private TextView tvBlogSpot = null;
-    private TextView tvFacebook = null;
-    private TextView tvGithub = null;
-    private TextView tvTwitter = null;
+    private ActivityAhmerBinding binding;
 
     public static File dirAhmer() {
         File dir = new File(PathUtils.getExternalAppDataPath(), Constant.FOLDER_AHMER);
@@ -71,7 +64,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityAhmerBinding binding = ActivityAhmerBinding.inflate(getLayoutInflater());
+        binding = ActivityAhmerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
@@ -81,60 +74,75 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, getClass().getSimpleName());
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Ahmer Activity Opened");
         firebaseAnalytics.logEvent("Ahmer_Activity_Open", bundle);
-        ImageView backIV = binding.ivBack;
-        backIV.setOnClickListener(this);
-        TextView aboutDeveloper = binding.tvTitle;
-        aboutDeveloper.setText(getString(R.string.about_dev));
-        emailYahoo = binding.idAhmerYahoo;
-        emailYahoo.setOnClickListener(this);
-        emailYahoo.setOnLongClickListener(this);
-        emailGmail = binding.idAhmerGmail;
-        emailGmail.setOnClickListener(this);
-        emailGmail.setOnLongClickListener(this);
-        qq = binding.idAhmerQQ;
-        qq.setOnLongClickListener(this);
-        ImageView ivFacebook = binding.ivFacebook;
-        ivFacebook.setOnClickListener(this);
-        tvFacebook = binding.tvFacebook;
-        tvFacebook.setOnClickListener(this);
-        tvFacebook.setOnLongClickListener(this);
-        ImageView ivTwitter = binding.ivTwitter;
-        ivTwitter.setOnClickListener(this);
-        tvTwitter = binding.tvTwitter;
-        tvTwitter.setOnClickListener(this);
-        tvTwitter.setOnLongClickListener(this);
-        ImageView ivGithub = binding.ivGithub;
-        ivGithub.setOnClickListener(this);
-        tvGithub = binding.tvGithub;
-        tvGithub.setOnClickListener(this);
-        tvGithub.setOnLongClickListener(this);
-        ImageView ivBlogSpot = binding.ivBlogspot;
-        ivBlogSpot.setOnClickListener(this);
-        tvBlogSpot = binding.tvBlogspot;
-        tvBlogSpot.setOnClickListener(this);
-        tvBlogSpot.setOnLongClickListener(this);
+        binding.idAhmerGmail.setOnClickListener(this);
+        binding.idAhmerGmail.setOnLongClickListener(this);
+        binding.idAhmerQQ.setOnLongClickListener(this);
+        binding.idAhmerYahoo.setOnClickListener(this);
+        binding.idAhmerYahoo.setOnLongClickListener(this);
+        binding.ivBack.setOnClickListener(this);
+        binding.ivBlogspot.setOnClickListener(this);
+        binding.ivFacebook.setOnClickListener(this);
+        binding.ivGithub.setOnClickListener(this);
+        binding.ivTwitter.setOnClickListener(this);
+        binding.tvBlogspot.setOnClickListener(this);
+        binding.tvBlogspot.setOnLongClickListener(this);
+        binding.tvFacebook.setOnClickListener(this);
+        binding.tvFacebook.setOnLongClickListener(this);
+        binding.tvGithub.setOnClickListener(this);
+        binding.tvGithub.setOnLongClickListener(this);
+        binding.tvTitle.setText(getString(R.string.about_dev));
+        binding.tvTwitter.setOnClickListener(this);
+        binding.tvTwitter.setOnLongClickListener(this);
         File preExistedPic = new File(dirAhmer() + "/" + Constant.FILE_NAME_AHMER + ".png");
-        ContentLoadingProgressBar progressBar = binding.progressCircleImageView;
-        ImageView loadPic = binding.imageViewAhmer;
         if (!preExistedPic.exists()) {
             if (NetworkUtils.isConnected()) {
-                try {
-                    DownloadImageTask download = new DownloadImageTask(loadPic, progressBar);
-                    download.execute(getString(R.string.ahmer_facebook_graph_link));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    ToastUtils.showLong(e.getMessage());
-                    ThrowableUtils.getFullStackTrace(e);
-                    FirebaseCrashlytics.getInstance().recordException(e);
-                }
+                final Bitmap[] bitmap = {null};
+                Observable.fromCallable(() -> {
+                    Request request = new Request.Builder()
+                            .url(getString(R.string.ahmer_facebook_graph_link))
+                            .build();
+                    OkHttpClient okHttpClient = new OkHttpClient();
+                    try {
+                        return okHttpClient.newCall(request).execute();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        ThrowableUtils.getFullStackTrace(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                    }
+                    return null;
+                })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new DisposableObserver<Response>() {
+                            @Override
+                            public void onNext(@NonNull Response response) {
+                                bitmap[0] = BitmapFactory.decodeStream(Objects.requireNonNull(response.body()).byteStream());
+                            }
+
+                            @Override
+                            public void onError(@NonNull Throwable e) {
+                                e.printStackTrace();
+                                ThrowableUtils.getFullStackTrace(e);
+                                FirebaseCrashlytics.getInstance().recordException(e);
+                                Log.v(TAG, getClass().getSimpleName() + " -> Exception: " + e.getMessage());
+                                binding.progressCircleImageView.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                Thumbnails.saveImage(dirAhmer(), bitmap[0], Constant.FILE_NAME_AHMER);
+                                binding.imageViewAhmer.setImageBitmap(bitmap[0]);
+                                binding.progressCircleImageView.setVisibility(View.GONE);
+                            }
+                        });
             } else {
                 Utilities.showNoInternetSnack(AhmerActivity.this);
-                new Handler().postDelayed(() -> progressBar.setVisibility(View.GONE), 5000);
+                new Handler().postDelayed(() -> binding.progressCircleImageView.setVisibility(View.GONE), 5000);
             }
         } else {
-            progressBar.setVisibility(View.GONE);
+            binding.progressCircleImageView.setVisibility(View.GONE);
             Bitmap imageThumbnail = BitmapFactory.decodeFile(preExistedPic.getAbsolutePath());
-            loadPic.setImageBitmap(imageThumbnail);
+            binding.imageViewAhmer.setImageBitmap(imageThumbnail);
         }
     }
 
@@ -248,30 +256,30 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.idAhmerQQ:
-                Utilities.clipBoardCopied(v.getContext(), qq);
+                Utilities.clipBoardCopied(v.getContext(), binding.idAhmerQQ);
                 break;
 
             case R.id.idAhmerGmail:
-                Utilities.clipBoardCopied(v.getContext(), emailGmail);
+                Utilities.clipBoardCopied(v.getContext(), binding.idAhmerGmail);
                 break;
 
             case R.id.idAhmerYahoo:
-                Utilities.clipBoardCopied(v.getContext(), emailYahoo);
+                Utilities.clipBoardCopied(v.getContext(), binding.idAhmerYahoo);
 
             case R.id.tvFacebook:
-                Utilities.clipBoardCopied(v.getContext(), tvFacebook);
+                Utilities.clipBoardCopied(v.getContext(), binding.tvFacebook);
                 break;
 
             case R.id.tvTwitter:
-                Utilities.clipBoardCopied(v.getContext(), tvTwitter);
+                Utilities.clipBoardCopied(v.getContext(), binding.tvTwitter);
                 break;
 
             case R.id.tvGithub:
-                Utilities.clipBoardCopied(v.getContext(), tvGithub);
+                Utilities.clipBoardCopied(v.getContext(), binding.tvGithub);
                 break;
 
             case R.id.tvBlogspot:
-                Utilities.clipBoardCopied(v.getContext(), tvBlogSpot);
+                Utilities.clipBoardCopied(v.getContext(), binding.tvBlogspot);
                 break;
 
             default:
@@ -284,61 +292,5 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
     protected void onResume() {
         super.onResume();
         firebaseAnalytics.setCurrentScreen(AhmerActivity.this, "CurrentScreen: " + getClass().getSimpleName(), null);
-    }
-
-    private static class DownloadImageTask extends AsyncTask<String, Integer, Bitmap> {
-
-        private final WeakReference<ContentLoadingProgressBar> progressBar;
-        private final WeakReference<ImageView> imageView;
-
-        public DownloadImageTask(ImageView imageView, ContentLoadingProgressBar progressBar) {
-            this.imageView = new WeakReference<>(imageView);
-            this.progressBar = new WeakReference<>(progressBar);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressBar.get().setVisibility(View.VISIBLE);
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            Response response = null;
-            Bitmap bitmap = null;
-            final OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(urls[0])
-                    .build();
-            try {
-                response = client.newCall(request).execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-                ThrowableUtils.getFullStackTrace(e);
-                FirebaseCrashlytics.getInstance().recordException(e);
-            }
-            if (Objects.requireNonNull(response).isSuccessful()) {
-                try {
-                    bitmap = BitmapFactory.decodeStream(Objects.requireNonNull(response.body()).byteStream());
-                } catch (Exception e) {
-                    Log.v(TAG, getClass().getSimpleName() + " -> Exception: " + e.getMessage());
-                    e.printStackTrace();
-                    ThrowableUtils.getFullStackTrace(e);
-                    FirebaseCrashlytics.getInstance().recordException(e);
-                }
-            }
-            return bitmap;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-            progressBar.get().setProgress(values[0]);
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            imageView.get().setImageBitmap(result);
-            Thumbnails.saveImage(dirAhmer(), result, Constant.FILE_NAME_AHMER);
-            progressBar.get().setVisibility(View.GONE);
-        }
     }
 }

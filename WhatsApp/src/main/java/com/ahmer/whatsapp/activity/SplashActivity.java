@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +18,6 @@ import com.ahmer.afzal.utils.utilcode.FileUtils;
 import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.afzal.utils.utilcode.PermissionUtils;
 import com.ahmer.afzal.utils.utilcode.ScreenUtils;
-import com.ahmer.afzal.utils.utilcode.ThreadUtils;
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.UtilsTransActivity;
 import com.ahmer.whatsapp.Constant;
@@ -29,9 +27,13 @@ import com.ahmer.whatsapp.databinding.ActivitySplashBinding;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.observers.DisposableObserver;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_UPPER_CASE;
@@ -55,9 +57,10 @@ public class SplashActivity extends AppCompatActivity {
 
     public static void getData() {
         /*
-        File moviesFolder = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
-        if (moviesFolder.exists()) {
-            getStatuses(moviesFolder.listFiles());
+        //File dirAhmer = new File(PathUtils.getExternalDownloadsPath());
+        File dirAhmer = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
+        if (dirAhmer.exists()) {
+            getStatuses(dirAhmer.listFiles());
         }
        */
         if (dirWhatsApp.exists()) {
@@ -162,7 +165,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onGranted(@NonNull List<String> permissionsGranted) {
                 Log.v(TAG, getClass().getSimpleName() + " -> Permission has been granted");
-                new RunProgram(SplashActivity.this).execute();
+                runMainProgram(SplashActivity.this);
             }
 
             @Override
@@ -196,56 +199,47 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    static class RunProgram extends AsyncTask<Void, Void, Void> {
-
-        private final WeakReference<SplashActivity> weakContext;
-
-        private RunProgram(final SplashActivity context) {
-            weakContext = new WeakReference<>(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+    private void runMainProgram(SplashActivity activity) {
+        Observable.fromCallable(() -> {
             Thumbnails.thumbnailDir();
-        }
+            return true;
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<Boolean>() {
+                    @Override
+                    public void onNext(@io.reactivex.rxjava3.annotations.NonNull Boolean aBoolean) {
+                        getData();
+                    }
 
-        @Override
-        protected Void doInBackground(Void... voids) {
-            ThreadUtils.runOnUiThread(() -> {
-                try {
-                    getData();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    ThrowableUtils.getFullStackTrace(e);
-                    Log.v(TAG, getClass().getSimpleName() + " -> Exception: Error during loading data: " + e.getMessage());
-                    ThrowableUtils.getFullStackTrace(e);
-                    FirebaseCrashlytics.getInstance().recordException(e);
-                }
-            });
-            return null;
-        }
+                    @Override
+                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                        e.printStackTrace();
+                        Log.v(TAG, getClass().getSimpleName() + " -> Exception: Error during loading data: " + e.getMessage());
+                        ThrowableUtils.getFullStackTrace(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                    }
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            SharedPreferencesUtil launcherPref = new SharedPreferencesUtil(weakContext.get(), Constant.PREFERENCE_LAUNCHER);
-            if (!launcherPref.loadBooleanSharedPreference(Constant.PREFERENCE_LAUNCHER_KEY)) {
-                Intent intentMainActivity = new Intent(weakContext.get(), MainActivity.class);
-                intentMainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    intentMainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                }
-                weakContext.get().startActivity(intentMainActivity);
-            } else {
-                Intent intentMainTabbed = new Intent(weakContext.get(), MainTabbedActivity.class);
-                intentMainTabbed.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    intentMainTabbed.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                }
-                weakContext.get().startActivity(intentMainTabbed);
-            }
-            weakContext.get().finish();
-        }
+                    @Override
+                    public void onComplete() {
+                        SharedPreferencesUtil launcherPref = new SharedPreferencesUtil(activity, Constant.PREFERENCE_LAUNCHER);
+                        if (!launcherPref.loadBooleanSharedPreference(Constant.PREFERENCE_LAUNCHER_KEY)) {
+                            Intent intentMainActivity = new Intent(activity, MainActivity.class);
+                            intentMainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                intentMainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            }
+                            activity.startActivity(intentMainActivity);
+                        } else {
+                            Intent intentMainTabbed = new Intent(activity, MainTabbedActivity.class);
+                            intentMainTabbed.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                intentMainTabbed.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            }
+                            activity.startActivity(intentMainTabbed);
+                        }
+                        activity.finish();
+                    }
+                });
     }
 }

@@ -131,13 +131,4 @@
                 app:srcCompat="@drawable/ic_status_item_share" />
         </LinearLayout>
     </RelativeLayout>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:visibility="visible" />
 </RelativeLayout>

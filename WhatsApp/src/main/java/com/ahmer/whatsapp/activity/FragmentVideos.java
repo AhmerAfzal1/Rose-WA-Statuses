@@ -36,6 +36,7 @@ import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INVALID_REQUEST;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NETWORK_ERROR;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
 
+@SuppressWarnings("CanBeFinal")
 public class FragmentVideos extends Fragment {
 
     public static ArrayList<StatusItem> statusItemFile = null;

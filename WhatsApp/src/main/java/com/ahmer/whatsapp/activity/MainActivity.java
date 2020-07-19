@@ -1,9 +1,7 @@
 package com.ahmer.whatsapp.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,17 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ahmer.afzal.utils.SharedPreferencesUtil;
 import com.ahmer.afzal.utils.constants.AppPackageConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.FileUtils;
@@ -46,7 +41,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -54,7 +48,6 @@ import static com.ahmer.whatsapp.Constant.EXT_JPG_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_JPG_UPPER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_MP4_LOWER_CASE;
 import static com.ahmer.whatsapp.Constant.EXT_MP4_UPPER_CASE;
-import static com.ahmer.whatsapp.Constant.TAG;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INTERNAL_ERROR;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INVALID_REQUEST;
 import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NETWORK_ERROR;
@@ -242,50 +235,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    static class MoveFiles extends AsyncTask<File, Integer, Boolean> {
-
-        private final File destination;
-        private final WeakReference<ProgressBar> progressBar;
-        private final WeakReference<Context> context;
-
-        private MoveFiles(Context context, File destination, ProgressBar progressBar) {
-            this.context = new WeakReference<>(context);
-            this.progressBar = new WeakReference<>(progressBar);
-            this.destination = destination;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressBar.get().setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Boolean doInBackground(File... files) {
-            ThreadUtils.runOnUiThread(() -> {
-                File source = files[0];
-                FileUtils.move(source, destination.getAbsoluteFile());
-            });
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-            progressBar.get().setProgress(values[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            progressBar.get().setVisibility(View.GONE);
-            ThreadUtils.runOnUiThread(() -> {
-                ToastUtils.showLong(context.get().getString(R.string.status_saved) + "\n" + destination.getPath());
-                new MediaScanner(context.get(), destination);
-            });
-        }
-    }
-
     public class StatusVideoAdapter extends RecyclerView.Adapter<StatusVideoAdapter.ViewHolder> {
 
         @Override
@@ -293,7 +242,6 @@ public class MainActivity extends AppCompatActivity {
             holder.ivThumbnails.setImageBitmap(contentList.get(position).getThumbnails());
             holder.relativeLayout.setBackgroundColor(Color.parseColor("#FFFFFF"));
             holder.relativeLayout.setAlpha(0);
-            holder.progressBar.setVisibility(View.GONE);
             holder.showSize.setText(Utilities.getFileSize(contentList.get(position).getSize()));
             File source = new File(contentList.get(position).getPath());
 
@@ -365,14 +313,16 @@ public class MainActivity extends AppCompatActivity {
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadMP4");
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download MP4 Status");
                     firebaseAnalytics.logEvent("Download_MP4_Open", bundleDownloadMP4);
-                    new MoveFiles(v.getContext(), destPathMP4, holder.progressBar).execute(source);
+                    FileUtils.move(source, destPathMP4);
+                    ThreadUtils.runOnUiThread(() -> {
+                        ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathMP4.getPath());
+                        new MediaScanner(v.getContext(), destPathMP4);
+                    });
                     contentList.remove(position);
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeRemoved(position, getItemCount());
                     recyclerView.scrollToPosition(position);
                     SplashActivity.bothStatuses.remove(position);
-                } else {
-                    Log.v(TAG, getClass().getSimpleName() + " -> MP4: No data was discovered and saved");
                 }
 
                 if (source.getAbsolutePath().endsWith(EXT_JPG_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_JPG_UPPER_CASE)) {
@@ -382,14 +332,16 @@ public class MainActivity extends AppCompatActivity {
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadJPG");
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download JPG Status");
                     firebaseAnalytics.logEvent("Download_JPG_Open", bundleDownloadJPG);
-                    new MoveFiles(v.getContext(), destPathJPG, holder.progressBar).execute(source);
+                    FileUtils.move(source, destPathJPG);
+                    ThreadUtils.runOnUiThread(() -> {
+                        ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
+                        new MediaScanner(v.getContext(), destPathJPG);
+                    });
                     contentList.remove(position);
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeRemoved(position, getItemCount());
                     recyclerView.scrollToPosition(position);
                     SplashActivity.bothStatuses.remove(position);
-                } else {
-                    Log.v(TAG, getClass().getSimpleName() + " -> JPG: No data was discovered and saved");
                 }
             });
         }
@@ -419,7 +371,6 @@ public class MainActivity extends AppCompatActivity {
             final ImageView btnShare;
             final ImageView btnShareWhatsApp;
             final ImageView ivThumbnails;
-            final ProgressBar progressBar;
             final RelativeLayout relativeLayout;
             final TextView showSize;
             final TextView showType;
@@ -431,7 +382,6 @@ public class MainActivity extends AppCompatActivity {
                 btnShare = binding.ivShare;
                 btnShareWhatsApp = binding.ivWhatsApp;
                 ivThumbnails = binding.ivImage;
-                progressBar = binding.progressBar;
                 relativeLayout = binding.layoutStatus;
                 showSize = binding.tvSize;
                 showType = binding.tvType;
