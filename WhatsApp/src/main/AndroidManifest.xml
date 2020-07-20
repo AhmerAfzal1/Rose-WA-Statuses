@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ahmer.whatsapp"
-    android:versionCode="102"
-    android:versionName="5.09190720">
+    android:versionCode="1"
+    android:versionName="1.00200720">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />

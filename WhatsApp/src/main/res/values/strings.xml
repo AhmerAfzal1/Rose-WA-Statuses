@@ -25,8 +25,8 @@
     <string name="settings_category_general">General</string>
     <string name="settings_category_layout_view">App Layout View</string>
     <string name="settings_category_theme">Theme</string>
-    <string name="summary_dark_mode">Change to dark mode</string>
-    <string name="summary_light_mode">Change to light mode</string>
+    <string name="summary_dark_mode">Change theme to night mode</string>
+    <string name="summary_light_mode">Change theme to day mode</string>
     <string name="title_cache">Clear Caches</string>
     <string name="title_change_view">Change Layout View</string>
     <string name="title_dark_mode">Dark Theme</string>
