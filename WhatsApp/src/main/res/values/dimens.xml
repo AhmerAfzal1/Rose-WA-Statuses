@@ -12,6 +12,10 @@
     <dimen name="margin_or_padding_05dp">5dp</dimen>
     <dimen name="margin_or_padding_10dp">10dp</dimen>
     <dimen name="margin_or_padding_20dp">20dp</dimen>
+    <dimen name="text_appearance_small">14sp</dimen>
+    <dimen name="text_appearance_medium">18sp</dimen>
+    <dimen name="text_appearance_large">28sp</dimen>
+    <dimen name="text_appearance_x_large">34sp</dimen>
     <dimen name="toolbar_image_view">48dp</dimen>
     <dimen name="toolbar_image_view_padding">10dp</dimen>
     <dimen name="toolbar_title_margin">10dp</dimen>
@@ -38,6 +42,10 @@
 
     <!-- For Status Item Activity layout -->
     <dimen name="status_item_circle_padding">6dp</dimen>
+    <dimen name="status_item_fab_image_size_big">28dp</dimen>
+    <dimen name="status_item_fab_image_size_small">20dp</dimen>
+    <dimen name="status_item_fab_size_big">56dp</dimen>
+    <dimen name="status_item_fab_size_small">40dp</dimen>
     <dimen name="status_item_image_view">36dp</dimen>
     <dimen name="status_item_layout_activity">170dp</dimen>
     <dimen name="status_item_tiny_period">10sp</dimen>
@@ -51,5 +59,4 @@
     <dimen name="view_floating_action_margin">10dp</dimen>
     <dimen name="view_layout_margin">25dp</dimen>
     <dimen name="view_layout_padding">12dp</dimen>
-
 </resources>

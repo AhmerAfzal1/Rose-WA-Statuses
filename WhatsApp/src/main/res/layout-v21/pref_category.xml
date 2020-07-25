@@ -14,23 +14,24 @@
 
     <TextView
         android:id="@android:id/title"
+        style="@style/myTextAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text="@string/splash_title"
-        android:textAppearance="@android:style/TextAppearance.Material.Medium"
         android:textColor="?android:colorAccent" />
 
     <TextView
         android:id="@android:id/summary"
+        style="@style/myTextAppearanceSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginTop="@dimen/pref_summary_top_margin"
         android:maxLines="4"
-        android:textAppearance="@android:style/TextAppearance.Material.Small"
-        android:textColor="?android:textColorSecondary" />
+        android:text="@string/auto_generate_msg"
+        android:textColor="@color/colorPrefSummary" />
 
 </LinearLayout>

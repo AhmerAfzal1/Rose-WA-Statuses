@@ -16,6 +16,8 @@
     <color name="colorCardView">#FFFFFF</color>
     <color name="colorCardViewStatusItemFrag">#FFFFFF</color>
     <color name="colorCardViewText">#000000</color>
+    <color name="colorPrefSummary">#757575</color>
+    <color name="colorPrefTitle">#000000</color>
     <color name="colorSemiBlack">#B2000000</color>
     <color name="colorSettingsIcons">#000000</color>
     <color name="colorSettingsNew">#FFFFFF</color>

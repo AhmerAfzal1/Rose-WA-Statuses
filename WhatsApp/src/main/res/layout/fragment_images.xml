@@ -14,13 +14,13 @@
 
         <TextView
             android:id="@+id/tvNoStatus"
+            style="@style/myTextAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="top|center"
             android:padding="@dimen/margin_or_padding_10dp"
             android:text="@string/no_having_status"
-            android:textAppearance="@android:style/TextAppearance.Small"
             android:textColor="@color/secondaryTextColor" />
     </RelativeLayout>
 

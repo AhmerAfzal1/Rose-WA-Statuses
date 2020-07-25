@@ -1,0 +1,63 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="appbar_padding">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="standard_55">55dp</dimen>
+    <dimen name="standard_100">100dp</dimen>
+    <dimen name="standard_145">145dp</dimen>
+
+    <!-- For whole app -->
+    <dimen name="card_view_elevation">5dp</dimen>
+    <dimen name="margin_or_padding_03dp">3dp</dimen>
+    <dimen name="margin_or_padding_05dp">5dp</dimen>
+    <dimen name="margin_or_padding_10dp">10dp</dimen>
+    <dimen name="margin_or_padding_20dp">20dp</dimen>
+    <dimen name="text_appearance_small">18sp</dimen>
+    <dimen name="text_appearance_medium">24sp</dimen>
+    <dimen name="text_appearance_large">42sp</dimen>
+    <dimen name="text_appearance_x_large">50sp</dimen>
+    <dimen name="toolbar_image_view">48dp</dimen> <!-- Total size is 48, need 24, (48-24)/2 = 12 is padding -->
+    <dimen name="toolbar_image_view_padding">5dp</dimen>
+    <dimen name="toolbar_title_margin">12dp</dimen>
+
+    <!-- For Ahmer layout -->
+    <dimen name="ahmer_layout_margin">50dp</dimen>
+    <dimen name="ahmer_profile_circle">3dp</dimen>
+    <dimen name="ahmer_profile_image_view">384dp</dimen>
+    <dimen name="ahmer_scroll_view_margin">16dp</dimen>
+    <dimen name="ahmer_social_image_view">36dp</dimen>
+    <dimen name="ahmer_table_row_margin">10dp</dimen>
+
+    <!-- For Splash layout -->
+    <dimen name="splash_image_view">192dp</dimen>
+    <dimen name="splash_image_view_margin">100dp</dimen>
+    <dimen name="splash_spin_kit_view">64dp</dimen>
+    <dimen name="splash_text_view_margin">50dp</dimen>
+
+    <!-- For Preferences layout -->
+    <dimen name="pref_image_view">54dp</dimen>
+    <dimen name="pref_margin">15dp</dimen>
+    <dimen name="pref_padding">16dp</dimen>
+    <dimen name="pref_summary_top_margin">3dp</dimen>
+
+    <!-- For Status Item Activity layout -->
+    <dimen name="status_item_circle_padding">10dp</dimen>
+    <dimen name="status_item_fab_image_size_big">42dp</dimen>
+    <dimen name="status_item_fab_image_size_small">30dp</dimen>
+    <dimen name="status_item_fab_size_big">84dp</dimen>
+    <dimen name="status_item_fab_size_small">60dp</dimen>
+    <dimen name="status_item_image_view">50dp</dimen>
+    <dimen name="status_item_layout_activity">220dp</dimen>
+    <dimen name="status_item_tiny_period">14sp</dimen>
+    <dimen name="status_item_tiny_text_view">14sp</dimen>
+
+    <!-- For Status Item Fragment layout -->
+    <dimen name="status_item_layout_fragment">195dp</dimen>
+    <dimen name="status_item_image_view_margin">3dp</dimen>
+
+    <!-- For View Image/Video layout -->
+    <dimen name="view_floating_action_margin">10dp</dimen>
+    <dimen name="view_layout_margin">25dp</dimen>
+    <dimen name="view_layout_padding">12dp</dimen>
+
+</resources>

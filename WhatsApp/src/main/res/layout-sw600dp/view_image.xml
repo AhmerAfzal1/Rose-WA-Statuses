@@ -5,11 +5,13 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
-    <VideoView
-        android:id="@+id/videoView"
+    <com.ahmer.afzal.utils.imageview.ZoomImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/empty_description"
+        app:srcCompat="@drawable/ic_splash_whatsapp" />
 
     <View
         android:id="@+id/fabBgLayout"
@@ -23,9 +25,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/view_layout_margin"
+        android:layout_marginRight="@dimen/view_layout_margin"
         android:layout_marginBottom="@dimen/view_layout_margin"
         android:clipToPadding="false"
         android:gravity="center_vertical"
@@ -45,6 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/view_floating_action_margin"
+            android:layout_marginLeft="@dimen/view_floating_action_margin"
             app:fabCustomSize="@dimen/status_item_fab_size_small"
             app:maxImageSize="@dimen/status_item_fab_image_size_small"
             app:srcCompat="@drawable/ic_view_file_download" />
@@ -55,9 +60,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/view_layout_margin"
+        android:layout_marginRight="@dimen/view_layout_margin"
         android:layout_marginBottom="@dimen/view_layout_margin"
         android:clipToPadding="false"
         android:gravity="center_vertical"
@@ -77,6 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/view_floating_action_margin"
+            android:layout_marginLeft="@dimen/view_floating_action_margin"
             app:fabCustomSize="@dimen/status_item_fab_size_small"
             app:maxImageSize="@dimen/status_item_fab_image_size_small"
             app:srcCompat="@drawable/ic_view_share_to_whatsapp" />
@@ -87,9 +95,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/view_layout_margin"
+        android:layout_marginRight="@dimen/view_layout_margin"
         android:layout_marginBottom="@dimen/view_layout_margin"
         android:clipToPadding="false"
         android:gravity="center_vertical"
@@ -109,6 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/view_floating_action_margin"
+            android:layout_marginLeft="@dimen/view_floating_action_margin"
             android:tint="@color/colorWhite"
             app:fabCustomSize="@dimen/status_item_fab_size_small"
             app:maxImageSize="@dimen/status_item_fab_image_size_small"
@@ -119,9 +130,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
         android:clipToPadding="false"
         android:gravity="center_vertical"
@@ -133,7 +146,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:gravity="center_vertical"
+            android:gravity="center"
             app:fabCustomSize="@dimen/status_item_fab_size_big"
             app:maxImageSize="@dimen/status_item_fab_image_size_big"
             app:srcCompat="@drawable/ic_view_add" />
