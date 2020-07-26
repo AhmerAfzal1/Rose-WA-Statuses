@@ -56,13 +56,13 @@ public class SplashActivity extends AppCompatActivity {
     public static final File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_YO_LOCATION);
 
     public static void getData() {
-        /*
-        //File dirAhmer = new File(PathUtils.getExternalDownloadsPath());
-        File dirAhmer = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
+
+        File dirAhmer = new File(PathUtils.getExternalDownloadsPath());
+        //File dirAhmer = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
         if (dirAhmer.exists()) {
             getStatuses(dirAhmer.listFiles());
         }
-       */
+       /*
         if (dirWhatsApp.exists()) {
             getStatuses(dirWhatsApp.listFiles());
         }
@@ -74,7 +74,7 @@ public class SplashActivity extends AppCompatActivity {
         }
         if (dirYoWhatsApp.exists()) {
             getStatuses(dirYoWhatsApp.listFiles());
-        }
+        }*/
     }
 
     private static void getStatuses(File[] filesList) {

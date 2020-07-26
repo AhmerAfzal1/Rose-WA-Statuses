@@ -1,6 +1,7 @@
 package com.ahmer.whatsapp.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,16 +26,14 @@ import com.ahmer.whatsapp.view.StatusViewImage;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.ArrayList;
 
-import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INTERNAL_ERROR;
-import static com.google.android.gms.ads.AdRequest.ERROR_CODE_INVALID_REQUEST;
-import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NETWORK_ERROR;
-import static com.google.android.gms.ads.AdRequest.ERROR_CODE_NO_FILL;
+import static com.ahmer.whatsapp.Constant.TAG;
 
 @SuppressWarnings("CanBeFinal")
 public class FragmentImages extends Fragment {
@@ -44,7 +43,6 @@ public class FragmentImages extends Fragment {
     private static RecyclerView recyclerViewImages = null;
     private AdView adView = null;
     private FirebaseAnalytics firebaseAnalytics = null;
-    private FirebaseCrashlytics firebaseCrashlytics = null;
     private FragmentImagesBinding binding;
 
     public FragmentImages() {
@@ -80,10 +78,17 @@ public class FragmentImages extends Fragment {
         recyclerViewImages = binding.rvImages;
         adView = binding.adView;
         firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext());
-        firebaseCrashlytics = FirebaseCrashlytics.getInstance();
+        FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        GridLayoutManager gridLayoutManager;
+        Configuration config = getResources().getConfiguration();
+        if (config.smallestScreenWidthDp >= 720) {
+            gridLayoutManager = new GridLayoutManager(getContext(), 3);
+            Log.v(TAG, getClass().getSimpleName() + " -> Screen width: " + config.smallestScreenWidthDp);
+        } else {
+            gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        }
         gridLayoutManager.isAutoMeasureEnabled();
         gridLayoutManager.setSmoothScrollbarEnabled(true);
         recyclerViewImages.getRecycledViewPool().clear();
@@ -151,35 +156,10 @@ public class FragmentImages extends Fragment {
             }
 
             @Override
-            public void onAdFailedToLoad(int errorCode) {
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad) + loadAdError.getCode());
                 binding.adViewLayout.setVisibility(View.GONE);
-                switch (errorCode) {
-                    case ERROR_CODE_INTERNAL_ERROR: {
-                        Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INTERNAL_ERROR));
-                        firebaseCrashlytics.log(getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INTERNAL_ERROR));
-                    }
-                    break;
-                    case ERROR_CODE_INVALID_REQUEST: {
-                        Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INVALID_REQUEST));
-                        firebaseCrashlytics.log(getResources().getString(R.string.adFailedToLoad_ERROR_CODE_INVALID_REQUEST));
-                    }
-                    break;
-                    case ERROR_CODE_NETWORK_ERROR: {
-                        Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_NETWORK_ERROR));
-                        firebaseCrashlytics.log(getResources().getString(R.string.adFailedToLoad_ERROR_CODE_NETWORK_ERROR));
-                    }
-                    break;
-                    case ERROR_CODE_NO_FILL: {
-                        Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad_ERROR_CODE_NO_FILL));
-                        firebaseCrashlytics.log(getResources().getString(R.string.adFailedToLoad_ERROR_CODE_NO_FILL));
-                    }
-                    break;
-                    default: {
-                        Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad) + errorCode);
-                        firebaseCrashlytics.log(getResources().getString(R.string.adFailedToLoad) + errorCode);
-                    }
-                    break;
-                }
             }
 
             @Override

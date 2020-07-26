@@ -21,120 +21,111 @@
         android:visibility="gone" />
 
     <LinearLayout
-        android:id="@+id/fabLayoutDownloadFile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/view_layout_margin"
-        android:layout_marginBottom="@dimen/view_layout_margin"
-        android:clipToPadding="false"
-        android:gravity="center_vertical"
-        android:padding="@dimen/view_layout_padding"
-        android:visibility="gone">
+        android:layout_marginEnd="@dimen/view_fab_margin_linear_layout"
+        android:layout_marginBottom="@dimen/view_fab_margin_linear_layout"
+        android:gravity="end"
+        android:orientation="vertical">
 
-        <TextView
-            style="@style/myTextAppearanceSmall"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/fab_view_bg_label"
-            android:text="@string/save"
-            android:textColor="@color/colorWhite" />
+            android:layout_marginTop="@dimen/view_fab_top_margin_between_layouts"
+            android:gravity="center">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabDownloadFile"
+            <TextView
+                android:id="@+id/tvDownload"
+                style="@style/myTextAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:background="@drawable/fab_view_bg_label"
+                android:text="@string/save"
+                android:textColor="@color/colorWhite" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabDownloadFile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:visibility="gone"
+                android:layout_marginStart="@dimen/view_floating_action_margin"
+                android:layout_marginEnd="@dimen/view_floating_action_margin"
+                android:tint="@color/colorWhite"
+                app:fabCustomSize="@dimen/status_item_fab_size_small"
+                app:maxImageSize="@dimen/status_item_fab_image_size_small"
+                app:srcCompat="@drawable/ic_view_file_download" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/view_floating_action_margin"
-            app:fabCustomSize="@dimen/status_item_fab_size_small"
-            app:maxImageSize="@dimen/status_item_fab_image_size_small"
-            app:srcCompat="@drawable/ic_view_file_download" />
-    </LinearLayout>
+            android:layout_marginTop="@dimen/view_fab_top_margin_between_layouts"
+            android:gravity="center">
 
-    <LinearLayout
-        android:id="@+id/fabLayoutShareWhatsApp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/view_layout_margin"
-        android:layout_marginBottom="@dimen/view_layout_margin"
-        android:clipToPadding="false"
-        android:gravity="center_vertical"
-        android:padding="@dimen/view_layout_padding"
-        android:visibility="gone">
+            <TextView
+                android:id="@+id/tvShareWhatsApp"
+                style="@style/myTextAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fab_view_bg_label"
+                android:text="@string/share_to_whatsapp"
+                android:visibility="gone"
+                android:textColor="@color/colorWhite" />
 
-        <TextView
-            style="@style/myTextAppearanceSmall"
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabShareWhatsApp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginStart="@dimen/view_floating_action_margin"
+                android:layout_marginEnd="@dimen/view_floating_action_margin"
+                android:tint="@color/colorWhite"
+                android:visibility="gone"
+                app:fabCustomSize="@dimen/status_item_fab_size_small"
+                app:maxImageSize="@dimen/status_item_fab_image_size_small"
+                app:srcCompat="@drawable/ic_status_item_whatsapp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/fab_view_bg_label"
-            android:text="@string/share_to_whatsapp"
-            android:textColor="@color/colorWhite" />
+            android:layout_marginTop="@dimen/view_fab_top_margin_between_layouts"
+            android:gravity="center">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabShareWhatsApp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/view_floating_action_margin"
-            app:fabCustomSize="@dimen/status_item_fab_size_small"
-            app:maxImageSize="@dimen/status_item_fab_image_size_small"
-            app:srcCompat="@drawable/ic_view_share_to_whatsapp" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tvShare"
+                style="@style/myTextAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:background="@drawable/fab_view_bg_label"
+                android:text="@string/share"
+                android:textColor="@color/colorWhite" />
 
-    <LinearLayout
-        android:id="@+id/fabLayoutShare"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/view_layout_margin"
-        android:layout_marginBottom="@dimen/view_layout_margin"
-        android:clipToPadding="false"
-        android:gravity="center_vertical"
-        android:padding="@dimen/view_layout_padding"
-        android:visibility="gone">
-
-        <TextView
-            style="@style/myTextAppearanceSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/fab_view_bg_label"
-            android:text="@string/share"
-            android:textColor="@color/colorWhite" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabShare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/view_floating_action_margin"
-            android:tint="@color/colorWhite"
-            app:fabCustomSize="@dimen/status_item_fab_size_small"
-            app:maxImageSize="@dimen/status_item_fab_image_size_small"
-            app:srcCompat="@drawable/ic_status_item_share" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:clipToPadding="false"
-        android:gravity="center_vertical"
-        android:padding="@dimen/view_layout_padding"
-        android:visibility="visible">
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:visibility="gone"
+                android:layout_marginStart="@dimen/view_floating_action_margin"
+                android:layout_marginEnd="@dimen/view_floating_action_margin"
+                android:tint="@color/colorWhite"
+                app:fabCustomSize="@dimen/status_item_fab_size_small"
+                app:maxImageSize="@dimen/status_item_fab_image_size_small"
+                app:srcCompat="@drawable/ic_status_item_share" />
+        </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabMain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:layout_marginTop="@dimen/view_fab_top_margin_between_layouts"
             android:gravity="center_vertical"
             app:fabCustomSize="@dimen/status_item_fab_size_big"
             app:maxImageSize="@dimen/status_item_fab_image_size_big"

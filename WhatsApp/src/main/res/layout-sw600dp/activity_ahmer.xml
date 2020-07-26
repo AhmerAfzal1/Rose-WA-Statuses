@@ -10,7 +10,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
+        android:layout_height="@dimen/action_bar_height_size"
         android:background="@color/primaryColor">
 
         <RelativeLayout
@@ -110,13 +110,17 @@
 
                         <androidx.core.widget.ContentLoadingProgressBar
                             android:id="@+id/progressCircleImageView"
-                            style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
+                            style="?android:attr/progressBarStyleLarge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:layout_centerHorizontal="true"
                             android:indeterminate="true"
-                            android:visibility="visible" />
+                            android:maxWidth="@dimen/ahmer_progressbar_width_height"
+                            android:maxHeight="@dimen/ahmer_progressbar_width_height"
+                            android:minWidth="@dimen/ahmer_progressbar_width_height"
+                            android:minHeight="@dimen/ahmer_progressbar_width_height"
+                            android:visibility="visible"/>
                     </RelativeLayout>
 
                     <TableLayout

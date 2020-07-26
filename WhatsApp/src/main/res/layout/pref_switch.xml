@@ -61,6 +61,8 @@
         android:paddingStart="@dimen/pref_margin"
         android:paddingLeft="@dimen/pref_margin"
         android:paddingEnd="@dimen/pref_margin"
-        android:paddingRight="@dimen/pref_margin" />
+        android:paddingRight="@dimen/pref_margin"
+        android:scaleX="@dimen/pref_compat_switch_size"
+        android:scaleY="@dimen/pref_compat_switch_size" />
 
 </LinearLayout>

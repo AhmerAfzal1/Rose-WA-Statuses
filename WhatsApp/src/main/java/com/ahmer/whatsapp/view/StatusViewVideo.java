@@ -1,6 +1,5 @@
 package com.ahmer.whatsapp.view;
 
-import android.animation.Animator;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
@@ -123,16 +122,14 @@ public class StatusViewVideo extends AppCompatActivity {
     private void showFAB() {
         view.pause();
         isFabOpened = true;
-        binding.fabLayoutDownloadFile.setVisibility(View.VISIBLE);
-        binding.fabLayoutShareWhatsApp.setVisibility(View.VISIBLE);
-        binding.fabLayoutShare.setVisibility(View.VISIBLE);
-        binding.fabBgLayout.setVisibility(View.VISIBLE);
+        Objects.requireNonNull(binding.tvDownload).setVisibility(View.VISIBLE);
+        binding.fabDownloadFile.setVisibility(View.VISIBLE);
+        Objects.requireNonNull(binding.tvShare).setVisibility(View.VISIBLE);
+        binding.fabShare.setVisibility(View.VISIBLE);
+        Objects.requireNonNull(binding.tvShareWhatsApp).setVisibility(View.VISIBLE);
+        binding.fabShareWhatsApp.setVisibility(View.VISIBLE);
 
         binding.fabMain.animate().rotationBy(180);
-
-        binding.fabLayoutDownloadFile.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
-        binding.fabLayoutShareWhatsApp.animate().translationY(-getResources().getDimension(R.dimen.standard_100));
-        binding.fabLayoutShare.animate().translationY(-getResources().getDimension(R.dimen.standard_145));
     }
 
     private void closeFAB() {
@@ -140,34 +137,12 @@ public class StatusViewVideo extends AppCompatActivity {
         isFabOpened = false;
         binding.fabBgLayout.setVisibility(View.GONE);
         binding.fabMain.animate().rotation(0);
-        binding.fabLayoutDownloadFile.animate().translationY(0);
-        binding.fabLayoutShareWhatsApp.animate().translationY(0);
-        binding.fabLayoutShare.animate().translationY(0);
-        binding.fabLayoutShare.animate().translationY(0).setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                if (!isFabOpened) {
-                    binding.fabLayoutDownloadFile.setVisibility(View.GONE);
-                    binding.fabLayoutShareWhatsApp.setVisibility(View.GONE);
-                    binding.fabLayoutShare.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
-            }
-        });
+        Objects.requireNonNull(binding.tvDownload).setVisibility(View.GONE);
+        binding.fabDownloadFile.setVisibility(View.GONE);
+        Objects.requireNonNull(binding.tvShare).setVisibility(View.GONE);
+        binding.fabShare.setVisibility(View.GONE);
+        Objects.requireNonNull(binding.tvShareWhatsApp).setVisibility(View.GONE);
+        binding.fabShareWhatsApp.setVisibility(View.GONE);
     }
 
     @Override

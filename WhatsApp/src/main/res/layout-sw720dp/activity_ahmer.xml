@@ -34,6 +34,7 @@
                 android:layout_marginLeft="@dimen/toolbar_title_margin"
                 android:layout_marginRight="@dimen/toolbar_title_margin"
                 android:layout_toEndOf="@id/ivBack"
+                android:layout_toRightOf="@id/ivBack"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
@@ -74,7 +75,7 @@
                     style="@style/myTextAppearanceMedium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_or_padding_05dp"
+                    android:layout_marginTop="@dimen/margin_or_padding_10dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:fontFamily="@font/roboto"
@@ -101,7 +102,8 @@
                             android:layout_width="@dimen/ahmer_profile_image_view"
                             android:layout_height="@dimen/ahmer_profile_image_view"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginBottom="@dimen/margin_or_padding_05dp"
+                            android:layout_marginTop="@dimen/margin_or_padding_10dp"
+                            android:layout_marginBottom="@dimen/margin_or_padding_10dp"
                             app:civ_border_color="@color/colorAccent"
                             app:civ_border_width="@dimen/ahmer_profile_circle"
                             app:srcCompat="@drawable/ic_ahmer_avatar" />
@@ -118,7 +120,7 @@
                             android:maxHeight="@dimen/ahmer_progressbar_width_height"
                             android:minWidth="@dimen/ahmer_progressbar_width_height"
                             android:minHeight="@dimen/ahmer_progressbar_width_height"
-                            android:visibility="visible"/>
+                            android:visibility="visible" />
                     </RelativeLayout>
 
                     <TableLayout
@@ -129,23 +131,25 @@
                         <TableRow>
 
                             <TextView
-                                style="@style/myTextAppearanceSmall"
+                                style="@style/myTextAppearanceMedium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_10dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingStart="@dimen/margin_or_padding_10dp"
+                                android:paddingLeft="@dimen/margin_or_padding_10dp"
                                 android:text="@string/name"
                                 android:textColor="@color/colorCardViewText"
                                 tools:ignore="RtlSymmetry" />
 
                             <TextView
-                                style="@style/myTextAppearanceSmall"
+                                style="@style/myTextAppearanceMedium"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_10dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingStart="@dimen/margin_or_padding_10dp"
+                                android:paddingLeft="@dimen/margin_or_padding_10dp"
                                 android:text="@string/ahmer"
                                 android:textColor="@color/colorCardViewText"
                                 tools:ignore="RtlSymmetry" />
@@ -154,24 +158,26 @@
                         <TableRow>
 
                             <TextView
-                                style="@style/myTextAppearanceSmall"
+                                style="@style/myTextAppearanceMedium"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_10dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingStart="@dimen/margin_or_padding_10dp"
+                                android:paddingLeft="@dimen/margin_or_padding_10dp"
                                 android:text="@string/email"
                                 android:textColor="@color/colorCardViewText"
                                 tools:ignore="RtlSymmetry" />
 
                             <TextView
                                 android:id="@+id/idAhmerYahoo"
-                                style="@style/myTextAppearanceSmall"
+                                style="@style/myTextAppearanceMedium"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_10dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingStart="@dimen/margin_or_padding_10dp"
+                                android:paddingLeft="@dimen/margin_or_padding_10dp"
                                 android:text="@string/email_yahoo"
                                 android:textColor="@color/colorCardViewText"
                                 tools:ignore="RtlSymmetry" />
@@ -180,24 +186,26 @@
                         <TableRow>
 
                             <TextView
-                                style="@style/myTextAppearanceSmall"
+                                style="@style/myTextAppearanceMedium"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_10dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingStart="@dimen/margin_or_padding_10dp"
+                                android:paddingLeft="@dimen/margin_or_padding_10dp"
                                 android:text="@string/email"
                                 android:textColor="@color/colorCardViewText"
                                 tools:ignore="RtlSymmetry" />
 
                             <TextView
                                 android:id="@+id/idAhmerGmail"
-                                style="@style/myTextAppearanceSmall"
+                                style="@style/myTextAppearanceMedium"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_10dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingStart="@dimen/margin_or_padding_10dp"
+                                android:paddingLeft="@dimen/margin_or_padding_10dp"
                                 android:text="@string/email_gmail"
                                 android:textColor="@color/colorCardViewText"
                                 tools:ignore="RtlSymmetry" />
@@ -206,25 +214,27 @@
                         <TableRow>
 
                             <TextView
-                                style="@style/myTextAppearanceSmall"
+                                style="@style/myTextAppearanceMedium"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_10dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingStart="@dimen/margin_or_padding_10dp"
+                                android:paddingLeft="@dimen/margin_or_padding_10dp"
                                 android:text="@string/qq"
                                 android:textColor="@color/colorCardViewText"
                                 tools:ignore="RtlSymmetry" />
 
                             <TextView
                                 android:id="@+id/idAhmerQQ"
-                                style="@style/myTextAppearanceSmall"
+                                style="@style/myTextAppearanceMedium"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="@dimen/margin_or_padding_05dp"
-                                android:layout_marginBottom="@dimen/margin_or_padding_05dp"
+                                android:layout_marginTop="@dimen/margin_or_padding_10dp"
+                                android:layout_marginBottom="@dimen/margin_or_padding_10dp"
                                 android:fontFamily="@font/roboto"
-                                android:paddingStart="@dimen/margin_or_padding_05dp"
+                                android:paddingStart="@dimen/margin_or_padding_10dp"
+                                android:paddingLeft="@dimen/margin_or_padding_10dp"
                                 android:text="@string/qq_id_ahmer"
                                 android:textColor="@color/colorCardViewText"
                                 tools:ignore="RtlSymmetry" />
@@ -249,13 +259,13 @@
                     style="@style/myTextAppearanceMedium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_or_padding_05dp"
+                    android:layout_marginTop="@dimen/margin_or_padding_10dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:fontFamily="@font/roboto"
                     android:gravity="center|center_horizontal|center_vertical"
-                    android:paddingStart="@dimen/margin_or_padding_05dp"
-                    android:paddingEnd="@dimen/margin_or_padding_05dp"
+                    android:paddingStart="@dimen/margin_or_padding_10dp"
+                    android:paddingEnd="@dimen/margin_or_padding_10dp"
                     android:text="@string/meet_on_social"
                     android:textColor="@color/colorCardViewText"
                     android:textIsSelectable="true"
@@ -273,18 +283,19 @@
                             android:id="@+id/ivFacebook"
                             android:layout_width="@dimen/ahmer_social_image_view"
                             android:layout_height="@dimen/ahmer_social_image_view"
-                            android:layout_marginStart="@dimen/margin_or_padding_05dp"
+                            android:layout_marginStart="@dimen/margin_or_padding_10dp"
+                            android:layout_marginLeft="@dimen/margin_or_padding_10dp"
                             android:contentDescription="@string/empty_description"
                             app:srcCompat="@drawable/ic_ahmer_facebook" />
 
                         <TextView
                             android:id="@+id/tvFacebook"
-                            style="@style/myTextAppearanceSmall"
+                            style="@style/myTextAppearanceMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start|center"
-                            android:paddingStart="@dimen/margin_or_padding_05dp"
-                            android:paddingEnd="@dimen/margin_or_padding_05dp"
+                            android:paddingStart="@dimen/margin_or_padding_10dp"
+                            android:paddingEnd="@dimen/margin_or_padding_10dp"
                             android:text="@string/ahmer_facebook_id"
                             android:textColor="@color/colorCardViewText" />
                     </TableRow>
@@ -295,18 +306,19 @@
                             android:id="@+id/ivTwitter"
                             android:layout_width="@dimen/ahmer_social_image_view"
                             android:layout_height="@dimen/ahmer_social_image_view"
-                            android:layout_marginStart="@dimen/margin_or_padding_05dp"
+                            android:layout_marginStart="@dimen/margin_or_padding_10dp"
+                            android:layout_marginLeft="@dimen/margin_or_padding_10dp"
                             android:contentDescription="@string/empty_description"
                             app:srcCompat="@drawable/ic_ahmer_twitter" />
 
                         <TextView
                             android:id="@+id/tvTwitter"
-                            style="@style/myTextAppearanceSmall"
+                            style="@style/myTextAppearanceMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start|center"
-                            android:paddingStart="@dimen/margin_or_padding_05dp"
-                            android:paddingEnd="@dimen/margin_or_padding_05dp"
+                            android:paddingStart="@dimen/margin_or_padding_10dp"
+                            android:paddingEnd="@dimen/margin_or_padding_10dp"
                             android:text="@string/ahmer_twitter_id"
                             android:textColor="@color/colorCardViewText" />
                     </TableRow>
@@ -317,18 +329,19 @@
                             android:id="@+id/ivGithub"
                             android:layout_width="@dimen/ahmer_social_image_view"
                             android:layout_height="@dimen/ahmer_social_image_view"
-                            android:layout_marginStart="@dimen/margin_or_padding_05dp"
+                            android:layout_marginStart="@dimen/margin_or_padding_10dp"
+                            android:layout_marginLeft="@dimen/margin_or_padding_10dp"
                             android:contentDescription="@string/empty_description"
                             app:srcCompat="@drawable/ic_ahmer_github" />
 
                         <TextView
                             android:id="@+id/tvGithub"
-                            style="@style/myTextAppearanceSmall"
+                            style="@style/myTextAppearanceMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start|center"
-                            android:paddingStart="@dimen/margin_or_padding_05dp"
-                            android:paddingEnd="@dimen/margin_or_padding_05dp"
+                            android:paddingStart="@dimen/margin_or_padding_10dp"
+                            android:paddingEnd="@dimen/margin_or_padding_10dp"
                             android:text="@string/ahmer_github_id"
                             android:textColor="@color/colorCardViewText" />
                     </TableRow>
@@ -339,18 +352,19 @@
                             android:id="@+id/ivBlogspot"
                             android:layout_width="@dimen/ahmer_social_image_view"
                             android:layout_height="@dimen/ahmer_social_image_view"
-                            android:layout_marginStart="@dimen/margin_or_padding_05dp"
+                            android:layout_marginStart="@dimen/margin_or_padding_10dp"
+                            android:layout_marginLeft="@dimen/margin_or_padding_10dp"
                             android:contentDescription="@string/empty_description"
                             app:srcCompat="@drawable/ic_ahmer_blogspot" />
 
                         <TextView
                             android:id="@+id/tvBlogspot"
-                            style="@style/myTextAppearanceSmall"
+                            style="@style/myTextAppearanceMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start|center"
-                            android:paddingStart="@dimen/margin_or_padding_05dp"
-                            android:paddingEnd="@dimen/margin_or_padding_05dp"
+                            android:paddingStart="@dimen/margin_or_padding_10dp"
+                            android:paddingEnd="@dimen/margin_or_padding_10dp"
                             android:text="@string/ahmer_blogspot_url"
                             android:textColor="@color/colorCardViewText" />
                     </TableRow>
