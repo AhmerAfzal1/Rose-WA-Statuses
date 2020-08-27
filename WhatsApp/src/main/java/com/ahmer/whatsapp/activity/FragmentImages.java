@@ -17,17 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmer.afzal.utils.constants.AppPackageConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
-import com.ahmer.whatsapp.Constant;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
+import com.ahmer.whatsapp.Utilities;
 import com.ahmer.whatsapp.databinding.FragmentImagesBinding;
 import com.ahmer.whatsapp.databinding.StatusItemFragBinding;
 import com.ahmer.whatsapp.view.StatusViewImage;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
@@ -42,8 +38,7 @@ public class FragmentImages extends Fragment {
     private static ImagesAdapter adapter = null;
     private static RecyclerView recyclerViewImages = null;
     private AdView adView = null;
-    private FirebaseAnalytics firebaseAnalytics = null;
-    private FragmentImagesBinding binding;
+    private FragmentImagesBinding binding = null;
 
     public FragmentImages() {
         // Required empty public constructor
@@ -77,7 +72,11 @@ public class FragmentImages extends Fragment {
         statusItemFile = new ArrayList<>(SplashActivity.imageStatuses);
         recyclerViewImages = binding.rvImages;
         adView = binding.adView;
-        firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext());
+        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext());
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, getClass().getSimpleName());
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Frag Images Opened");
+        firebaseAnalytics.logEvent("Frag_Images_Open", bundle);
         FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
@@ -141,50 +140,12 @@ public class FragmentImages extends Fragment {
         };
         adapter.registerAdapterDataObserver(observer);
         observer.onChanged();
-        loadAds();
-    }
-
-    private void loadAds() {
-        MobileAds.initialize(getContext(), initializationStatus -> {
-            //Keep empty
-        });
-        adView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                binding.adViewLayout.setVisibility(View.VISIBLE);
-                Log.v(Constant.TAG, getResources().getString(R.string.adLoaded));
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError loadAdError) {
-                super.onAdFailedToLoad(loadAdError);
-                Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad) + loadAdError.getCode());
-                binding.adViewLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAdOpened() {
-                Log.v(Constant.TAG, getResources().getString(R.string.adOpened));
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                Log.v(Constant.TAG, getResources().getString(R.string.adLeftApplication));
-            }
-
-            @Override
-            public void onAdClosed() {
-                Log.v(Constant.TAG, getResources().getString(R.string.adClosed));
-            }
-        });
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
+        Utilities.loadAds(requireContext(), adView, binding.adViewLayout);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        firebaseAnalytics.setCurrentScreen(requireActivity(), "CurrentScreen: " + getClass().getSimpleName(), null);
         if (adView != null) {
             adView.resume();
         }

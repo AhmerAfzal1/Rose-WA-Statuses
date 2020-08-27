@@ -14,13 +14,13 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.ahmer.afzal.utils.HelperUtils;
 import com.ahmer.afzal.utils.SharedPreferencesUtil;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.CleanUtils;
 import com.ahmer.afzal.utils.utilcode.Utils;
 import com.ahmer.whatsapp.Constant;
 import com.ahmer.whatsapp.R;
-import com.ahmer.whatsapp.Utilities;
 import com.ahmer.whatsapp.databinding.ActivitySettingsBinding;
 
 import java.io.File;
@@ -61,14 +61,14 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.settings_pref, rootKey);
             SharedPreferencesUtil prefLauncher = new SharedPreferencesUtil(requireContext(), Constant.PREFERENCE_LAUNCHER);
-            SwitchPreferenceCompat buttonLauncher = findPreference(getString(R.string.button_change_view));
+            SwitchPreferenceCompat buttonLauncher = findPreference(getResources().getString(R.string.button_change_view));
             Objects.requireNonNull(buttonLauncher).setOnPreferenceChangeListener((preference, newValue) -> {
                 prefLauncher.saveSharedPreferences(Constant.PREFERENCE_LAUNCHER_KEY, (Boolean) newValue);
                 AppUtils.relaunchApp();
                 return true;
             });
             SharedPreferencesUtil prefTheme = new SharedPreferencesUtil(requireContext(), Constant.PREFERENCE_THEME);
-            SwitchPreferenceCompat buttonTheme = findPreference(getString(R.string.button_dark_mode));
+            SwitchPreferenceCompat buttonTheme = findPreference(getResources().getString(R.string.button_dark_mode));
             if (Objects.requireNonNull(buttonTheme).isChecked()) {
                 buttonTheme.setTitle(R.string.title_light_mode);
                 buttonTheme.setIcon(R.drawable.ic_settings_sun);
@@ -88,7 +88,7 @@ public class SettingsActivity extends AppCompatActivity {
                 prefTheme.saveSharedPreferences(Constant.PREFERENCE_THEME_KEY, isChecked);
                 return true;
             });
-            buttonCaches = findPreference(getString(R.string.button_clear_caches));
+            buttonCaches = findPreference(getResources().getString(R.string.button_clear_caches));
             Objects.requireNonNull(buttonCaches).setOnPreferenceClickListener(preference -> {
                 CleanUtils.cleanExternalCache();
                 CleanUtils.cleanInternalCache();
@@ -96,7 +96,7 @@ public class SettingsActivity extends AppCompatActivity {
                 initializeCache();
                 return true;
             });
-            Preference versionApp = findPreference(getString(R.string.button_about));
+            Preference versionApp = findPreference(getResources().getString(R.string.button_about));
             Objects.requireNonNull(versionApp).setSummary(String.format(Locale.getDefault(),
                     "App Version: %s (%d)", AppUtils.getAppVersionName(), AppUtils.getAppVersionCode()));
             initializeCache();
@@ -106,7 +106,7 @@ public class SettingsActivity extends AppCompatActivity {
             long size = 0;
             size += getDirSize(Utils.getApp().getCacheDir());
             size += getDirSize(Objects.requireNonNull(Utils.getApp().getExternalCacheDir()));
-            buttonCaches.setSummary("Caches Size " + Utilities.getFileSize(size));
+            buttonCaches.setSummary("Caches Size " + HelperUtils.getFileSize(size));
         }
 
         private long getDirSize(File dir) {

@@ -226,14 +226,14 @@ public class SplashActivity extends AppCompatActivity {
                         if (!launcherPref.loadBooleanSharedPreference(Constant.PREFERENCE_LAUNCHER_KEY)) {
                             Intent intentMainActivity = new Intent(activity, MainActivity.class);
                             intentMainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                                 intentMainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             }
                             activity.startActivity(intentMainActivity);
                         } else {
                             Intent intentMainTabbed = new Intent(activity, MainTabbedActivity.class);
                             intentMainTabbed.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                                 intentMainTabbed.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             }
                             activity.startActivity(intentMainTabbed);

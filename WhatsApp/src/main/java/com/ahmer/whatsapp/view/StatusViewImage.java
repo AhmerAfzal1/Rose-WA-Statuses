@@ -29,7 +29,7 @@ import static com.ahmer.whatsapp.Constant.TAG;
 public class StatusViewImage extends AppCompatActivity {
 
     private boolean isFabOpened = false;
-    private ViewImageBinding binding;
+    private ViewImageBinding binding = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +78,7 @@ public class StatusViewImage extends AppCompatActivity {
                 File destPathJPG = new File(PathUtils.getExternalStoragePath() + Utilities.saveToWithFileName(path) + EXT_JPG_LOWER_CASE);
                 FileUtils.move(new File(Objects.requireNonNull(path)), destPathJPG);
                 ThreadUtils.runOnUiThread(() -> {
-                    ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
+                    ToastUtils.showLong(getResources().getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
                     new MediaScanner(v.getContext(), destPathJPG);
                 });
                 FragmentImages.updateList(position);

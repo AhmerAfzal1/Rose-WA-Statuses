@@ -18,13 +18,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ahmer.afzal.utils.HelperUtils;
 import com.ahmer.afzal.utils.constants.AppPackageConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.FileUtils;
 import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.afzal.utils.utilcode.ThreadUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
-import com.ahmer.whatsapp.Constant;
 import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
@@ -33,11 +33,7 @@ import com.ahmer.whatsapp.databinding.ActivityMainBinding;
 import com.ahmer.whatsapp.databinding.StatusItemActivityBinding;
 import com.ahmer.whatsapp.view.StatusViewImage;
 import com.ahmer.whatsapp.view.StatusViewVideo;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -55,11 +51,11 @@ import static com.ahmer.whatsapp.Constant.TAG;
 public class MainActivity extends AppCompatActivity {
 
     private final ArrayList<StatusItem> contentList = new ArrayList<>();
+    private ActivityMainBinding binding = null;
     private AdView adView = null;
     private FirebaseAnalytics firebaseAnalytics = null;
     private RecyclerView recyclerView = null;
     private StatusVideoAdapter adapter = null;
-    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,17 +68,17 @@ public class MainActivity extends AppCompatActivity {
         });
         binding.tvTitle.setText(R.string.app_name);
         binding.ivInfo.setOnClickListener(v -> {
-            Intent intentAbout = new Intent(MainActivity.this, AhmerActivity.class);
+            Intent intentAbout = new Intent(v.getContext(), AhmerActivity.class);
             intentAbout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 intentAbout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             startActivity(intentAbout);
         });
         binding.ivSettings.setOnClickListener(v -> {
-            Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
+            Intent intentSettings = new Intent(v.getContext(), SettingsActivity.class);
             intentSettings.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 intentSettings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             startActivity(intentSettings);
@@ -98,52 +94,15 @@ public class MainActivity extends AppCompatActivity {
         loadData();
     }
 
-    private void loadAds() {
-        MobileAds.initialize(MainActivity.this, initializationStatus -> {
-            //Keep empty
-        });
-        adView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                binding.adViewLayout.setVisibility(View.VISIBLE);
-                Log.v(Constant.TAG, getResources().getString(R.string.adLoaded));
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError loadAdError) {
-                super.onAdFailedToLoad(loadAdError);
-                Log.v(Constant.TAG, getResources().getString(R.string.adFailedToLoad) + loadAdError.getCode());
-                binding.adViewLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAdOpened() {
-                Log.v(Constant.TAG, getResources().getString(R.string.adOpened));
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                Log.v(Constant.TAG, getResources().getString(R.string.adLeftApplication));
-            }
-
-            @Override
-            public void onAdClosed() {
-                Log.v(Constant.TAG, getResources().getString(R.string.adClosed));
-            }
-        });
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
-    }
-
     private void loadData() {
-        loadAds();
+        Utilities.loadAds(getApplicationContext(), adView, binding.adViewLayout);
         GridLayoutManager gridLayoutManager;
         Configuration config = getResources().getConfiguration();
         if (config.smallestScreenWidthDp >= 720) {
-            gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
+            gridLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
             Log.v(TAG, getClass().getSimpleName() + " -> Screen width: " + config.smallestScreenWidthDp);
         } else {
-            gridLayoutManager = new GridLayoutManager(MainActivity.this, 1);
+            gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);
         }
         gridLayoutManager.isAutoMeasureEnabled();
         gridLayoutManager.setSmoothScrollbarEnabled(true);
@@ -190,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        firebaseAnalytics.setCurrentScreen(this, "CurrentScreen: " + getClass().getSimpleName(), null);
         if (adView != null) {
             adView.resume();
         }
@@ -220,9 +178,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             holder.ivThumbnails.setImageBitmap(contentList.get(position).getThumbnails());
-            holder.relativeLayout.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            holder.relativeLayout.setBackgroundColor(Color.WHITE);
             holder.relativeLayout.setAlpha(0);
-            holder.showSize.setText(Utilities.getFileSize(contentList.get(position).getSize()));
+            holder.showSize.setText(HelperUtils.getFileSize(contentList.get(position).getSize()));
             File source = new File(contentList.get(position).getPath());
 
             if (contentList.get(position).getFormat().endsWith(EXT_MP4_LOWER_CASE) ||
@@ -295,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
                     firebaseAnalytics.logEvent("Download_MP4_Open", bundleDownloadMP4);
                     FileUtils.move(source, destPathMP4);
                     ThreadUtils.runOnUiThread(() -> {
-                        ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathMP4.getPath());
+                        ToastUtils.showLong(getResources().getString(R.string.status_saved) + "\n" + destPathMP4.getPath());
                         new MediaScanner(v.getContext(), destPathMP4);
                     });
                     contentList.remove(position);
@@ -314,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
                     firebaseAnalytics.logEvent("Download_JPG_Open", bundleDownloadJPG);
                     FileUtils.move(source, destPathJPG);
                     ThreadUtils.runOnUiThread(() -> {
-                        ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
+                        ToastUtils.showLong(getResources().getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
                         new MediaScanner(v.getContext(), destPathJPG);
                     });
                     contentList.remove(position);

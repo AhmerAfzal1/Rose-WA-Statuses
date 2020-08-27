@@ -31,9 +31,9 @@ import static com.ahmer.whatsapp.Constant.TAG;
 public class StatusViewVideo extends AppCompatActivity {
 
     private boolean isFabOpened = false;
-    private ViewVideoBinding binding;
     private MediaController mediaController = null;
     private VideoView view = null;
+    private ViewVideoBinding binding = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +103,7 @@ public class StatusViewVideo extends AppCompatActivity {
                 File destPathMP4 = new File(PathUtils.getExternalStoragePath() + Utilities.saveToWithFileName(path) + EXT_MP4_LOWER_CASE);
                 FileUtils.move(new File(Objects.requireNonNull(path)), destPathMP4);
                 ThreadUtils.runOnUiThread(() -> {
-                    ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathMP4.getPath());
+                    ToastUtils.showLong(getResources().getString(R.string.status_saved) + "\n" + destPathMP4.getPath());
                     new MediaScanner(v.getContext(), destPathMP4);
                 });
                 FragmentVideos.updateList(position);
