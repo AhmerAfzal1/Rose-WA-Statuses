@@ -11,13 +11,11 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Size;
 
-import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 
 import static com.ahmer.whatsapp.Constant.IMAGE_HEIGHT;
 import static com.ahmer.whatsapp.Constant.IMAGE_WIDTH;
@@ -98,46 +96,5 @@ public final class Thumbnails {
         matrix.postScale(scaleWidth, scaleHeight);
         // Recreate the new bitmap
         return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
-    }
-
-    public static File thumbnailDir() {
-        File thumbnailDir = new File(PathUtils.getInternalAppCachePath(), Constant.FOLDER_THUMBNAIL);
-        if (!thumbnailDir.exists()) {
-            if (thumbnailDir.mkdir()) {
-                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> The directory has been created: " + thumbnailDir);
-            } else {
-                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> Could not create the directory for some unknown reason");
-            }
-        } else {
-            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> This directory has already been created");
-        }
-        return thumbnailDir;
-    }
-
-    public static void saveImage(Bitmap bmp, String fileName) {
-        saveImage(thumbnailDir(), bmp, fileName);
-    }
-
-    public static void saveImage(File locationToSave, Bitmap bmp, String fileName) {
-        File file = new File(locationToSave, fileName + ".png");
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
-            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> Thumbnail saved on: " + file);
-        } catch (Exception e) {
-            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> Exception: " + e.getMessage());
-            ThrowableUtils.getFullStackTrace(e);
-            FirebaseCrashlytics.getInstance().recordException(e);
-        } finally {
-            try {
-                if (out != null)
-                    out.close();
-            } catch (Exception e) {
-                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> Image not saved due to: " + e.getMessage(), e);
-                ThrowableUtils.getFullStackTrace(e);
-                FirebaseCrashlytics.getInstance().recordException(e);
-            }
-        }
     }
 }

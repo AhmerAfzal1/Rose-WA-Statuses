@@ -29,6 +29,8 @@ import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -104,6 +106,7 @@ public class Helper {
         return Constant.SAVE_TO_WITH_FILE_NAME + FileUtils.getFileNameNoExtension(path);
     }
 
+    @NotNull
     public static File dirAhmer() {
         File dir = new File(PathUtils.getExternalAppDataPath(), Constant.FOLDER_AHMER);
         if (!dir.exists()) {

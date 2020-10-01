@@ -3,7 +3,6 @@ package com.ahmer.whatsapp.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +13,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.ahmer.afzal.utils.async.AsyncTask;
 import com.ahmer.afzal.utils.constants.PermissionConstants;
-import com.ahmer.afzal.utils.utilcode.FileUtils;
 import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.afzal.utils.utilcode.PermissionUtils;
 import com.ahmer.afzal.utils.utilcode.SPUtils;
@@ -84,24 +82,14 @@ public class SplashActivity extends AppCompatActivity {
 
     private static void getVideoStatuses(File file) {
         String filePath = file.getAbsolutePath();
-        String fileName = FileUtils.getFileNameNoExtension(file.getName());
-        File preExistedThumbnails = new File(Thumbnails.thumbnailDir() + "/" + fileName + ".png");
         if (filePath.endsWith(EXT_MP4_LOWER_CASE) || filePath.endsWith(EXT_MP4_UPPER_CASE)) {
             StatusItem item = new StatusItem();
-            item.setPath(file.getAbsolutePath());
+            item.setPath(filePath);
             item.setName(file.getName());
             item.setSize(file.length());
             item.setFormat(EXT_MP4_LOWER_CASE);
-            if (!preExistedThumbnails.exists()) {
-                Log.v(TAG, SplashActivity.class.getSimpleName() + " -> First time generate thumbnails for videos");
-                Bitmap video = Thumbnails.videoThumbnails(file);
-                item.setThumbnails(video);
-                Thumbnails.saveImage(video, FileUtils.getFileNameNoExtension(file.getName()));
-            } else {
-                Log.v(TAG, SplashActivity.class.getSimpleName() + " -> Load pre-existed thumbnails for videos");
-                Bitmap videoThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
-                item.setThumbnails(videoThumbnail);
-            }
+            Bitmap video = Thumbnails.videoThumbnails(file);
+            item.setThumbnails(video);
             videoStatuses.add(item);
             bothStatuses.add(item);
         }
@@ -109,24 +97,14 @@ public class SplashActivity extends AppCompatActivity {
 
     private static void getImageStatuses(File file) {
         String filePath = file.getAbsolutePath();
-        String fileName = FileUtils.getFileNameNoExtension(file.getName());
-        File preExistedThumbnails = new File(Thumbnails.thumbnailDir() + "/" + fileName + ".png");
         if (filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE)) {
             StatusItem item = new StatusItem();
             item.setPath(file.getAbsolutePath());
             item.setName(file.getName());
             item.setSize(file.length());
             item.setFormat(EXT_JPG_LOWER_CASE);
-            if (!preExistedThumbnails.exists()) {
-                Log.v(TAG, SplashActivity.class.getSimpleName() + " -> First time generate thumbnails for images");
-                Bitmap jpg = Thumbnails.imageThumbnails(file);
-                item.setThumbnails(jpg);
-                Thumbnails.saveImage(jpg, FileUtils.getFileNameNoExtension(file.getName()));
-            } else {
-                Log.v(TAG, SplashActivity.class.getSimpleName() + " -> Load pre-existed thumbnails for images");
-                Bitmap imageThumbnail = BitmapFactory.decodeFile(preExistedThumbnails.getAbsolutePath());
-                item.setThumbnails(imageThumbnail);
-            }
+            Bitmap jpg = Thumbnails.imageThumbnails(file);
+            item.setThumbnails(jpg);
             imageStatuses.add(item);
             bothStatuses.add(item);
         }
@@ -207,7 +185,6 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Thumbnails.thumbnailDir();
         }
 
         @Override
