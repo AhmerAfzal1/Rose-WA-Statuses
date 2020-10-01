@@ -99,7 +99,7 @@ public class SplashActivity extends AppCompatActivity {
         String filePath = file.getAbsolutePath();
         if (filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE)) {
             StatusItem item = new StatusItem();
-            item.setPath(file.getAbsolutePath());
+            item.setPath(filePath);
             item.setName(file.getName());
             item.setSize(file.length());
             item.setFormat(EXT_JPG_LOWER_CASE);
