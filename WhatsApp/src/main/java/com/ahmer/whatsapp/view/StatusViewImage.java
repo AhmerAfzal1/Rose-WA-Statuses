@@ -15,7 +15,7 @@ import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
-import com.ahmer.whatsapp.Utilities;
+import com.ahmer.whatsapp.Helper;
 import com.ahmer.whatsapp.activity.FragmentImages;
 import com.ahmer.whatsapp.databinding.ViewImageBinding;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -75,7 +75,7 @@ public class StatusViewImage extends AppCompatActivity {
         Log.v(TAG, getClass().getSimpleName() + " -> ImagesAdapter position: " + position);
         binding.fabDownloadFile.setOnClickListener(v -> {
             try {
-                File destPathJPG = new File(PathUtils.getExternalStoragePath() + Utilities.saveToWithFileName(path) + EXT_JPG_LOWER_CASE);
+                File destPathJPG = new File(PathUtils.getExternalStoragePath() + Helper.saveToWithFileName(path) + EXT_JPG_LOWER_CASE);
                 FileUtils.move(new File(Objects.requireNonNull(path)), destPathJPG);
                 ThreadUtils.runOnUiThread(() -> {
                     ToastUtils.showLong(getResources().getString(R.string.status_saved) + "\n" + destPathJPG.getPath());
@@ -90,8 +90,8 @@ public class StatusViewImage extends AppCompatActivity {
                 FirebaseCrashlytics.getInstance().recordException(e);
             }
         });
-        binding.fabShare.setOnClickListener(v -> Utilities.shareFile(v.getContext(), FragmentImages.statusItemFile, position));
-        binding.fabShareWhatsApp.setOnClickListener(v -> Utilities.shareToWhatsApp(v.getContext(), FragmentImages.statusItemFile, position));
+        binding.fabShare.setOnClickListener(v -> Helper.shareFile(v.getContext(), FragmentImages.statusItemFile, position));
+        binding.fabShareWhatsApp.setOnClickListener(v -> Helper.shareToWhatsApp(v.getContext(), FragmentImages.statusItemFile, position));
     }
 
     private void showFAB() {

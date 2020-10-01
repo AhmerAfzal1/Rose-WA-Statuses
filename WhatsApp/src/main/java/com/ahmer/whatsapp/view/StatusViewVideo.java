@@ -17,7 +17,7 @@ import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
-import com.ahmer.whatsapp.Utilities;
+import com.ahmer.whatsapp.Helper;
 import com.ahmer.whatsapp.activity.FragmentVideos;
 import com.ahmer.whatsapp.databinding.ViewVideoBinding;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -100,7 +100,7 @@ public class StatusViewVideo extends AppCompatActivity {
         });
         binding.fabDownloadFile.setOnClickListener(v -> {
             try {
-                File destPathMP4 = new File(PathUtils.getExternalStoragePath() + Utilities.saveToWithFileName(path) + EXT_MP4_LOWER_CASE);
+                File destPathMP4 = new File(PathUtils.getExternalStoragePath() + Helper.saveToWithFileName(path) + EXT_MP4_LOWER_CASE);
                 FileUtils.move(new File(Objects.requireNonNull(path)), destPathMP4);
                 ThreadUtils.runOnUiThread(() -> {
                     ToastUtils.showLong(getResources().getString(R.string.status_saved) + "\n" + destPathMP4.getPath());
@@ -115,8 +115,8 @@ public class StatusViewVideo extends AppCompatActivity {
                 FirebaseCrashlytics.getInstance().recordException(e);
             }
         });
-        binding.fabShare.setOnClickListener(v -> Utilities.shareFile(v.getContext(), FragmentVideos.statusItemFile, position));
-        binding.fabShareWhatsApp.setOnClickListener(v -> Utilities.shareToWhatsApp(v.getContext(), FragmentVideos.statusItemFile, position));
+        binding.fabShare.setOnClickListener(v -> Helper.shareFile(v.getContext(), FragmentVideos.statusItemFile, position));
+        binding.fabShareWhatsApp.setOnClickListener(v -> Helper.shareToWhatsApp(v.getContext(), FragmentVideos.statusItemFile, position));
     }
 
     private void showFAB() {

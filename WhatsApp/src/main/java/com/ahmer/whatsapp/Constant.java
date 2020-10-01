@@ -20,4 +20,6 @@ public class Constant {
     public static final String WHATSAPP_FM_LOCATION = "/FMWhatsApp/Media/.Statuses";
     public static final String WHATSAPP_LOCATION = "/WhatsApp/Media/.Statuses";
     public static final String WHATSAPP_YO_LOCATION = "/YoWhatsApp/Media/.Statuses";
+    public static final String PREFERENCE_SYNC_AHMER = "AhmerSync";
+    public static final String PREFERENCE_SYNC_KEY_AHMER = "AhmerSyncKey";
 }

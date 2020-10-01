@@ -6,11 +6,14 @@ import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.multidex.MultiDexApplication;
 
+import com.ahmer.afzal.utils.utilcode.Utils;
+
 public class MyApp extends MultiDexApplication implements LifecycleObserver {
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Utils.init(MyApp.this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
     }
 

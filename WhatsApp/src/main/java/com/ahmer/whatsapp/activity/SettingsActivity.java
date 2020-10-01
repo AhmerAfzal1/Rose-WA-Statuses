@@ -15,9 +15,9 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.ahmer.afzal.utils.HelperUtils;
-import com.ahmer.afzal.utils.SharedPreferencesUtil;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.CleanUtils;
+import com.ahmer.afzal.utils.utilcode.SPUtils;
 import com.ahmer.afzal.utils.utilcode.Utils;
 import com.ahmer.whatsapp.Constant;
 import com.ahmer.whatsapp.R;
@@ -60,14 +60,14 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.settings_pref, rootKey);
-            SharedPreferencesUtil prefLauncher = new SharedPreferencesUtil(requireContext(), Constant.PREFERENCE_LAUNCHER);
+            SPUtils prefLauncher = SPUtils.getInstance(Constant.PREFERENCE_LAUNCHER);
             SwitchPreferenceCompat buttonLauncher = findPreference(getResources().getString(R.string.button_change_view));
             Objects.requireNonNull(buttonLauncher).setOnPreferenceChangeListener((preference, newValue) -> {
-                prefLauncher.saveSharedPreferences(Constant.PREFERENCE_LAUNCHER_KEY, (Boolean) newValue);
+                prefLauncher.put(Constant.PREFERENCE_LAUNCHER_KEY, (Boolean) newValue);
                 AppUtils.relaunchApp();
                 return true;
             });
-            SharedPreferencesUtil prefTheme = new SharedPreferencesUtil(requireContext(), Constant.PREFERENCE_THEME);
+            SPUtils prefTheme = SPUtils.getInstance(Constant.PREFERENCE_THEME);
             SwitchPreferenceCompat buttonTheme = findPreference(getResources().getString(R.string.button_dark_mode));
             if (Objects.requireNonNull(buttonTheme).isChecked()) {
                 buttonTheme.setTitle(R.string.title_light_mode);
@@ -85,7 +85,7 @@ public class SettingsActivity extends AppCompatActivity {
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
-                prefTheme.saveSharedPreferences(Constant.PREFERENCE_THEME_KEY, isChecked);
+                prefTheme.put(Constant.PREFERENCE_THEME_KEY, isChecked);
                 return true;
             });
             buttonCaches = findPreference(getResources().getString(R.string.button_clear_caches));

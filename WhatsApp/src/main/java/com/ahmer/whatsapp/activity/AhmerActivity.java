@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 
@@ -17,48 +18,20 @@ import com.ahmer.afzal.utils.HelperUtils;
 import com.ahmer.afzal.utils.constants.AppPackageConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.afzal.utils.utilcode.NetworkUtils;
-import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.whatsapp.Constant;
+import com.ahmer.whatsapp.Helper;
 import com.ahmer.whatsapp.R;
-import com.ahmer.whatsapp.Thumbnails;
 import com.ahmer.whatsapp.databinding.ActivityAhmerBinding;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Objects;
-
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.observers.DisposableObserver;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
-import static com.ahmer.whatsapp.Constant.TAG;
 
 public class AhmerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
     private ActivityAhmerBinding binding = null;
     private FirebaseAnalytics firebaseAnalytics = null;
-
-    public static File dirAhmer() {
-        File dir = new File(PathUtils.getExternalAppDataPath(), Constant.FOLDER_AHMER);
-        if (!dir.exists()) {
-            if (dir.mkdir()) {
-                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> The directory has been created: " + dir);
-            } else {
-                Log.v(TAG, Thumbnails.class.getSimpleName() + " -> Could not create the directory for some unknown reason");
-            }
-        } else {
-            Log.v(TAG, Thumbnails.class.getSimpleName() + " -> This directory has already been created");
-        }
-        return dir;
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,56 +65,46 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
         binding.tvTitle.setText(getResources().getString(R.string.about_dev));
         binding.tvTwitter.setOnClickListener(this);
         binding.tvTwitter.setOnLongClickListener(this);
-        File preExistedPic = new File(dirAhmer() + "/" + Constant.FILE_NAME_AHMER + ".png");
+        File preExistedPic = new File(Helper.dirAhmer() + "/" + Constant.FILE_NAME_AHMER + ".png");
         if (!preExistedPic.exists()) {
-            if (NetworkUtils.isConnected()) {
-                final Bitmap[] bitmap = {null};
-                Observable.fromCallable(() -> {
-                    Request request = new Request.Builder()
-                            .url(getResources().getString(R.string.ahmer_facebook_graph_link))
-                            .build();
-                    OkHttpClient okHttpClient = new OkHttpClient();
-                    try {
-                        return okHttpClient.newCall(request).execute();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        ThrowableUtils.getFullStackTrace(e);
-                        FirebaseCrashlytics.getInstance().recordException(e);
-                    }
-                    return null;
-                })
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new DisposableObserver<Response>() {
-                            @Override
-                            public void onNext(@NonNull Response response) {
-                                bitmap[0] = BitmapFactory.decodeStream(Objects.requireNonNull(response.body()).byteStream());
-                            }
-
-                            @Override
-                            public void onError(@NonNull Throwable e) {
-                                e.printStackTrace();
-                                ThrowableUtils.getFullStackTrace(e);
-                                FirebaseCrashlytics.getInstance().recordException(e);
-                                Log.v(TAG, getClass().getSimpleName() + " -> Exception: " + e.getMessage());
-                                binding.progressCircleImageView.setVisibility(View.GONE);
-                            }
-
-                            @Override
-                            public void onComplete() {
-                                Thumbnails.saveImage(dirAhmer(), bitmap[0], Constant.FILE_NAME_AHMER);
-                                binding.imageViewAhmer.setImageBitmap(bitmap[0]);
-                                binding.progressCircleImageView.setVisibility(View.GONE);
-                            }
-                        });
-            } else {
-                HelperUtils.showNoInternetSnack(AhmerActivity.this);
-                new Handler().postDelayed(() -> binding.progressCircleImageView.setVisibility(View.GONE), 5000);
-            }
+            downloadPic();
         } else {
             binding.progressCircleImageView.setVisibility(View.GONE);
             Bitmap imageThumbnail = BitmapFactory.decodeFile(preExistedPic.getAbsolutePath());
             binding.imageViewAhmer.setImageBitmap(imageThumbnail);
+            long lastSyncWas = Helper.getLastSyncWithTimeSpanByNow(Constant.PREFERENCE_SYNC_AHMER,
+                    Constant.PREFERENCE_SYNC_KEY_AHMER);
+            // getTimeSpanByNow return minus value
+            if (lastSyncWas < 0) {
+                if (NetworkUtils.isConnected()) {
+                    boolean isOldPicDeleted = preExistedPic.delete();
+                    if (isOldPicDeleted) {
+                        downloadPic();
+                    } else {
+                        Log.v(Constant.TAG, getClass().getSimpleName() + " -> Could not deleted for some unknown reason");
+                    }
+                } else {
+                    Log.v(Constant.TAG, getClass().getSimpleName() + " ->  There's no working Internet connection");
+                }
+            } else {
+                Log.v(Constant.TAG, getClass().getSimpleName() + " -> Value is zero");
+            }
+        }
+        binding.imageViewAhmer.setOnClickListener(v -> downloadPic());
+        binding.imageViewAhmer.setOnLongClickListener(this);
+    }
+
+    private void downloadPic() {
+        binding.progressCircleImageView.setVisibility(View.VISIBLE);
+        if (NetworkUtils.isConnected()) {
+            Helper.setLastSync(Constant.PREFERENCE_SYNC_AHMER, Constant.PREFERENCE_SYNC_KEY_AHMER);
+            new Helper.DownloadPic(binding.imageViewAhmer, binding.progressCircleImageView,
+                    Constant.FILE_NAME_AHMER)
+                    .execute(getString(R.string.ahmer_facebook_graph_link));
+        } else {
+            HelperUtils.showNoInternetSnack(this);
+            new Handler(Looper.getMainLooper()).postDelayed(() ->
+                    binding.progressCircleImageView.setVisibility(View.GONE), 5000);
         }
     }
 
@@ -278,6 +241,28 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.tvBlogspot:
                 HelperUtils.clipBoardCopied(v.getContext(), binding.tvBlogspot);
+                break;
+
+            case R.id.imageViewAhmer:
+                String idFB = getString(R.string.ahmer_facebook_url) + getString(R.string.ahmer_facebook_id);
+                if (NetworkUtils.isConnected()) {
+                    if (AppUtils.isAppInstalled(AppPackageConstants.PKG_FACEBOOK)) {
+                        Intent intentFB = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/100025917301113"));
+                        intentFB.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            intentFB.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        }
+                        startActivity(intentFB);
+                        Bundle facebook = new Bundle();
+                        facebook.putString(FirebaseAnalytics.Param.ITEM_ID, "Ahmer Facebook");
+                        facebook.putString(FirebaseAnalytics.Param.ITEM_NAME, "Ahmer Facebook ID Opened");
+                        firebaseAnalytics.logEvent("Ahmer_FB_Open", facebook);
+                    } else {
+                        HelperUtils.openCustomTabs(v.getContext(), idFB);
+                    }
+                } else {
+                    HelperUtils.showNoInternetSnack(this);
+                }
                 break;
 
             default:

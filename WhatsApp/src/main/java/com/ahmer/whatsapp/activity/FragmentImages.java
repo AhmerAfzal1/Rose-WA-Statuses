@@ -19,7 +19,7 @@ import com.ahmer.afzal.utils.constants.AppPackageConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
-import com.ahmer.whatsapp.Utilities;
+import com.ahmer.whatsapp.Helper;
 import com.ahmer.whatsapp.databinding.FragmentImagesBinding;
 import com.ahmer.whatsapp.databinding.StatusItemFragBinding;
 import com.ahmer.whatsapp.view.StatusViewImage;
@@ -100,8 +100,8 @@ public class FragmentImages extends Fragment {
             @Override
             public void onChanged() {
                 super.onChanged();
-                if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_BUSINESS_WHATSAPP)
-                        || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp) || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
+                if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP_BUSINESS)
+                        || AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP_FM) || AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP_YO))) {
                     binding.layoutNoStatus.setVisibility(View.VISIBLE);
                     binding.tvNoStatus.setText(R.string.no_whatsapp_installed);
                 } else {
@@ -140,7 +140,7 @@ public class FragmentImages extends Fragment {
         };
         adapter.registerAdapterDataObserver(observer);
         observer.onChanged();
-        Utilities.loadAds(requireContext(), adView, binding.adViewLayout);
+        Helper.loadAds(requireContext(), adView, binding.adViewLayout);
     }
 
     @Override

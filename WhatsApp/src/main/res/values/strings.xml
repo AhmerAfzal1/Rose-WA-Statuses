@@ -72,5 +72,6 @@
     <string name="tab_text_2">Videos</string>
     <string name="title_activity_main_tabbed">MainTabbedActivity</string>
     <string name="no_internet_connection">Please check your Internet connection</string>
+    <string name="update_app_server_not_found">Server not found</string>
 
 </resources>

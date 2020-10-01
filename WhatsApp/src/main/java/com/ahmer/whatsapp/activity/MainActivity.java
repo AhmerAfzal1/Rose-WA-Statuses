@@ -28,7 +28,7 @@ import com.ahmer.afzal.utils.utilcode.ToastUtils;
 import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
-import com.ahmer.whatsapp.Utilities;
+import com.ahmer.whatsapp.Helper;
 import com.ahmer.whatsapp.databinding.ActivityMainBinding;
 import com.ahmer.whatsapp.databinding.StatusItemActivityBinding;
 import com.ahmer.whatsapp.view.StatusViewImage;
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        Utilities.loadAds(getApplicationContext(), adView, binding.adViewLayout);
+        Helper.loadAds(getApplicationContext(), adView, binding.adViewLayout);
         GridLayoutManager gridLayoutManager;
         Configuration config = getResources().getConfiguration();
         if (config.smallestScreenWidthDp >= 720) {
@@ -116,8 +116,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged() {
                 super.onChanged();
-                if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_BUSINESS_WHATSAPP)
-                        || AppUtils.isAppInstalled(AppPackageConstants.PKG_FM_WhatsApp) || AppUtils.isAppInstalled(AppPackageConstants.PKG_Yo_WhatsApp))) {
+                if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP_BUSINESS)
+                        || AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP_FM) || AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP_YO))) {
                     binding.layoutNoStatus.setVisibility(View.VISIBLE);
                     binding.tvNoStatus.setText(R.string.no_whatsapp_installed);
                 } else {
@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
                 bundleShare.putString(FirebaseAnalytics.Param.ITEM_ID, "Share");
                 bundleShare.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Shared Something");
                 firebaseAnalytics.logEvent("Share_Open", bundleShare);
-                Utilities.shareFile(v.getContext(), contentList, position);
+                Helper.shareFile(v.getContext(), contentList, position);
             });
 
             holder.btnShareWhatsApp.setOnClickListener(v -> {
@@ -240,13 +240,13 @@ public class MainActivity extends AppCompatActivity {
                 bundleWhatsApp.putString(FirebaseAnalytics.Param.ITEM_ID, "ShareWhatsApp");
                 bundleWhatsApp.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Shared Something on WhatsApp");
                 firebaseAnalytics.logEvent("WhatsApp_Share_Open", bundleWhatsApp);
-                Utilities.shareToWhatsApp(v.getContext(), contentList, position);
+                Helper.shareToWhatsApp(v.getContext(), contentList, position);
             });
 
             holder.btnDownload.setOnClickListener(v -> {
                 if (source.getAbsolutePath().endsWith(EXT_MP4_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_MP4_UPPER_CASE)) {
                     File destPathMP4 = new File(PathUtils.getExternalStoragePath() +
-                            Utilities.saveToWithFileName(source.getAbsolutePath()) + EXT_MP4_LOWER_CASE);
+                            Helper.saveToWithFileName(source.getAbsolutePath()) + EXT_MP4_LOWER_CASE);
                     Bundle bundleDownloadMP4 = new Bundle();
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadMP4");
                     bundleDownloadMP4.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download MP4 Status");
@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (source.getAbsolutePath().endsWith(EXT_JPG_LOWER_CASE) || source.getAbsolutePath().endsWith(EXT_JPG_UPPER_CASE)) {
                     File destPathJPG = new File(PathUtils.getExternalStoragePath() +
-                            Utilities.saveToWithFileName(source.getAbsolutePath()) + EXT_JPG_LOWER_CASE);
+                            Helper.saveToWithFileName(source.getAbsolutePath()) + EXT_JPG_LOWER_CASE);
                     Bundle bundleDownloadJPG = new Bundle();
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_ID, "DownloadJPG");
                     bundleDownloadJPG.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Download JPG Status");
