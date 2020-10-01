@@ -39,11 +39,10 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        binding.ivBack.setOnClickListener(v -> {
+        binding.toolbar.setOnClickListener(v -> {
             finish();
             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
         });
-        binding.tvTitle.setText(R.string.title_settings);
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {

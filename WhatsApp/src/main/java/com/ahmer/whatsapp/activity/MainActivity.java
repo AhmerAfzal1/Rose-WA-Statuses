@@ -25,10 +25,10 @@ import com.ahmer.afzal.utils.utilcode.FileUtils;
 import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.afzal.utils.utilcode.ThreadUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
+import com.ahmer.whatsapp.Helper;
 import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
-import com.ahmer.whatsapp.Helper;
 import com.ahmer.whatsapp.databinding.ActivityMainBinding;
 import com.ahmer.whatsapp.databinding.StatusItemActivityBinding;
 import com.ahmer.whatsapp.view.StatusViewImage;
@@ -62,26 +62,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        binding.toolbar.setOnClickListener(v -> {
-            finish();
-            overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
-        });
-        binding.tvTitle.setText(R.string.app_name);
-        binding.ivInfo.setOnClickListener(v -> {
-            Intent intentAbout = new Intent(v.getContext(), AhmerActivity.class);
-            intentAbout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                intentAbout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.menuSettings:
+                    Intent intentSettings = new Intent(getApplicationContext(), SettingsActivity.class);
+                    intentSettings.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        intentSettings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    }
+                    startActivity(intentSettings);
+                    break;
+
+                case R.id.menuInfo:
+                    Intent intentAbout = new Intent(getApplicationContext(), AhmerActivity.class);
+                    intentAbout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        intentAbout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    }
+                    startActivity(intentAbout);
+                    break;
+
+                default:
+                    break;
             }
-            startActivity(intentAbout);
-        });
-        binding.ivSettings.setOnClickListener(v -> {
-            Intent intentSettings = new Intent(v.getContext(), SettingsActivity.class);
-            intentSettings.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                intentSettings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            }
-            startActivity(intentSettings);
+            return false;
         });
         adView = binding.adView;
         recyclerView = binding.rvStatusList;

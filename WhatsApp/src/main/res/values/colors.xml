@@ -24,4 +24,10 @@
     <color name="colorTabText">#E0E0E0</color>
     <color name="colorTransBg">#70000000</color>
     <color name="colorWhite">#FFFFFF</color>
+
+    <color name="colorBgMainLayout">#EEEEEE</color>
+    <color name="colorBgRoundedLayout">#FCFCFC</color>
+    <color name="colorBgRoundedStrokeLayout">#DDDDDD</color>
+
+    <color name="colorBlack">@android:color/black</color>
 </resources>

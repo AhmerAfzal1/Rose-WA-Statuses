@@ -32,21 +32,30 @@ public class MainTabbedActivity extends AppCompatActivity {
                     break;
             }
         }).attach();
-        binding.ivSettings.setOnClickListener(v -> {
-            Intent intentSetting = new Intent(v.getContext(), SettingsActivity.class);
-            intentSetting.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                intentSetting.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        binding.toolbarAppBar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.menuSettings:
+                    Intent intentSetting = new Intent(getApplicationContext(), SettingsActivity.class);
+                    intentSetting.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        intentSetting.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    }
+                    startActivity(intentSetting);
+                    break;
+
+                case R.id.menuInfo:
+                    Intent intentAhmer = new Intent(getApplicationContext(), AhmerActivity.class);
+                    intentAhmer.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        intentAhmer.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    }
+                    startActivity(intentAhmer);
+                    break;
+
+                default:
+                    break;
             }
-            startActivity(intentSetting);
-        });
-        binding.ivInfo.setOnClickListener(v -> {
-            Intent intentAhmer = new Intent(v.getContext(), AhmerActivity.class);
-            intentAhmer.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                intentAhmer.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            }
-            startActivity(intentAhmer);
+            return false;
         });
     }
 }

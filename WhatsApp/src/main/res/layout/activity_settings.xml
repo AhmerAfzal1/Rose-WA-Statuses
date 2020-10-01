@@ -3,41 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/action_bar_height_size"
-        android:background="@color/primaryColor">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/ivBack"
-                android:layout_width="@dimen/toolbar_image_view"
-                android:layout_height="@dimen/toolbar_image_view"
-                android:layout_centerVertical="true"
-                android:contentDescription="@string/empty_description"
-                android:padding="@dimen/toolbar_image_view_padding"
-                app:srcCompat="@drawable/ic_toolbar_arrow_back" />
-
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/toolbar_title_margin"
-                android:layout_marginRight="@dimen/toolbar_title_margin"
-                android:layout_toEndOf="@id/ivBack"
-                android:layout_toRightOf="@id/ivBack"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-                android:textColor="@color/colorWhite"
-                android:textStyle="bold" />
-        </RelativeLayout>
-    </androidx.appcompat.widget.Toolbar>
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="10dp"
+        android:theme="@style/Rose.Toolbar.Style"
+        app:contentInsetEnd="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
+        app:navigationIcon="@drawable/ic_toolbar_arrow_back"
+        app:title="@string/title_settings"
+        app:titleMarginStart="0dp" />
 
     <FrameLayout
         android:id="@+id/settings"

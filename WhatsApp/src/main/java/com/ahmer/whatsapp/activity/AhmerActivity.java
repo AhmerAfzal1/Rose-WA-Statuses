@@ -51,7 +51,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
         binding.idAhmerQQ.setOnLongClickListener(this);
         binding.idAhmerYahoo.setOnClickListener(this);
         binding.idAhmerYahoo.setOnLongClickListener(this);
-        binding.ivBack.setOnClickListener(this);
+        binding.toolbar.setOnClickListener(this);
         binding.ivBlogspot.setOnClickListener(this);
         binding.ivFacebook.setOnClickListener(this);
         binding.ivGithub.setOnClickListener(this);
@@ -62,7 +62,6 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
         binding.tvFacebook.setOnLongClickListener(this);
         binding.tvGithub.setOnClickListener(this);
         binding.tvGithub.setOnLongClickListener(this);
-        binding.tvTitle.setText(getResources().getString(R.string.about_dev));
         binding.tvTwitter.setOnClickListener(this);
         binding.tvTwitter.setOnLongClickListener(this);
         File preExistedPic = new File(Helper.dirAhmer() + "/" + Constant.FILE_NAME_AHMER + ".png");
@@ -100,7 +99,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
             Helper.setLastSync(Constant.PREFERENCE_SYNC_AHMER, Constant.PREFERENCE_SYNC_KEY_AHMER);
             new Helper.DownloadPic(binding.imageViewAhmer, binding.progressCircleImageView,
                     Constant.FILE_NAME_AHMER)
-                    .execute(getString(R.string.ahmer_facebook_graph_link));
+                    .execute(getString(R.string.graph_link_facebook_ahmer));
         } else {
             HelperUtils.showNoInternetSnack(this);
             new Handler(Looper.getMainLooper()).postDelayed(() ->
@@ -111,7 +110,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ivBack:
+            case R.id.toolbar:
                 finish();
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                 break;
@@ -127,7 +126,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.ivFacebook:
             case R.id.tvFacebook:
-                String idFB = getResources().getString(R.string.ahmer_facebook_url) + getResources().getString(R.string.ahmer_facebook_id);
+                String idFB = getResources().getString(R.string.url_facebook) + getResources().getString(R.string.id_facebook_ahmer);
                 if (NetworkUtils.isConnected()) {
                     if (AppUtils.isAppInstalled(AppPackageConstants.PKG_FACEBOOK)) {
                         Intent intentFB = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/100025917301113"));
@@ -153,7 +152,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
                 if (NetworkUtils.isConnected()) {
                     if (AppUtils.isAppInstalled(AppPackageConstants.PKG_TWITTER)) {
                         try {
-                            Intent intentTwitter = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=" + getResources().getString(R.string.ahmer_twitter_id)));
+                            Intent intentTwitter = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=" + getResources().getString(R.string.id_twitter_ahmer)));
                             intentTwitter.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                                 intentTwitter.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -164,7 +163,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
                             twitter.putString(FirebaseAnalytics.Param.ITEM_NAME, "Ahmer Twitter ID Opened");
                             firebaseAnalytics.logEvent("Ahmer_Twitter_Open", twitter);
                         } catch (Exception e) {
-                            Intent intentTwitter1 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/#!/" + getResources().getString(R.string.ahmer_twitter_id)));
+                            Intent intentTwitter1 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/#!/" + getResources().getString(R.string.id_twitter_ahmer)));
                             intentTwitter1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                                 intentTwitter1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -174,7 +173,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
                             FirebaseCrashlytics.getInstance().recordException(e);
                         }
                     } else {
-                        HelperUtils.openCustomTabs(v.getContext(), getResources().getString(R.string.ahmer_twitter_url));
+                        HelperUtils.openCustomTabs(v.getContext(), getResources().getString(R.string.url_twitter));
                     }
                 } else {
                     HelperUtils.showNoInternetSnack(AhmerActivity.this);
@@ -184,7 +183,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
             case R.id.ivGithub:
             case R.id.tvGithub:
                 if (NetworkUtils.isConnected()) {
-                    String url = getResources().getString(R.string.ahmer_github_url) + getResources().getString(R.string.ahmer_github_id) + "/";
+                    String url = getResources().getString(R.string.url_github) + getResources().getString(R.string.id_github_ahmer) + "/";
                     HelperUtils.openCustomTabs(v.getContext(), url);
                     Bundle blogSpot = new Bundle();
                     blogSpot.putString(FirebaseAnalytics.Param.ITEM_ID, "Ahmer Github");
@@ -198,7 +197,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
             case R.id.ivBlogspot:
             case R.id.tvBlogspot:
                 if (NetworkUtils.isConnected()) {
-                    HelperUtils.openCustomTabs(v.getContext(), getResources().getString(R.string.ahmer_blogspot_url));
+                    HelperUtils.openCustomTabs(v.getContext(), getResources().getString(R.string.url_blogspot_ahmer));
                     Bundle blogSpot = new Bundle();
                     blogSpot.putString(FirebaseAnalytics.Param.ITEM_ID, "Ahmer BlogSpot");
                     blogSpot.putString(FirebaseAnalytics.Param.ITEM_NAME, "Ahmer BlogSpot Web Link Opened");
@@ -244,7 +243,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.imageViewAhmer:
-                String idFB = getString(R.string.ahmer_facebook_url) + getString(R.string.ahmer_facebook_id);
+                String idFB = getString(R.string.url_facebook) + getString(R.string.id_facebook_ahmer);
                 if (NetworkUtils.isConnected()) {
                     if (AppUtils.isAppInstalled(AppPackageConstants.PKG_FACEBOOK)) {
                         Intent intentFB = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/100025917301113"));

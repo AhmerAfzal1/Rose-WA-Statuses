@@ -38,7 +38,7 @@
 
             <TextView
                 android:id="@+id/tvDownload"
-                style="@style/myTextAppearanceSmall"
+                style="@style/Rose.TextAppearance.Normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/fab_view_bg_label"
@@ -68,7 +68,7 @@
 
             <TextView
                 android:id="@+id/tvShareWhatsApp"
-                style="@style/myTextAppearanceSmall"
+                style="@style/Rose.TextAppearance.Normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/fab_view_bg_label"
@@ -98,7 +98,7 @@
 
             <TextView
                 android:id="@+id/tvShare"
-                style="@style/myTextAppearanceSmall"
+                style="@style/Rose.TextAppearance.Normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/fab_view_bg_label"
