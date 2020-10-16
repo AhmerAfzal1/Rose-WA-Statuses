@@ -80,7 +80,7 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    private static void getVideoStatuses(File file) {
+    private static void getVideoStatuses(@NonNull File file) {
         String filePath = file.getAbsolutePath();
         if (filePath.endsWith(EXT_MP4_LOWER_CASE) || filePath.endsWith(EXT_MP4_UPPER_CASE)) {
             StatusItem item = new StatusItem();
@@ -95,7 +95,7 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    private static void getImageStatuses(File file) {
+    private static void getImageStatuses(@NonNull File file) {
         String filePath = file.getAbsolutePath();
         if (filePath.endsWith(EXT_JPG_LOWER_CASE) || filePath.endsWith(EXT_JPG_UPPER_CASE)) {
             StatusItem item = new StatusItem();
@@ -115,9 +115,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivitySplashBinding binding = ActivitySplashBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
-        firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
         SPUtils themePref = SPUtils.getInstance(Constant.PREFERENCE_THEME);
         boolean isChecked = themePref.getBoolean(Constant.PREFERENCE_THEME_KEY);
         if (isChecked) {
@@ -176,7 +174,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private static class RunMainProgram extends AsyncTask<Void, Void, Void> {
 
-        private Activity activity;
+        private final Activity activity;
 
         RunMainProgram(Activity activity) {
             this.activity = activity;
@@ -189,7 +187,7 @@ public class SplashActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void aVoid) throws Exception {
-            getData();
+            SplashActivity.getData();
             return null;
         }
 
@@ -216,7 +214,7 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onBackgroundError(Exception e) {
+        protected void onBackgroundError(@NonNull Exception e) {
             e.printStackTrace();
             Log.v(TAG, getClass().getSimpleName() + " -> Exception: Error during loading data: " + e.getMessage());
             ThrowableUtils.getFullStackTrace(e);

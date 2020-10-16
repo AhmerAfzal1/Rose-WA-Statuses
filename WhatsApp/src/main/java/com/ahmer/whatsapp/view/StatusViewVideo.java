@@ -15,9 +15,9 @@ import com.ahmer.afzal.utils.utilcode.PathUtils;
 import com.ahmer.afzal.utils.utilcode.ThreadUtils;
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.ahmer.afzal.utils.utilcode.ToastUtils;
+import com.ahmer.whatsapp.Helper;
 import com.ahmer.whatsapp.MediaScanner;
 import com.ahmer.whatsapp.R;
-import com.ahmer.whatsapp.Helper;
 import com.ahmer.whatsapp.activity.FragmentVideos;
 import com.ahmer.whatsapp.databinding.ViewVideoBinding;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -40,9 +40,7 @@ public class StatusViewVideo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ViewVideoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
-        firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
         view = binding.videoView;
         String format = getIntent().getStringExtra("format");
         String path = getIntent().getStringExtra("path");
@@ -91,7 +89,7 @@ public class StatusViewVideo extends AppCompatActivity {
         }
         view.setOnCompletionListener(mp -> {
             view.stopPlayback();
-            StatusViewVideo.this.finish();
+            finish();
         });
         view.setOnTouchListener((v, event) -> {
             v.performClick();
@@ -103,7 +101,7 @@ public class StatusViewVideo extends AppCompatActivity {
                 File destPathMP4 = new File(PathUtils.getExternalStoragePath() + Helper.saveToWithFileName(path) + EXT_MP4_LOWER_CASE);
                 FileUtils.move(new File(Objects.requireNonNull(path)), destPathMP4);
                 ThreadUtils.runOnUiThread(() -> {
-                    ToastUtils.showLong(getResources().getString(R.string.status_saved) + "\n" + destPathMP4.getPath());
+                    ToastUtils.showLong(getString(R.string.status_saved) + "\n" + destPathMP4.getPath());
                     new MediaScanner(v.getContext(), destPathMP4);
                 });
                 FragmentVideos.updateList(position);

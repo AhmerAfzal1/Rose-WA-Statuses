@@ -11,6 +11,8 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Size;
 
+import androidx.annotation.NonNull;
+
 import com.ahmer.afzal.utils.utilcode.ThrowableUtils;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
@@ -86,7 +88,7 @@ public final class Thumbnails {
         return bitmap;
     }
 
-    public static Bitmap getBitmap(Bitmap bitmap, int newWidth, int newHeight) {
+    public static Bitmap getBitmap(@NonNull Bitmap bitmap, int newWidth, int newHeight) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         float scaleWidth = ((float) newWidth) / width;

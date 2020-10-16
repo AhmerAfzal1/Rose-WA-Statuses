@@ -11,7 +11,6 @@
     <!-- Ads key strings -->
     <string name="banner_ad_app_id">ca-app-pub-0672688958454166~1575550090</string>
     <string name="banner_ad_unit_id">ca-app-pub-0672688958454166/9041948903</string>
-    <string name="start_app_id">205889906</string>
 
     <!-- Settings strings -->
     <string name="button_about">buttonVersion</string>
@@ -32,32 +31,21 @@
 
     <!-- AhmerActivity strings -->
     <string name="email_gmail_ahmer"><a href="mailto:ahmerafzal1@gmail.com">ahmerafzal1@gmail.com</a></string>
-    <string name="email_live_sajjad"><a href="mailto:sajjad.bhutta@live.com">sajjad.bhutta@live.com</a></string>
     <string name="email_yahoo_ahmer"><a href="mailto:ahmerafzal@yahoo.com">ahmerafzal@yahoo.com</a></string>
-    <string name="email_yahoo_sajjad"><a href="mailto:sajjad.bhutta@yahoo.com">sajjad.bhutta@yahoo.com</a></string>
     <string name="graph_link_facebook_ahmer">https://graph.facebook.com/100025917301113/picture?width=512&amp;height=512</string>
-    <string name="graph_link_facebook_sajjad">https://graph.facebook.com/1297307759/picture?width=512&amp;height=512</string>
-    <string name="graph_link_twitter_ahmer">https://twitter.com/mrahmerafzal/profile_image?size=original</string>
-    <string name="graph_link_twitter_sajjad">https://twitter.com/sajjadbhutta6/profile_image?size=original</string>
     <string name="heading_app_developed_by">App Developed By</string>
     <string name="heading_meet_on_social">Meet on Social Media and Web</string>
     <string name="id_facebook_ahmer">Mr.AhmerAfzal</string>
-    <string name="id_facebook_sajjad">Sajjad.Hussain9211</string>
     <string name="id_github_ahmer">AhmerAfzal1</string>
-    <string name="id_instagram_sajjad">sajjad.bhutta.11</string>
     <string name="id_qq_ahmer">180989639</string>
-    <string name="id_qq_sajjad">2766805148</string>
     <string name="id_twitter_ahmer">MrAhmerAfzal</string>
-    <string name="id_twitter_sajjad">SajjadBhutta211</string>
     <string name="title_email">Email:</string>
     <string name="title_name">Name:</string>
     <string name="title_name_ahmer_afzal">Ahmer Afzal</string>
-    <string name="title_name_sajjad_bhutta">Sajjad Hussain Bhutta</string>
     <string name="title_qq">QQ ID:</string>
     <string name="url_blogspot_ahmer">http://ahmerafzal1.blogspot.com/</string>
     <string name="url_facebook">https://www.facebook.com/</string>
     <string name="url_github">https://github.com/</string>
-    <string name="url_instagram">http://instagram.com/</string>
     <string name="url_twitter">https://mobile.twitter.com/</string>
     <string name="text_copied">Text is Copied</string>
 
@@ -81,7 +69,7 @@
     <string name="tab_text_1">Images</string>
     <string name="tab_text_2">Videos</string>
     <string name="title_activity_main_tabbed">MainTabbedActivity</string>
-    <string name="no_internet_connection">Please check your Internet connection</string>
     <string name="update_app_server_not_found">Server not found</string>
+    <string name="more_info">More info</string>
 
 </resources>

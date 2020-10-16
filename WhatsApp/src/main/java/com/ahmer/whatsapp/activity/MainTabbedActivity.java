@@ -24,36 +24,32 @@ public class MainTabbedActivity extends AppCompatActivity {
         new TabLayoutMediator(binding.tabs, binding.viewPager, (tab, position) -> {
             switch (position) {
                 case 0:
-                    tab.setText(getResources().getString(R.string.tab_text_1));
+                    tab.setText(getString(R.string.tab_text_1));
                     break;
 
                 case 1:
-                    tab.setText(getResources().getString(R.string.tab_text_2));
-                    break;
-            }
-        }).attach();
-        binding.toolbarAppBar.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.menuSettings:
-                    Intent intentSetting = new Intent(getApplicationContext(), SettingsActivity.class);
-                    intentSetting.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        intentSetting.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    }
-                    startActivity(intentSetting);
-                    break;
-
-                case R.id.menuInfo:
-                    Intent intentAhmer = new Intent(getApplicationContext(), AhmerActivity.class);
-                    intentAhmer.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        intentAhmer.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    }
-                    startActivity(intentAhmer);
+                    tab.setText(getString(R.string.tab_text_2));
                     break;
 
                 default:
                     break;
+            }
+        }).attach();
+        binding.toolbarAppBar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menuSettings) {
+                Intent intentSetting = new Intent(getApplicationContext(), SettingsActivity.class);
+                intentSetting.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    intentSetting.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
+                startActivity(intentSetting);
+            } else if (item.getItemId() == R.id.menuInfo) {
+                Intent intentAhmer = new Intent(getApplicationContext(), AhmerActivity.class);
+                intentAhmer.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    intentAhmer.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
+                startActivity(intentAhmer);
             }
             return false;
         });

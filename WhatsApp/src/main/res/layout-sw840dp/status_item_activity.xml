@@ -28,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:contentDescription="@string/empty_description"
             app:backgroundTint="@color/colorAccent"
             app:fabCustomSize="@dimen/status_item_fab_size_big"
             app:maxImageSize="@dimen/status_item_fab_image_size_big"

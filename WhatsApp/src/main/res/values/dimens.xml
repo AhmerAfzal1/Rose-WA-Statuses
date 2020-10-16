@@ -1,11 +1,7 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="standard_55">55dp</dimen>
-    <dimen name="standard_100">100dp</dimen>
-    <dimen name="standard_145">145dp</dimen>
 
     <!-- For whole app -->
-    <dimen name="action_bar_height_size">48dp</dimen>
     <dimen name="card_view_elevation">5dp</dimen>
     <dimen name="margin_or_padding_03dp">3dp</dimen>
     <dimen name="margin_or_padding_05dp">5dp</dimen>
@@ -14,16 +10,11 @@
     <dimen name="text_appearance_small">14sp</dimen>
     <dimen name="text_appearance_medium">18sp</dimen>
     <dimen name="text_appearance_large">28sp</dimen>
-    <dimen name="toolbar_image_view">48dp</dimen>
-    <dimen name="toolbar_image_view_padding">10dp</dimen>
-    <dimen name="toolbar_title_margin">10dp</dimen>
 
     <!-- For Ahmer layout -->
-    <dimen name="ahmer_layout_margin">40dp</dimen>
     <dimen name="ahmer_profile_circle">3dp</dimen>
     <dimen name="ahmer_profile_image_view">256dp</dimen>
     <dimen name="ahmer_progressbar_width_height">80dp</dimen>
-    <dimen name="ahmer_scroll_view_margin">10dp</dimen>
     <dimen name="ahmer_social_image_view">36dp</dimen>
     <dimen name="ahmer_table_row_margin">10dp</dimen>
 

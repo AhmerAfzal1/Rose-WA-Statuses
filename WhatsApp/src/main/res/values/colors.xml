@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="primaryColor">#512DA8</color>
     <color name="primaryDarkColor">#140078</color>
     <color name="primaryLightColor">#8559DA</color>
     <color name="primaryTextColor">#FFFFFF</color>
     <color name="secondaryColor">#00BFA5</color>
-    <color name="secondaryDarkColor">#008E76</color>
+    <color name="secondaryDarkColor" tools:ignore="UnusedResources">#008E76</color>
     <color name="secondaryLightColor">#5DF2D6</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="colorAccent">#00BFA5</color>//D81B60
@@ -13,9 +13,7 @@
     <color name="colorBgBorderStatusItem">#00BFA5</color>
     <color name="colorBgStatusItemEnd">#140078</color>
     <color name="colorBgStatusItemStart">#512DA8</color>
-    <color name="colorCardView">#FFFFFF</color>
     <color name="colorCardViewStatusItemFrag">#FFFFFF</color>
-    <color name="colorCardViewText">#000000</color>
     <color name="colorPrefSummary">#757575</color>
     <color name="colorPrefTitle">#000000</color>
     <color name="colorSemiBlack">#B2000000</color>

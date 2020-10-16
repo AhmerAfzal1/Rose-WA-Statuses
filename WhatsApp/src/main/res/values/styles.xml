@@ -10,7 +10,9 @@
         <item name="colorSecondaryVariant">@color/secondaryLightColor</item>
         <item name="colorOnSecondary">@color/secondaryTextColor</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@null</item>
         <item name="android:fontFamily">@font/roboto</item>
+        <item name="fontFamily">@font/roboto</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
@@ -34,40 +36,10 @@
         <item name="colorControlNormal">@android:color/white</item>
     </style>
 
-    <style name="Rose.MaterialAlertDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
-        <!-- Background Color-->
-        <item name="android:background">@android:color/white</item>
-        <!-- Text Color for title and message -->
-        <item name="colorOnSurface">@android:color/black</item>
-        <!-- Style for positive button -->
-        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
-        <!-- Style for negative button -->
-        <!--<item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>-->
-        <item name="android:fontFamily">@font/roboto</item>
-        <item name="fontFamily">@font/roboto</item>
-    </style>
-
-    <style name="PositiveButtonStyle" parent="@style/Widget.MaterialComponents.Button">
-        <!-- text color for the button -->
-        <item name="android:textColor">@android:color/white</item>
-        <!-- Background tint for the button -->
-        <item name="backgroundTint">@color/primaryDarkColor</item>
-        <item name="android:fontFamily">@font/roboto</item>
-        <item name="fontFamily">@font/roboto</item>
-    </style>
-
-    <style name="Rose.Toolbar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
     <style name="Rose.TextAppearance.Heading" parent="TextAppearance.MaterialComponents.Headline5">
         <item name="fontFamily">@font/roboto</item>
         <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textSize">@dimen/text_appearance_large</item>
-    </style>
-
-    <style name="Rose.TextAppearance.Toolbar" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:fontFamily">@font/roboto</item>
-        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="Rose.TextAppearance.Heading.Small" parent="TextAppearance.MaterialComponents.Body2">
@@ -82,15 +54,4 @@
         <item name="android:textSize">@dimen/text_appearance_small</item>
     </style>
 
-    <style name="Rose.TextAppearance.Caption" parent="TextAppearance.MaterialComponents.Caption">
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:fontFamily">@font/roboto</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="Rose.TextAppearance.Tiny" parent="TextAppearance.MaterialComponents.Overline">
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:fontFamily">@font/roboto</item>
-        <item name="android:textSize">10sp</item>
-    </style>
 </resources>

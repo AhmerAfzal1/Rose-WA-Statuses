@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.core.widget.ContentLoadingProgressBar;
 
 import com.ahmer.afzal.utils.async.AsyncTask;
@@ -48,7 +49,7 @@ import static com.ahmer.whatsapp.Constant.TAG;
 
 public class Helper {
 
-    public static void loadAds(Context context, AdView adView, LinearLayout layout) {
+    public static void loadAds(Context context, @NonNull AdView adView, LinearLayout layout) {
         MobileAds.initialize(context, initializationStatus -> {
             //Keep empty
         });
@@ -56,36 +57,36 @@ public class Helper {
             @Override
             public void onAdLoaded() {
                 layout.setVisibility(View.VISIBLE);
-                Log.v(Constant.TAG, context.getResources().getString(R.string.adLoaded));
+                Log.v(Constant.TAG, context.getString(R.string.adLoaded));
             }
 
             @Override
             public void onAdFailedToLoad(LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
-                Log.v(Constant.TAG, context.getResources().getString(R.string.adFailedToLoad) + loadAdError.getCode());
+                Log.v(Constant.TAG, context.getString(R.string.adFailedToLoad) + loadAdError.getCode());
                 layout.setVisibility(View.GONE);
             }
 
             @Override
             public void onAdOpened() {
-                Log.v(Constant.TAG, context.getResources().getString(R.string.adOpened));
+                Log.v(Constant.TAG, context.getString(R.string.adOpened));
             }
 
             @Override
             public void onAdLeftApplication() {
-                Log.v(Constant.TAG, context.getResources().getString(R.string.adLeftApplication));
+                Log.v(Constant.TAG, context.getString(R.string.adLeftApplication));
             }
 
             @Override
             public void onAdClosed() {
-                Log.v(Constant.TAG, context.getResources().getString(R.string.adClosed));
+                Log.v(Constant.TAG, context.getString(R.string.adClosed));
             }
         });
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
     }
 
-    public static void shareToWhatsApp(Context context, ArrayList<StatusItem> contentList, int position) {
+    public static void shareToWhatsApp(@NonNull Context context, @NonNull ArrayList<StatusItem> contentList, int position) {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.setPackage("com.whatsapp");
@@ -94,7 +95,7 @@ public class Helper {
         context.startActivity(Intent.createChooser(sendIntent, "Send Status via:"));
     }
 
-    public static void shareFile(Context context, ArrayList<StatusItem> contentList, int position) {
+    public static void shareFile(@NonNull Context context, @NonNull ArrayList<StatusItem> contentList, int position) {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(contentList.get(position).getPath()));
@@ -102,6 +103,7 @@ public class Helper {
         context.startActivity(Intent.createChooser(sendIntent, "Send Status via:"));
     }
 
+    @NonNull
     public static String saveToWithFileName(String path) {
         return Constant.SAVE_TO_WITH_FILE_NAME + FileUtils.getFileNameNoExtension(path);
     }
@@ -185,14 +187,14 @@ public class Helper {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            File path = new File(dirAhmer() + "/" + fileName + "." + Bitmap.CompressFormat.PNG);
+            File path = new File(Helper.dirAhmer() + "/" + fileName + "." + Bitmap.CompressFormat.PNG);
             ImageUtils.save(bitmap, path, Bitmap.CompressFormat.PNG, 100);
             imageView.setImageBitmap(bitmap);
             progressBar.setVisibility(View.GONE);
         }
 
         @Override
-        protected void onBackgroundError(Exception e) {
+        protected void onBackgroundError(@NonNull Exception e) {
             e.printStackTrace();
             ThrowableUtils.getFullStackTrace(e);
             FirebaseCrashlytics.getInstance().recordException(e);

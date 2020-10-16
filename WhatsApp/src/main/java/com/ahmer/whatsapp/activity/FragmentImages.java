@@ -17,21 +17,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmer.afzal.utils.constants.AppPackageConstants;
 import com.ahmer.afzal.utils.utilcode.AppUtils;
+import com.ahmer.whatsapp.Helper;
 import com.ahmer.whatsapp.R;
 import com.ahmer.whatsapp.StatusItem;
-import com.ahmer.whatsapp.Helper;
 import com.ahmer.whatsapp.databinding.FragmentImagesBinding;
 import com.ahmer.whatsapp.databinding.StatusItemFragBinding;
 import com.ahmer.whatsapp.view.StatusViewImage;
 import com.google.android.gms.ads.AdView;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.ArrayList;
 
 import static com.ahmer.whatsapp.Constant.TAG;
 
-@SuppressWarnings("CanBeFinal")
 public class FragmentImages extends Fragment {
 
     public static ArrayList<StatusItem> statusItemFile = null;
@@ -72,14 +70,7 @@ public class FragmentImages extends Fragment {
         statusItemFile = new ArrayList<>(SplashActivity.imageStatuses);
         recyclerViewImages = binding.rvImages;
         adView = binding.adView;
-        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext());
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, getClass().getSimpleName());
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Frag Images Opened");
-        firebaseAnalytics.logEvent("Frag_Images_Open", bundle);
-        FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.getInstance();
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
-        firebaseCrashlytics.log("Start " + getClass().getSimpleName() + " Crashlytics logging...");
         GridLayoutManager gridLayoutManager;
         Configuration config = getResources().getConfiguration();
         if (config.smallestScreenWidthDp >= 720) {
@@ -100,12 +91,14 @@ public class FragmentImages extends Fragment {
             @Override
             public void onChanged() {
                 super.onChanged();
-                if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP) || AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP_BUSINESS)
-                        || AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP_FM) || AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP_YO))) {
+                if (!(AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP)
+                        || AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP_BUSINESS)
+                        || AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP_FM)
+                        || AppUtils.isAppInstalled(AppPackageConstants.PKG_WHATSAPP_YO))) {
                     binding.layoutNoStatus.setVisibility(View.VISIBLE);
                     binding.tvNoStatus.setText(R.string.no_whatsapp_installed);
                 } else {
-                    if (adapter.getItemCount() == 0) {
+                    if (FragmentImages.adapter.getItemCount() == 0) {
                         binding.layoutNoStatus.setVisibility(View.VISIBLE);
                         binding.tvNoStatus.setText(R.string.no_having_status);
                     } else {
@@ -173,7 +166,7 @@ public class FragmentImages extends Fragment {
         private final ArrayList<StatusItem> statusItem;
 
         public ImagesAdapter(ArrayList<StatusItem> list) {
-            this.statusItem = list;
+            statusItem = list;
         }
 
         @NonNull

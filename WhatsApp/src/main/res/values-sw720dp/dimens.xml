@@ -1,66 +1,81 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="standard_55">55dp</dimen>
-    <dimen name="standard_100">100dp</dimen>
-    <dimen name="standard_145">145dp</dimen>
 
     <!-- For whole app -->
-    <dimen name="action_bar_height_size">64dp</dimen> <!-- Increment 8 point to previous value -->
+    <!-- Increment 8 point to previous value -->
     <dimen name="card_view_elevation">5dp</dimen>
     <dimen name="margin_or_padding_03dp">3dp</dimen>
     <dimen name="margin_or_padding_05dp">5dp</dimen>
     <dimen name="margin_or_padding_10dp">10dp</dimen>
     <dimen name="margin_or_padding_20dp">20dp</dimen>
-    <dimen name="text_appearance_small">28sp</dimen> <!-- Increment (value * 1.25) point to previous value -->
-    <dimen name="text_appearance_medium">30sp</dimen> <!-- Increment (value * 1.25) point to previous value -->
-    <dimen name="text_appearance_large">44sp</dimen> <!-- Increment (value * 1.25) point to previous value -->
-    <dimen name="toolbar_image_view">60dp</dimen> <!-- Total size is 48, need 24, (48-24)/2 = 12 is padding -->
-    <dimen name="toolbar_image_view_padding">10dp</dimen> <!-- Keep as is it -->
-    <dimen name="toolbar_title_margin">12dp</dimen> <!-- Keep as is it -->
+    <dimen name="text_appearance_small">28sp
+    </dimen> <!-- Increment (value * 1.25) point to previous value -->
+    <dimen name="text_appearance_medium">30sp
+    </dimen> <!-- Increment (value * 1.25) point to previous value -->
+    <dimen name="text_appearance_large">44sp
+    </dimen> <!-- Increment (value * 1.25) point to previous value -->
+    <!-- Total size is 48, need 24, (48-24)/2 = 12 is padding -->
+    <!-- Keep as is it -->
+    <!-- Keep as is it -->
 
     <!-- For Ahmer layout -->
-    <dimen name="ahmer_layout_margin">60dp</dimen> <!-- Increment 10 point to previous value -->
+    <!-- Increment 10 point to previous value -->
     <dimen name="ahmer_profile_circle">5dp</dimen>
-    <dimen name="ahmer_profile_image_view">400dp</dimen> <!-- Increment (value * 1.25) point to previous value -->
-    <dimen name="ahmer_progressbar_width_height">125dp</dimen> <!-- Increment (value * 1.25) point to previous value -->
-    <dimen name="ahmer_scroll_view_margin">16dp</dimen> <!-- Keep as is it -->
-    <dimen name="ahmer_social_image_view">58dp</dimen> <!-- Increment (value * 1.25) point to previous value -->
+    <dimen name="ahmer_profile_image_view">400dp
+    </dimen> <!-- Increment (value * 1.25) point to previous value -->
+    <dimen name="ahmer_progressbar_width_height">125dp
+    </dimen> <!-- Increment (value * 1.25) point to previous value -->
+    <!-- Keep as is it -->
+    <dimen name="ahmer_social_image_view">58dp
+    </dimen> <!-- Increment (value * 1.25) point to previous value -->
     <dimen name="ahmer_table_row_margin">14dp</dimen> <!-- Increment 2 point to previous value -->
 
     <!-- For Splash layout -->
-    <dimen name="splash_image_view">150dp</dimen> <!-- Increment (value * 1.25) point to previous value -->
+    <dimen name="splash_image_view">150dp
+    </dimen> <!-- Increment (value * 1.25) point to previous value -->
     <dimen name="splash_image_view_margin">70dp</dimen> <!-- Increment 5 point to previous value -->
-    <dimen name="splash_spin_kit_view">100dp</dimen> <!-- Increment (value * 1.25) point to previous value -->
+    <dimen name="splash_spin_kit_view">100dp
+    </dimen> <!-- Increment (value * 1.25) point to previous value -->
     <dimen name="splash_text_view_margin">50dp</dimen> <!-- Keep as is it -->
 
     <!-- For Tabbed layout -->
-    <dimen name="tabbed_text_view_size">28sp</dimen> <!-- Increment (value * 1.25) point to previous value -->
+    <dimen name="tabbed_text_view_size">28sp
+    </dimen> <!-- Increment (value * 1.25) point to previous value -->
 
     <!-- For Preferences layout -->
     <dimen name="pref_compat_switch_size" format="float" type="dimen">1.75</dimen>
-    <dimen name="pref_image_view">58dp</dimen> <!-- Increment (value * 1.25) point to previous value -->
+    <dimen name="pref_image_view">58dp
+    </dimen> <!-- Increment (value * 1.25) point to previous value -->
     <dimen name="pref_margin">20dp</dimen> <!-- Increment 4 point to previous value -->
     <dimen name="pref_padding">16dp</dimen> <!-- Keep as is it -->
     <dimen name="pref_summary_top_margin">3dp</dimen> <!-- Keep as is it -->
 
     <!-- For Status Item Activity layout -->
     <dimen name="status_item_circle_padding">10dp</dimen> <!-- Keep as is it -->
-    <dimen name="status_item_fab_image_size_big">42dp</dimen> <!-- Increment (value * 1.25) point to previous value -->
+    <dimen name="status_item_fab_image_size_big">42dp
+    </dimen> <!-- Increment (value * 1.25) point to previous value -->
     <dimen name="status_item_fab_image_size_small">30dp</dimen> <!-- Keep as is it -->
-    <dimen name="status_item_fab_size_big">66dp</dimen> <!-- Increment (value * 1.10) point to previous value -->
-    <dimen name="status_item_fab_size_small">48dp</dimen> <!-- Increment (value * 1.10) point to previous value -->
+    <dimen name="status_item_fab_size_big">66dp
+    </dimen> <!-- Increment (value * 1.10) point to previous value -->
+    <dimen name="status_item_fab_size_small">48dp
+    </dimen> <!-- Increment (value * 1.10) point to previous value -->
     <dimen name="status_item_image_view">50dp</dimen> <!-- Keep as is it -->
-    <dimen name="status_item_layout_activity">220dp</dimen> <!-- Increment 10 point to previous value -->
+    <dimen name="status_item_layout_activity">220dp
+    </dimen> <!-- Increment 10 point to previous value -->
     <dimen name="status_item_tiny_period">14sp</dimen> <!-- Keep as is it -->
     <dimen name="status_item_tiny_text_view">14sp</dimen> <!-- Keep as is it -->
 
     <!-- For Status Item Fragment layout -->
-    <dimen name="status_item_layout_fragment">220dp</dimen> <!-- Increment (value * 1.125) point to previous value -->
+    <dimen name="status_item_layout_fragment">220dp
+    </dimen> <!-- Increment (value * 1.125) point to previous value -->
     <dimen name="status_item_image_view_margin">3dp</dimen> <!-- Keep as is it -->
 
     <!-- For View Image/Video layout -->
-    <dimen name="view_fab_margin_linear_layout">24dp</dimen> <!-- Increment 4 point to previous value -->
-    <dimen name="view_fab_top_margin_between_layouts">7dp</dimen> <!-- Increment 1 point to previous value -->
-    <dimen name="view_floating_action_margin">14dp</dimen> <!-- Increment 2 point to previous value -->
+    <dimen name="view_fab_margin_linear_layout">24dp
+    </dimen> <!-- Increment 4 point to previous value -->
+    <dimen name="view_fab_top_margin_between_layouts">7dp
+    </dimen> <!-- Increment 1 point to previous value -->
+    <dimen name="view_floating_action_margin">14dp
+    </dimen> <!-- Increment 2 point to previous value -->
 
 </resources>

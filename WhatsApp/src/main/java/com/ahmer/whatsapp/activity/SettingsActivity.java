@@ -49,6 +49,18 @@ public class SettingsActivity extends AppCompatActivity {
 
         private Preference buttonCaches;
 
+        private static long getDirSize(@NonNull File dir) {
+            long size = 0;
+            for (File file : Objects.requireNonNull(dir.listFiles())) {
+                if (file != null && file.isDirectory()) {
+                    size += getDirSize(file);
+                } else if (file != null && file.isFile()) {
+                    size += file.length();
+                }
+            }
+            return size;
+        }
+
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
@@ -60,14 +72,14 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.settings_pref, rootKey);
             SPUtils prefLauncher = SPUtils.getInstance(Constant.PREFERENCE_LAUNCHER);
-            SwitchPreferenceCompat buttonLauncher = findPreference(getResources().getString(R.string.button_change_view));
+            SwitchPreferenceCompat buttonLauncher = findPreference(getString(R.string.button_change_view));
             Objects.requireNonNull(buttonLauncher).setOnPreferenceChangeListener((preference, newValue) -> {
                 prefLauncher.put(Constant.PREFERENCE_LAUNCHER_KEY, (Boolean) newValue);
                 AppUtils.relaunchApp();
                 return true;
             });
             SPUtils prefTheme = SPUtils.getInstance(Constant.PREFERENCE_THEME);
-            SwitchPreferenceCompat buttonTheme = findPreference(getResources().getString(R.string.button_dark_mode));
+            SwitchPreferenceCompat buttonTheme = findPreference(getString(R.string.button_dark_mode));
             if (Objects.requireNonNull(buttonTheme).isChecked()) {
                 buttonTheme.setTitle(R.string.title_light_mode);
                 buttonTheme.setIcon(R.drawable.ic_settings_sun);
@@ -87,7 +99,7 @@ public class SettingsActivity extends AppCompatActivity {
                 prefTheme.put(Constant.PREFERENCE_THEME_KEY, isChecked);
                 return true;
             });
-            buttonCaches = findPreference(getResources().getString(R.string.button_clear_caches));
+            buttonCaches = findPreference(getString(R.string.button_clear_caches));
             Objects.requireNonNull(buttonCaches).setOnPreferenceClickListener(preference -> {
                 CleanUtils.cleanExternalCache();
                 CleanUtils.cleanInternalCache();
@@ -95,7 +107,7 @@ public class SettingsActivity extends AppCompatActivity {
                 initializeCache();
                 return true;
             });
-            Preference versionApp = findPreference(getResources().getString(R.string.button_about));
+            Preference versionApp = findPreference(getString(R.string.button_about));
             Objects.requireNonNull(versionApp).setSummary(String.format(Locale.getDefault(),
                     "App Version: %s (%d)", AppUtils.getAppVersionName(), AppUtils.getAppVersionCode()));
             initializeCache();
@@ -106,18 +118,6 @@ public class SettingsActivity extends AppCompatActivity {
             size += getDirSize(Utils.getApp().getCacheDir());
             size += getDirSize(Objects.requireNonNull(Utils.getApp().getExternalCacheDir()));
             buttonCaches.setSummary("Caches Size " + HelperUtils.getFileSize(size));
-        }
-
-        private long getDirSize(File dir) {
-            long size = 0;
-            for (File file : Objects.requireNonNull(dir.listFiles())) {
-                if (file != null && file.isDirectory()) {
-                    size += getDirSize(file);
-                } else if (file != null && file.isFile()) {
-                    size += file.length();
-                }
-            }
-            return size;
         }
     }
 }
