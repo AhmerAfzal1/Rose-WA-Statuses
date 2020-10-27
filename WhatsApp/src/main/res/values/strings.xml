@@ -3,7 +3,7 @@
 
     <!-- Ads log strings -->
     <string name="adClosed">onAdClosed: Ad closed</string>
-    <string name="adFailedToLoad">onAdFailedToLoad : Failed to load Ad, Error code is: %d</string>
+    <string name="adFailedToLoad">onAdFailedToLoad : Failed to load Ad, Error code is: </string>
     <string name="adLeftApplication">onAdLeftApplication: Ad left the App</string>
     <string name="adLoaded">onAdLoaded: Ad loading…</string>
     <string name="adOpened">onAdOpened: Ad opening… user tap or click the ad</string>

@@ -50,13 +50,13 @@ public class SplashActivity extends AppCompatActivity {
     public static final File dirYoWhatsApp = new File(PathUtils.getExternalStoragePath() + WHATSAPP_YO_LOCATION);
 
     public static void getData() {
-        /*
-        File dirAhmer = new File(PathUtils.getExternalDownloadsPath());
-        //File dirAhmer = new File(PathUtils.getExternalStoragePath() + "/AhmerFolder");
+
+        /*//File dirAhmer = new File(PathUtils.getExternalDownloadsPath());
+        File dirAhmer = new File(PathUtils.getExternalStoragePath() + "/Ahmer");
         if (dirAhmer.exists()) {
             getStatuses(dirAhmer.listFiles());
-        }
-       */
+        }*/
+
         if (dirWhatsApp.exists()) {
             getStatuses(dirWhatsApp.listFiles());
         }
@@ -129,7 +129,7 @@ public class SplashActivity extends AppCompatActivity {
     private void checkPermissions() {
         PermissionUtils.permission(PermissionConstants.STORAGE).rationale(new PermissionUtils.OnRationaleListener() {
             @Override
-            public void rationale(UtilsTransActivity activity, ShouldRequest shouldRequest) {
+            public void rationale(@NonNull UtilsTransActivity activity, @NonNull ShouldRequest shouldRequest) {
                 shouldRequest.again(true);
                 Log.v(TAG, getClass().getSimpleName() + " -> Again permission checking");
             }
@@ -150,7 +150,7 @@ public class SplashActivity extends AppCompatActivity {
             }
         }).theme(new PermissionUtils.ThemeCallback() {
             @Override
-            public void onActivityCreate(Activity activity) {
+            public void onActivityCreate(@NonNull Activity activity) {
                 Log.v(TAG, getClass().getSimpleName() + " -> Permission ThemeCallback runs");
                 //Must add this for run app properly
                 ScreenUtils.setFullScreen(activity);
