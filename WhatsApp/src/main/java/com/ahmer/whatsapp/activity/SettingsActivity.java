@@ -50,7 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
         private Preference buttonCaches;
 
         private static long getDirSize(@NonNull File dir) {
-            long size = 0;
+            long size = 0L;
             for (File file : Objects.requireNonNull(dir.listFiles())) {
                 if (file != null && file.isDirectory()) {
                     size += getDirSize(file);
@@ -114,7 +114,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         private void initializeCache() {
-            long size = 0;
+            long size = 0L;
             size += getDirSize(Utils.getApp().getCacheDir());
             size += getDirSize(Objects.requireNonNull(Utils.getApp().getExternalCacheDir()));
             buttonCaches.setSummary("Caches Size " + HelperUtils.getFileSize(size));

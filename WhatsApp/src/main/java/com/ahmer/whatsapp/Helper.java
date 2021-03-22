@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,6 +32,7 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -38,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -49,37 +52,36 @@ import static com.ahmer.whatsapp.Constant.TAG;
 
 public class Helper {
 
-    public static void loadAds(Context context, @NonNull AdView adView, LinearLayout layout) {
-        MobileAds.initialize(context, initializationStatus -> {
+    public static void loadAds(@NotNull AdView adView, LinearLayout layout) {
+        MobileAds.initialize(Utils.getApp(), initializationStatus -> {
             //Keep empty
         });
         adView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
                 layout.setVisibility(View.VISIBLE);
-                Log.v(Constant.TAG, context.getString(R.string.adLoaded));
+                Log.v(Constant.TAG, getClass().getSimpleName() + " -> "
+                        + Utils.getApp().getString(R.string.adLoaded));
             }
 
             @Override
             public void onAdFailedToLoad(LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
-                Log.v(Constant.TAG, context.getString(R.string.adFailedToLoad) + loadAdError.getCode());
+                Log.v(Constant.TAG, getClass().getSimpleName() + " -> " + Utils.getApp()
+                        .getString(R.string.adFailedToLoad) + loadAdError.getCode());
                 layout.setVisibility(View.GONE);
             }
 
             @Override
             public void onAdOpened() {
-                Log.v(Constant.TAG, context.getString(R.string.adOpened));
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                Log.v(Constant.TAG, context.getString(R.string.adLeftApplication));
+                Log.v(Constant.TAG, getClass().getSimpleName() + " -> "
+                        + Utils.getApp().getString(R.string.adOpened));
             }
 
             @Override
             public void onAdClosed() {
-                Log.v(Constant.TAG, context.getString(R.string.adClosed));
+                Log.v(Constant.TAG, getClass().getSimpleName() + " -> "
+                        + Utils.getApp().getString(R.string.adClosed));
             }
         });
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -158,9 +160,31 @@ public class Helper {
         @Override
         protected Bitmap doInBackground(String s) throws Exception {
             Bitmap bitmap = null;
+            String link = "";
+            OkHttpClient clientProfile = new OkHttpClient();
+            Request requestProfile = new Request.Builder()
+                    .url(Constant.PROFILE_SERVER)
+                    .get()
+                    .build();
+            Call callProfile = clientProfile.newCall(requestProfile);
+            Response responseProfile = callProfile.execute();
+            if (responseProfile.isSuccessful()) {
+                String result = Objects.requireNonNull(responseProfile.body()).string();
+                Log.v(Constant.TAG, getClass().getSimpleName() + " -> Result is: " + result);
+                if (TextUtils.isEmpty(result)) {
+                    Log.v(Constant.TAG, getClass().getSimpleName() + " -> Result is null");
+                } else {
+                    JSONObject object = new JSONObject(Objects.requireNonNull(result));
+                    link = object.getString(s);
+                    Log.v(Constant.TAG, getClass().getSimpleName() + " -> " + link);
+                }
+            } else {
+                callProfile.cancel();
+            }
+
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(s)
+                    .url(link)
                     .get()
                     .build();
             Call call = client.newCall(request);

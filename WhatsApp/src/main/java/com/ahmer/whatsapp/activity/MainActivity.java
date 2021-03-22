@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        Helper.loadAds(getApplicationContext(), adView, binding.adViewLayout);
+        Helper.loadAds(adView, binding.adViewLayout);
         GridLayoutManager gridLayoutManager;
         Configuration config = getResources().getConfiguration();
         if (config.smallestScreenWidthDp >= 720) {

@@ -4,7 +4,6 @@
     <!-- Ads log strings -->
     <string name="adClosed">onAdClosed: Ad closed</string>
     <string name="adFailedToLoad">onAdFailedToLoad : Failed to load Ad, Error code is: </string>
-    <string name="adLeftApplication">onAdLeftApplication: Ad left the App</string>
     <string name="adLoaded">onAdLoaded: Ad loading…</string>
     <string name="adOpened">onAdOpened: Ad opening… user tap or click the ad</string>
 
@@ -32,10 +31,9 @@
     <!-- AhmerActivity strings -->
     <string name="email_gmail_ahmer"><a href="mailto:ahmerafzal1@gmail.com">ahmerafzal1@gmail.com</a></string>
     <string name="email_yahoo_ahmer"><a href="mailto:ahmerafzal@yahoo.com">ahmerafzal@yahoo.com</a></string>
-    <string name="graph_link_facebook_ahmer">https://graph.facebook.com/100025917301113/picture?width=512&amp;height=512</string>
     <string name="heading_app_developed_by">App Developed By</string>
     <string name="heading_meet_on_social">Meet on Social Media and Web</string>
-    <string name="id_facebook_ahmer">Mr.AhmerAfzal</string>
+    <string name="id_facebook_ahmer">Mr.AhmerAfzal1</string>
     <string name="id_github_ahmer">AhmerAfzal1</string>
     <string name="id_qq_ahmer">180989639</string>
     <string name="id_twitter_ahmer">MrAhmerAfzal</string>
@@ -47,14 +45,9 @@
     <string name="url_facebook">https://www.facebook.com/</string>
     <string name="url_github">https://github.com/</string>
     <string name="url_twitter">https://mobile.twitter.com/</string>
-    <string name="text_copied">Text is Copied</string>
 
     <!-- Email strings -->
     <string name="auto_generate_msg">*** This is an automatically generated message. ***</string>
-    <string name="email_ahmer_gmail">ahmerafzal1@gmail.com</string>
-    <string name="email_ahmer_yahoo">ahmerafzal@yahoo.com</string>
-    <string name="send_email_to_author">Send E-Mail to Ahmer Afzal</string>
-    <string name="no_email_client">There are no E-Mail client found</string>
 
     <!-- Miscellaneous strings -->
     <string name="empty_description">Empty content description</string>

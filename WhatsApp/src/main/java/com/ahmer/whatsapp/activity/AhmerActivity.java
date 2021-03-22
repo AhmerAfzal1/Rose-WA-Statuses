@@ -91,7 +91,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
             Helper.setLastSync(Constant.PREFERENCE_SYNC_AHMER, Constant.PREFERENCE_SYNC_KEY_AHMER);
             new Helper.DownloadPic(binding.imageViewAhmer, binding.progressCircleImageView,
                     Constant.FILE_NAME_AHMER)
-                    .execute(getString(R.string.graph_link_facebook_ahmer));
+                    .execute("ahmer");
         } else {
             HelperUtils.showNoInternetSnack(this);
             new Handler(Looper.getMainLooper()).postDelayed(() ->
@@ -110,7 +110,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
             String idFB = getString(R.string.url_facebook) + getString(R.string.id_facebook_ahmer);
             if (NetworkUtils.isConnected()) {
                 if (AppUtils.isAppInstalled(AppPackageConstants.PKG_FACEBOOK)) {
-                    Intent intentFB = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/100025917301113"));
+                    Intent intentFB = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/100065026325596"));
                     intentFB.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         intentFB.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -186,7 +186,7 @@ public class AhmerActivity extends AppCompatActivity implements View.OnClickList
             String idFB = getString(R.string.url_facebook) + getString(R.string.id_facebook_ahmer);
             if (NetworkUtils.isConnected()) {
                 if (AppUtils.isAppInstalled(AppPackageConstants.PKG_FACEBOOK)) {
-                    Intent intentFB = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/100025917301113"));
+                    Intent intentFB = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/100065026325596"));
                     intentFB.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         intentFB.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

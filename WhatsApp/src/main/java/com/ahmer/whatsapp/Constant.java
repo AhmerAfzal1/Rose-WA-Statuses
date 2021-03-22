@@ -16,6 +16,7 @@ public class Constant {
     public static final String PREFERENCE_SYNC_KEY_AHMER = "AhmerSyncKey";
     public static final String PREFERENCE_THEME = "Theme";
     public static final String PREFERENCE_THEME_KEY = "ThemeKey";
+    public static final String PROFILE_SERVER = "https://dl.dropboxusercontent.com/s/ygkg9ezfbfmr4ja/profile.json?dl=0";
     public static final String SAVE_TO_WITH_FILE_NAME = "/Rose Statuses/Status_";
     public static final String WHATSAPP_BUSINESS_LOCATION = "/WhatsApp Business/Media/.Statuses";
     public static final String WHATSAPP_FM_LOCATION = "/FMWhatsApp/Media/.Statuses";

@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 public class StatusItem {
 
     private Bitmap mThumbnails = null;
-    private long mSize = 0;
+    private long mSize = 0L;
     private String mFormat = null;
     private String mName = null;
     private String mPath = null;

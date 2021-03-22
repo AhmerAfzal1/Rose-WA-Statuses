@@ -133,7 +133,7 @@ public class FragmentVideos extends Fragment {
         };
         adapter.registerAdapterDataObserver(observer);
         observer.onChanged();
-        Helper.loadAds(requireContext(), adView, binding.adViewLayout);
+        Helper.loadAds(adView, binding.adViewLayout);
     }
 
     @Override
